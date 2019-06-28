@@ -1,0 +1,7 @@
+########################################
+# test
+########################################
+
+POST http://localhost:3000/pets
+Accept: application/json
+Content-Type: application/json

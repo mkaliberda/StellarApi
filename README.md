@@ -1,0 +1,2 @@
+## TEMPLATE FOR TS NODE JS HTTP MICROSERVICE
+## USING Express Typescript Boilerplate
