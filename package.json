@@ -1,42 +1,18 @@
 {
-  "name": "express-typescript-boilerplate",
-  "version": "3.2.0",
-  "description": "A delightful way to building a Node.js RESTful API Services with beautiful code written in TypeScript",
+  "name": "StellarApi",
+  "version": "1.0.0",
+  "description": "RESTful API Service for Stellar Network",
   "main": "src/app.ts",
   "scripts": {
     "test": "cross-env NODE_ENV=test jest --testPathPattern=unit",
     "build": "tsc --project ./tsconfig.json",
-    "dev": "nodemon --watch src --watch .env --inspect",
+    "dev": "nodemon --watch src --watch .env --inspect --strictNullChecks",
     "start": "cross-env NODE_ENV=production node dist/src/app.js",
     "typeorm": "ts-node ./node_modules/typeorm/cli.js"
   },
   "engines": {
     "node": ">=8.0.0"
   },
-  "repository": "git+ssh://git@github.com/w3tec/express-typescript-boilerplate.git",
-  "keywords": [
-    "NodeJS",
-    "TypeScript",
-    "express",
-    "boilerplate",
-    "skeleton",
-    "starter-kit",
-    "w3tec.ch"
-  ],
-  "homepage": "https://github.com/w3tec/express-typescript-boilerplate#readme",
-  "author": "w3tec.ch <info@w3tec.ch>",
-  "contributors": [
-    {
-      "name": "David Weber",
-      "email": "david.weber@w3tec.ch",
-      "url": "https://github.com/dweber019"
-    },
-    {
-      "name": "Gery Hirschfeld",
-      "email": "gery.hirschfeld@w3tec.ch",
-      "url": "https://github.com/hirsch88"
-    }
-  ],
   "dependencies": {
     "@types/node-vault": "^0.5.3",
     "bcrypt": "^3.0.6",
@@ -98,7 +74,6 @@
     "testEnvironment": "node",
     "setupTestFrameworkScriptFile": "./test/unit/lib/setup.ts"
   },
-  "license": "MIT",
   "devDependencies": {
     "@types/bcrypt": "^2.0.0",
     "@types/bluebird": "^3.5.18",
