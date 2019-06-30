@@ -9,7 +9,7 @@ import {
 /**
  * Load .env file or for tests the .env.test file.
  */
-dotenv.config({ path: path.join(process.cwd(), `.env${((process.env.NODE_ENV === 'test') ? '.test' : '')}`) });
+dotenv.config({path: path.join(process.cwd(), `.env${((process.env.NODE_ENV === 'test') ? '.test' : '')}`)});
 
 /**
  * Environment variables
@@ -67,5 +67,11 @@ export const env = {
         route: getOsEnv('MONITOR_ROUTE'),
         username: getOsEnv('MONITOR_USERNAME'),
         password: getOsEnv('MONITOR_PASSWORD'),
+    },
+    keysStorage: {
+        vault: {
+            url: getOsEnv('VAULT_URL'),
+            token: getOsEnv('VAULT_TOKEN'),
+        },
     },
 };
