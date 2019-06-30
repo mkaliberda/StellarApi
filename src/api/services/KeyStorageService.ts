@@ -1,6 +1,6 @@
 import { Service } from 'typedi';
-import { IAccountKeys, IKeysStorage } from '../../lib/env/keys-storage/IStorage';
-import { VaultStorage } from '../../lib/env/keys-storage/VaultStorage';
+import { IAccountKeys, IKeysStorage } from '../../lib/keys-storage/IStorage';
+import { VaultStorage } from '../../lib/keys-storage/VaultStorage';
 
 @Service()
 export class KeyStorageService {

@@ -1,6 +1,6 @@
 import { IKeysStorage, IAccountKeys, IKeyPair } from './IStorage';
-import { env } from '../../../env';
-import * as Vault from '../../../../node_modules/node-vault';
+import { env } from '../../env';
+import * as Vault from 'node-vault';
 
 export class VaultStorage implements IKeysStorage {
     private static SECRET_PATH = '/secret/stellarKeys/';

@@ -1,6 +1,6 @@
 import { Body, Get, JsonController, Param, Post } from 'routing-controllers';
 import { KeyStorageService } from '../services/KeyStorageService';
-import { IAccountKeys } from '../../lib/env/keys-storage/IStorage';
+import { IAccountKeys } from '../../lib/keys-storage/IStorage';
 
 @JsonController('/store')
 export class StellarController {
@@ -27,7 +27,6 @@ export class StellarController {
         };
         try {
             this.storeService.storeAccountKeys(toStoreKeys);
-            console.log('All ok, keys saved! =)');
             return ['Keys Saved'];
         } catch (error) {
             console.log('Error! =(', error);

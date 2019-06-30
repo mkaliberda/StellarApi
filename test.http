@@ -2,7 +2,7 @@
 # test
 ########################################
 
-GET http://localhost:3000/api/store/get-secret/my-address
+GET http://localhost:3000/api/store/get-secret/my-addresss
 Accept: application/json
 Content-Type: application/json
 
