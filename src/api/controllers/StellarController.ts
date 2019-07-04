@@ -29,7 +29,6 @@ export class StellarController {
             this.storeService.storeAccountKeys(toStoreKeys);
             return ['Keys Saved'];
         } catch (error) {
-            console.log('Error! =(', error);
             return ['Error'];
         }
     }
