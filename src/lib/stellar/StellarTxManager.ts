@@ -25,7 +25,7 @@ export class StellarTxManager extends StellarBaseManager {
         transaction.addOperation(
             Operation.createAccount({
                 destination: newPair.publicKey(),
-                startingBalance: env.stellar.seeds.init_xml_amt,
+                startingBalance: env.stellar.seeds.init_xlm_amt,
             })
         );
         const tx = transaction.build();
@@ -86,7 +86,7 @@ export class StellarTxManager extends StellarBaseManager {
         transaction.addOperation(
             Operation.createAccount({
                 destination: newPair.publicKey(),
-                startingBalance: env.stellar.seeds.init_xml_amt,
+                startingBalance: env.stellar.seeds.init_xlm_amt,
             })
         );
         this.createTrustOperations(assetToTrust,
