@@ -19,12 +19,12 @@ export class StellarBaseManager {
     }
 
     public createTrustOperations(assetToTrust: string[],
-                                 IssuerAddress: string,
+                                 issuerAddress: string,
                                  destAddr: string): any[] {
         const operationsTrust: any[] = [];
         assetToTrust.forEach((item) => {
             const operation = Operation.changeTrust({
-                asset: new Asset(item, IssuerAddress),
+                asset: new Asset(item, issuerAddress),
                 source: destAddr,
             });
             operationsTrust.push(operation);

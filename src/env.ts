@@ -76,9 +76,7 @@ export const env = {
     },
     stellar: {
         seeds: {
-            init_xml_amt: getOsEnv('INIT_XML_AMT'),
-            root: getOsEnv('ROOT_STELLAR_SEED'),
-            rs: getOsEnv('RS_STELLAR_SEED'),
+            init_xlm_amt: getOsEnv('INIT_XLM_AMT'),
         },
         network: {
             isTest: getOsEnv('IS_STELLAR_TEST_NETWORK'),
