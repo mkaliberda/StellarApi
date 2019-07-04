@@ -38,3 +38,8 @@ test/**/*.js.map
 coverage/
 !test/preprocessor.js
 mydb.sql
+coverage
+config.hcl
+# Vault service
+vault-keys
+vault

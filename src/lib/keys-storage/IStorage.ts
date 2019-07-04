@@ -12,7 +12,7 @@ interface IKeysStorage {
     getAccountKeys(address: string): any;
     getBasePair(address: string): IKeyPair;
     getPendingPair(address: string): IKeyPair;
-    saveAccountKeys(keys: IAccountKeys): void;
+    saveAccountKeys(address: string, keys: IAccountKeys): void;
     deleteAccountKeys(address: string): void;
 }
 

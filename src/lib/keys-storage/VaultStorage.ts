@@ -1,6 +1,7 @@
-import { IKeysStorage, IAccountKeys, IKeyPair } from './IStorage';
-import { env } from '../../env';
 import * as Vault from 'node-vault';
+
+import { env } from '../../env';
+import { IAccountKeys, IKeyPair, IKeysStorage } from './IStorage';
 
 export class VaultStorage implements IKeysStorage {
     private static SECRET_PATH = '/secret/stellarKeys/';
@@ -36,9 +37,9 @@ export class VaultStorage implements IKeysStorage {
         return response.data;
     }
 
-    public async saveAccountKeys(keys: IAccountKeys): Promise<void> {
+    public async saveAccountKeys(address: string, keys: IAccountKeys): Promise<void> {
         try {
-            await this.vault.write(`${VaultStorage.SECRET_PATH}${keys.base.address}`, keys);
+            await this.vault.write(`${VaultStorage.SECRET_PATH}${address}`, keys);
         } catch (err) {
             VaultStorage.handleResponseException(err);
         }

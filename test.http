@@ -1,12 +1,13 @@
-########################################
-# test
-########################################
+
+###
+
+###
 
 GET http://localhost:3000/api/store/get-secret/my-addresss
 Accept: application/json
 Content-Type: application/json
 
-###
+#######################################
 
 POST http://localhost:3000/api/store/put-secret/
 Accept: application/json
@@ -18,5 +19,7 @@ Content-Type: application/json
     "pendingAddress": "my-pending-address",
     "pendingPrivate": "my-pending-private"
 }
+
+#################################
 
 ###
