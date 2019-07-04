@@ -4,9 +4,10 @@
   "description": "RESTful API Service for Stellar Network",
   "main": "src/app.ts",
   "scripts": {
-    "test": "cross-env NODE_ENV=test jest --testPathPattern=unit",
+    "test-unit": "cross-env NODE_ENV=test jest --testPathPattern=unit --verbose",
+    "test-unit-coverage": "cross-env NODE_ENV=test jest --testPathPattern=unit --verbose --coverage",
     "build": "tsc --project ./tsconfig.json",
-    "dev": "nodemon --watch src --watch .env --inspect --strictNullChecks",
+    "dev": "nodemon --watch src --watch .env --inspect",
     "start": "cross-env NODE_ENV=production node dist/src/app.js",
     "typeorm": "ts-node ./node_modules/typeorm/cli.js"
   },
@@ -15,6 +16,7 @@
   },
   "dependencies": {
     "@types/node-vault": "^0.5.3",
+    "@types/stellar-sdk": "^0.11.1",
     "bcrypt": "^3.0.6",
     "bcryptjs": "^2.4.3",
     "chalk": "^2.4.1",
@@ -45,6 +47,7 @@
     "reflect-metadata": "^0.1.10",
     "routing-controllers": "^0.7.6",
     "serve-favicon": "^2.4.5",
+    "stellar-sdk": "^1.0.5",
     "supertest": "^3.0.0",
     "swagger-ui-express": "4.0.1",
     "ts-node": "7.0.1",

@@ -74,4 +74,15 @@ export const env = {
             token: getOsEnv('VAULT_TOKEN'),
         },
     },
+    stellar: {
+        seeds: {
+            init_xml_amt: getOsEnv('INIT_XML_AMT'),
+            root: getOsEnv('ROOT_STELLAR_SEED'),
+            rs: getOsEnv('RS_STELLAR_SEED'),
+        },
+        network: {
+            isTest: getOsEnv('IS_STELLAR_TEST_NETWORK'),
+            uri: getOsEnv('STELLAR_URI'),
+        },
+    },
 };
