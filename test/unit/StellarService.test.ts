@@ -5,14 +5,15 @@ import { StellarTxManager } from '../../src/lib/stellar/StellarTxManager';
 const ROOT_SECRET = 'SAW6HLSFTXYBMTNVWRCH5F6K3DKTUY6X2BJDNLZPH34BM4XHLA6S53AQ';
 
 describe('StellarTxManager', () => {
-    const stellaTx = new StellarTxManager(ROOT_SECRET);
+    const rootPair = StellarTxManager.getKeyPairFromSecret(ROOT_SECRET);
+    const stellaTx = new StellarTxManager(rootPair);
     let userSecret: any;
     let userPair: any;
     jest.setTimeout(30000);
     test('createAccount', async (done) => {
         const res = await stellaTx.createAccount();
         userSecret = res.secret;
-        userPair = stellaTx.getKeyPairFromSecret(res.secret);
+        userPair = StellarTxManager.getKeyPairFromSecret(res.secret);
         expect(3).toBe(3);
         done();
     });
@@ -21,7 +22,7 @@ describe('StellarTxManager', () => {
             'DIMO',
             'SIMO',
         ];
-        userPair = stellaTx.getKeyPairFromSecret(userSecret);
+        userPair = StellarTxManager.getKeyPairFromSecret(userSecret);
         await stellaTx.changeTrustLine(array, userPair);
         expect(3).toBe(3);
         done();

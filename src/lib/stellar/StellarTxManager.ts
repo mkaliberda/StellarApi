@@ -6,9 +6,9 @@ import { StellarBaseManager } from './StellarBaseManager';
 export class StellarTxManager extends StellarBaseManager {
     public pairRoot: Keypair;
 
-    constructor(secretRoot: string) {
+    constructor(pairRoot: Keypair) {
         super();
-        this.pairRoot = Keypair.fromSecret(secretRoot);
+        this.pairRoot = pairRoot;
     }
 
     public async createAccount(): Promise<any> {
@@ -105,6 +105,14 @@ export class StellarTxManager extends StellarBaseManager {
             hash: response.hash,
             ledger: response.ledger,
         };
+    }
+
+    public async sendAsset(srcKeyPair: Keypair,
+                           destKeyPair: Keypair,
+                           asset: string,
+                           amount: string,
+                           memo: string): Promise<any> {
+        this._buildTx(srcKeyPair);
     }
 
     private async _buildTx(fromPair?: Keypair): Promise<any> {
