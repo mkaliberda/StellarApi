@@ -1,7 +1,4 @@
-import { Key } from 'readline';
-import {
-    Asset, Keypair, Network, Operation, Server, Transaction, TransactionBuilder
-} from 'stellar-sdk';
+import { Keypair, Operation, TransactionBuilder } from 'stellar-sdk';
 
 import { env } from '../../env';
 import { StellarBaseManager } from './StellarBaseManager';
