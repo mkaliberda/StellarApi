@@ -1,6 +1,5 @@
-import { Key } from 'readline';
 import {
-    Asset, Keypair, Network, Operation, Server, Transaction, TransactionBuilder
+    Keypair, Operation, TransactionBuilder
 } from 'stellar-sdk';
 
 import { env } from '../../env';
@@ -56,8 +55,8 @@ export class StellarTxManager extends StellarBaseManager {
             throw new Error('TODO ADD EXCEPTION 1' + err);
         }
         this.createTrustOperations(assetToTrust,
-                                   this.pairRoot.publicKey(),
-                                   destKeyPair.publicKey()).forEach(element => {
+            this.pairRoot.publicKey(),
+            destKeyPair.publicKey()).forEach(element => {
             transaction.addOperation(element);
         });
         const tx = transaction.build();
@@ -90,8 +89,8 @@ export class StellarTxManager extends StellarBaseManager {
             })
         );
         this.createTrustOperations(assetToTrust,
-                                   this.pairRoot.publicKey(),
-                                   newPair.publicKey()).forEach(element => {
+            this.pairRoot.publicKey(),
+            newPair.publicKey()).forEach(element => {
             transaction.addOperation(element);
         });
         const tx = transaction.build();
@@ -113,9 +112,10 @@ export class StellarTxManager extends StellarBaseManager {
     private async _buildTx(fromPair?: Keypair): Promise<any> {
         const address = fromPair ? fromPair.publicKey() : this.pairRoot.publicKey();
         const account = await this.server.loadAccount(address);
-        const options = { fee: 100, // await this.server.fetchBaseFee(),
-                          timebounds: await this.server.fetchTimebounds(100),
-                        };
+        const options = {
+            fee: 100, // await this.server.fetchBaseFee(),
+            timebounds: await this.server.fetchTimebounds(100),
+        };
         return new TransactionBuilder(account, options);
     }
 }
