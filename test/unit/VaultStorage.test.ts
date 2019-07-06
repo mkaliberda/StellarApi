@@ -6,19 +6,19 @@ describe('Vault storage tests', () => {
     const keys: IAccountKeys = {
         base: {
             address: '12341234123412341',
-            private: '22222222222222222',
+            secret: '22222222222222222',
         },
         pending: {
             address: '33333333333333333',
-            private: '44444444444444444',
+            secret: '44444444444444444',
         },
     };
 
     test('Check is account keys stored properly', async (done) => {
         storage.saveAccountKeys(keys.base.address, keys);
         const response = await storage.getAccountKeys(keys.base.address);
-        expect(response.base.private).toBe(keys.base.private);
-        expect(response.pending.private).toBe(keys.pending.private);
+        expect(response.base.secret).toBe(keys.base.secret);
+        expect(response.pending.secret).toBe(keys.pending.secret);
         expect(response.pending.address).toBe(keys.pending.address);
         done();
     });
