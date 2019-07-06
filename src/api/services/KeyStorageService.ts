@@ -1,4 +1,5 @@
 import { Service } from 'typedi';
+
 import { IAccountKeys, IKeysStorage } from '../../lib/keys-storage/IStorage';
 import { VaultStorage } from '../../lib/keys-storage/VaultStorage';
 
@@ -14,7 +15,7 @@ export class KeyStorageService {
         return this.storage.getAccountKeys(address);
     }
 
-    public storeAccountKeys(keys: IAccountKeys): void {
-        this.storage.saveAccountKeys(keys);
+    public storeAccountKeys(address: string, keys: IAccountKeys): void {
+        this.storage.saveAccountKeys(address, keys);
     }
 }

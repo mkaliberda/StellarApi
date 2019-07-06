@@ -1,6 +1,6 @@
 interface IKeyPair {
     address: string;
-    private: string;
+    secret: string;
 }
 
 interface IAccountKeys {

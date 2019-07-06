@@ -1,4 +1,5 @@
-import { Keypair, Operation, TransactionBuilder } from 'stellar-sdk';
+import { Asset } from 'stellar-base';
+import { Keypair, Memo, Operation, TransactionBuilder } from 'stellar-sdk';
 
 import { env } from '../../env';
 import { StellarBaseManager } from './StellarBaseManager';
@@ -33,6 +34,7 @@ export class StellarTxManager extends StellarBaseManager {
         } catch (err) {
             throw new Error('TODO ADD EXCEPTION 2' + err);
         }
+        console.debug(newPair.publicKey(), newPair.secret());
         return {
             address: newPair.publicKey(),
             secret: newPair.secret(),
@@ -111,14 +113,40 @@ export class StellarTxManager extends StellarBaseManager {
                            destKeyPair: Keypair,
                            asset: string,
                            amount: string,
-                           memo: string): Promise<any> {
-        this._buildTx(srcKeyPair);
+                           memo?: string): Promise<any> {
+        let transaction: any;
+        try {
+            transaction = await this._buildTx(srcKeyPair);
+        } catch (err) {
+            throw new Error('TODO ADD EXCEPTION 1' + err);
+        }
+        transaction.addOperation(
+            Operation.payment({
+                destination: destKeyPair.publicKey(),
+                asset: new Asset(asset, this.pairRoot.publicKey()),
+                amount,
+            })
+        );
+        const tx = transaction.build();
+        tx.sign(...[srcKeyPair]);
+        let response: any;
+        try {
+            response = await this.server.submitTransaction(tx);
+        } catch (err) {
+            throw new Error('TODO ADD EXCEPTION 2' + err);
+        }
+        return {
+            hash: response.hash,
+            ledger: response.ledger,
+        };
     }
 
-    private async _buildTx(fromPair?: Keypair): Promise<any> {
+    private async _buildTx(fromPair?: Keypair, memo?: string): Promise<any> {
+        const memoText = Memo.text(memo ? memo : '');
         const address = fromPair ? fromPair.publicKey() : this.pairRoot.publicKey();
         const account = await this.server.loadAccount(address);
         const options = { fee: 100, // await this.server.fetchBaseFee(),
+                          memo: memoText,
                           timebounds: await this.server.fetchTimebounds(100),
                         };
         return new TransactionBuilder(account, options);
