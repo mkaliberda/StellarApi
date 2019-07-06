@@ -4,7 +4,7 @@ import { env } from '../../env';
 import { IAccountKeys, IKeyPair, IKeysStorage } from './IStorage';
 
 export class VaultStorage implements IKeysStorage {
-    private static SECRET_PATH = '/secret/stellarKeys/';
+    private static SECRET_PATH = 'secret/stellarKeys/';
 
     private static options: object = {
         apiVersion: 'v1',
@@ -30,7 +30,7 @@ export class VaultStorage implements IKeysStorage {
         let response: any;
 
         try {
-            response = await this.vault.read(`secret/${address}`);
+            response = await this.vault.read(`${VaultStorage.SECRET_PATH}${address}`);
         } catch (err) {
             VaultStorage.handleResponseException(err, address);
         }
