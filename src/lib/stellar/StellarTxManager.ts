@@ -16,7 +16,7 @@ export class StellarTxManager extends StellarBaseManager {
         let transaction: any;
         const newPair = Keypair.random();
         try {
-            transaction = await this._buildTx();
+            transaction = await this._getTxBuilder();
         } catch (err) {
             throw new Error('TODO ADD EXCEPTION 1' + err);
         }
@@ -50,7 +50,7 @@ export class StellarTxManager extends StellarBaseManager {
         }
         let transaction: any;
         try {
-            transaction = await this._buildTx(destKeyPair);
+            transaction = await this._getTxBuilder(destKeyPair);
         } catch (err) {
             throw new Error('TODO ADD EXCEPTION 1' + err);
         }
@@ -78,7 +78,7 @@ export class StellarTxManager extends StellarBaseManager {
         let transaction: any;
         const newPair = Keypair.random();
         try {
-            transaction = await this._buildTx();
+            transaction = await this._getTxBuilder();
         } catch (err) {
             throw new Error('TODO ADD EXCEPTION 1' + err);
         }
@@ -116,7 +116,7 @@ export class StellarTxManager extends StellarBaseManager {
                            memo?: string): Promise<any> {
         let transaction: any;
         try {
-            transaction = await this._buildTx(srcKeyPair);
+            transaction = await this._getTxBuilder(srcKeyPair);
         } catch (err) {
             throw new Error('TODO ADD EXCEPTION 1' + err);
         }
@@ -141,8 +141,8 @@ export class StellarTxManager extends StellarBaseManager {
         };
     }
 
-    private async _buildTx(fromPair?: Keypair, memo?: string): Promise<any> {
-        const memoText = Memo.text(memo ? memo : '');
+    private async _getTxBuilder(fromPair?: Keypair, memo?: string): Promise<any> {
+        const memoText = Memo.text(memo || '');
         const address = fromPair ? fromPair.publicKey() : this.pairRoot.publicKey();
         const account = await this.server.loadAccount(address);
         const options = { fee: 100, // await this.server.fetchBaseFee(),
