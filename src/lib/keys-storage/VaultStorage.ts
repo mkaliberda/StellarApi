@@ -4,7 +4,7 @@ import { env } from '../../env';
 import { IAccountKeys, IKeyPair, IKeysStorage } from './IStorage';
 
 export class VaultStorage implements IKeysStorage {
-    private static SECRET_PATH = '/secret/stellarKeys/';
+    private static SECRET_PATH = 'secret/stellarKeys/';
 
     private static options: object = {
         apiVersion: 'v1',

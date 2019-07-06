@@ -15,7 +15,7 @@ export class StellarBaseManager {
         } else {
             Network.usePublicNetwork();
         }
-        this.server = new Server(env.stellar.network.uri);
+        this.server = new Server(env.stellar.network.uri, {allowHttp: true});
     }
 
     public createTrustOperations(assetToTrust: string[],

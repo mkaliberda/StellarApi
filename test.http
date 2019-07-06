@@ -20,6 +20,16 @@ Content-Type: application/json
     "pendingPrivate": "my-pending-private"
 }
 
-#################################
-
 ###
+
+GET http://localhost:3000/api/stellar/balance/GBSALEPFZQMIAOMLIBKMRGIA2OM4TE265PT2W6BZO6ASFXJGBRI2QKNJ
+Accept: application/json
+Content-Type: application/json
+
+#######################################
+
+GET http://localhost:3000/api/stellar/test?hello[]=world&hello[]=artist
+Accept: application/json
+Content-Type: application/json
+
+#######################################
