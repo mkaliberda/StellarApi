@@ -1,4 +1,5 @@
 import { Service } from 'typedi';
+
 import { IAccountKeys, IKeysStorage } from '../../lib/keys-storage/IStorage';
 import { VaultStorage } from '../../lib/keys-storage/VaultStorage';
 

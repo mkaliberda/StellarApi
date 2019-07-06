@@ -3,6 +3,10 @@ import { Asset, Keypair, Network, Operation, Server } from 'stellar-sdk';
 import { env } from '../../env';
 
 export class StellarBaseManager {
+
+    public static getKeyPairFromSecret(secret: string): Keypair {
+        return Keypair.fromSecret(secret);
+    }
     public server: Server;
 
     constructor() {
@@ -12,10 +16,6 @@ export class StellarBaseManager {
             Network.usePublicNetwork();
         }
         this.server = new Server(env.stellar.network.uri, {allowHttp: true});
-    }
-
-    public getKeyPairFromSecret(secret: string): Keypair {
-        return Keypair.fromSecret(secret);
     }
 
     public createTrustOperations(assetToTrust: string[],
