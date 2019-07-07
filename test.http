@@ -6,7 +6,7 @@ Content-Type: application/json
 
 ###
 
-GET http://localhost:3000/api/wallet/balance/GBAEEYWSMLPT4WEIYHWVQJEMQKTDQVS7FBEWXQEMP5SKQMIAMX7BP7O2?asset=wegerg
+GET http://localhost:3000/api/wallet/balance/GBSALEPFZQMIAOMLIBKMRGIA2OM4TE265PT2W6BZO6ASFXJGBRI2QKNJ?assets[]=USD&assets[]=BTC
 Accept: application/json
 Content-Type: application/json
 

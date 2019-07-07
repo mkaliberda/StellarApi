@@ -10,6 +10,7 @@ export class StellarAccountManager extends StellarBaseManager {
         try {
             account = await this.server.loadAccount(address);
         } catch (err) {
+            console.log('Get balance error', err);
             throw new Error('TODO ADD EXCEPTION 1' + err);
         }
         return account.balances;

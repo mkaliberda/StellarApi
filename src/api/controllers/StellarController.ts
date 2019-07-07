@@ -1,5 +1,5 @@
 import { Body, Get, JsonController, Param, Post, QueryParams } from 'routing-controllers';
-import { StellarService } from '../services/StellarService';
+import { StellarService, IAccountBalancesGroup } from '../services/StellarService';
 import { BalanceParams } from '../validators/ApiValidatorBalance';
 import { CreateWalletParams } from '../validators/ApiValidatorCreateWallet';
 import { DepositWithdrawParams } from '../validators/ApiValidatorDepositWithdraw';
@@ -14,24 +14,17 @@ export class StellarController {
     }
 
     @Get('/balance/:address')
-    public async balance(@Param('address') address: string, @QueryParams() payloads: BalanceParams): Promise<any> {
+    public async balance(@Param('address') address: string, @QueryParams() payloads: BalanceParams): Promise<IAccountBalancesGroup> {
         /**
          * Account balance.
          * Show balances in native view if no optional arguments passed.
          * @route /api/wallet/balance/:address
          * @param {string} address - Account address.
          * @param {array} [assets] - Array of assets to show.
-         * @param {bool} [include_pending=false] - If true show balance of pending account.
+         * @param {string} [include_pending=false] - If true show balance of pending account.
          * @returns {array} - Array of account balances.
          */
-        // Boolean string parameter `include_pending`!! Warning need cast to boolean with toBool function from /env/utils
-
-        let balance: any;
-        console.log('Payloads', payloads);
-        console.log('Address', address);
-        balance = await this.stellarService.getAccountBalance(address);
-
-        return balance;
+        return await this.stellarService.getAccountBalance(address, payloads);
     }
 
     @Post('/create')
