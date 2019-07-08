@@ -36,11 +36,7 @@ Content-Type: application/json
 
 ###
 
-<<<<<<< HEAD
-GET http://localhost:3000/api/wallet/balance/GBSALEPFZQMIAOMLIBKMRGIA2OM4TE265PT2W6BZO6ASFXJGBRI2QKNJ
-=======
 POST http://localhost:3000/api/wallet/withdraw
->>>>>>> 1bc8a6eed994c8118d88bee69048934cd042d606
 Accept: application/json
 Content-Type: application/json
 
@@ -57,20 +53,9 @@ POST http://localhost:3000/api/wallet/hold/GBAEEYWSMLPT4WEIYHWVQJEMQKTDQVS7FBEWX
 Accept: application/json
 Content-Type: application/json
 
-<<<<<<< HEAD
-
-#######################################
-
-POST http://localhost:3000/api/stellar/wallet/create/
-Accept: application/json
-Content-Type: application/json
-
-#######################################
-=======
 {
     "asset": "DIMO",
     "amount": 123123
 }
 
 ###
->>>>>>> 1bc8a6eed994c8118d88bee69048934cd042d606

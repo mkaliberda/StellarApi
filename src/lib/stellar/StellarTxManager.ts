@@ -1,6 +1,6 @@
 import { Asset } from 'stellar-base';
 import { Keypair, Memo, Operation, TransactionBuilder } from 'stellar-sdk';
-
+import { IKeyPair } from '../../lib/keys-storage/IStorage';
 import { env } from '../../env';
 import { StellarBaseManager } from './StellarBaseManager';
 
@@ -13,7 +13,7 @@ export class StellarTxManager extends StellarBaseManager {
         this.pairRoot = pairRoot || Keypair.fromSecret(env.stellar.seeds.ROOT_SEED);
     }
 
-    public async createAccount(): Promise<any> {
+    public async createAccount(balance: string): Promise<IKeyPair> {
         let transaction: any;
         const newPair = Keypair.random();
         try {
@@ -24,14 +24,13 @@ export class StellarTxManager extends StellarBaseManager {
         transaction.addOperation(
             Operation.createAccount({
                 destination: newPair.publicKey(),
-                startingBalance: env.stellar.seeds.init_xlm_amt,
+                startingBalance: balance,
             })
         );
         const tx = transaction.build();
         tx.sign(...[this.pairRoot]);
-        let response: any;
         try {
-            response = await this.server.submitTransaction(tx);
+            await this.server.submitTransaction(tx);
         } catch (err) {
             console.log(err);
             throw new Error('TODO ADD EXCEPTION 2' + err);
@@ -39,8 +38,6 @@ export class StellarTxManager extends StellarBaseManager {
         return {
             address: newPair.publicKey(),
             secret: newPair.secret(),
-            hash: response.hash,
-            ledger: response.ledger,
         };
     }
 
@@ -72,7 +69,7 @@ export class StellarTxManager extends StellarBaseManager {
         };
     }
 
-    public async createAndTrustAccount(assetToTrust: string[], balance: string): Promise<any> {
+    public async createAndTrustAccount(assetToTrust: string[], balance: string): Promise<IKeyPair> {
         if (assetToTrust === undefined || assetToTrust.length === 0) {
             throw new Error('assetToTrust have contain minimum 1 element');
         }
@@ -96,17 +93,14 @@ export class StellarTxManager extends StellarBaseManager {
         });
         const tx = transaction.build();
         tx.sign(...[this.pairRoot, newPair]);
-        let response: any;
         try {
-            response = await this.server.submitTransaction(tx);
+            await this.server.submitTransaction(tx);
         } catch (err) {
             throw new Error('TODO ADD EXCEPTION 2' + err);
         }
         return {
             address: newPair.publicKey(),
             secret: newPair.secret(),
-            hash: response.hash,
-            ledger: response.ledger,
         };
     }
 
