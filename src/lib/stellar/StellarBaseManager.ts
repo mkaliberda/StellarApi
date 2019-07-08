@@ -5,7 +5,7 @@ import { BadAddressError } from './StellarError';
 
 export class StellarBaseManager {
 
-    public static getKeyPairFromSecret(secret: string): Keypair {
+    public static getKeyPair(secret: string): Keypair {
         try {
             return Keypair.fromSecret(secret);
         } catch (error) {
