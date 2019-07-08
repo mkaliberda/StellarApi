@@ -33,14 +33,15 @@ export class StellarTxManager extends StellarBaseManager {
         try {
             response = await this.server.submitTransaction(tx);
         } catch (err) {
+            console.log(err);
             throw new Error('TODO ADD EXCEPTION 2' + err);
         }
-        return Promise.resolve({
+        return {
             address: newPair.publicKey(),
             secret: newPair.secret(),
             hash: response.hash,
             ledger: response.ledger,
-        });
+        };
     }
 
     public async changeTrustLine(assetToTrust: string[],
@@ -71,13 +72,12 @@ export class StellarTxManager extends StellarBaseManager {
         };
     }
 
-    public async createAndTrustAccount(assetToTrust: string[], balance?: string): Promise<any> {
+    public async createAndTrustAccount(assetToTrust: string[], balance: string): Promise<any> {
         if (assetToTrust === undefined || assetToTrust.length === 0) {
             throw new Error('assetToTrust have contain minimum 1 element');
         }
         let transaction: any;
         const newPair = Keypair.random();
-        const initAmt = balance || env.stellar.seeds.init_xlm_amt;
         try {
             transaction = await this._getTxBuilder();
         } catch (err) {
@@ -86,7 +86,7 @@ export class StellarTxManager extends StellarBaseManager {
         transaction.addOperation(
             Operation.createAccount({
                 destination: newPair.publicKey(),
-                startingBalance: initAmt,
+                startingBalance: balance,
             })
         );
         this.createTrustOperations(assetToTrust,

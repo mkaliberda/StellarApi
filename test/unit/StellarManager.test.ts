@@ -3,7 +3,7 @@ import { Keypair } from 'stellar-sdk';
 import { StellarAccountManager } from '../../src/lib/stellar/StellarAccountManager';
 import { StellarTxManager } from '../../src/lib/stellar/StellarTxManager';
 
-const ROOT_SECRET = 'SDTACBTJOBL5N44PCE3ZTZMQPEZX7ESLHWWSPE7T463YEQZSRRP2UTOG';
+const ROOT_SECRET = 'SDDSQ7P5JBGTCI7ZUN3L3KJSRWVJNIELRADPLBEVUXTJH2426ZOC5JJD';
 
 const TO_SEND = {
     address: 'GBSASA52T7B6UEKL5NAOJ6GVVXTUFHFBWPBR3VRJF25GV3MQYFID7Q6N',
@@ -60,13 +60,13 @@ describe('StellarTxManagerSuccess', () => {
     // });
 });
 
-// describe('StellarAccountManager', () => {
-//     const stellaAccount = new StellarAccountManager();
-//     test('getBalances', async (done) => {
-//         const address = 'GAU63SOWRTPXBWOWFVA3CRGS22G3DJQNIPDOVSJVZ6AOWI45QPX6W6RM';
-//         const info = await stellaAccount.getBalances(address);
-//         console.log(info);
-//         expect(3).toBe(3);
-//         done();
-//     });
-// });
+describe('StellarAccountManager', () => {
+    const stellaAccount = new StellarAccountManager();
+    test('getBalances', async (done) => {
+        const address = 'GDKGMU2QL6RILIAQV4BKB5AYQSOUJQL5FHXEQ5JWZAQT3TWTNRAQ7VR7';
+        const info = await stellaAccount.getBalances(address);
+        console.log(info);
+        expect(3).toBe(3);
+        done();
+    });
+});

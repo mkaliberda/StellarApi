@@ -10,3 +10,6 @@ export const ERROR = {
         TOO_EARLY: 'op_no_destination',
     },
 };
+
+export const DEBIT = 'd';
+export const CREDIT = 'c';
