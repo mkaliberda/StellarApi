@@ -34,7 +34,6 @@ export class StellarTxManager extends StellarBaseManager {
         } catch (err) {
             throw new Error('TODO ADD EXCEPTION 2' + err);
         }
-        console.debug(newPair.publicKey(), newPair.secret());
         return {
             address: newPair.publicKey(),
             secret: newPair.secret(),

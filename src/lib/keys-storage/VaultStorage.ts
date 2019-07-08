@@ -39,7 +39,7 @@ export class VaultStorage implements IKeysStorage {
 
     public async saveAccountKeys(address: string, keys: IAccountKeys): Promise<void> {
         try {
-            await this.vault.write(`${address}`, keys);
+            await this.vault.write(`${VaultStorage.SECRET_PATH}${address}`, keys);
         } catch (err) {
             VaultStorage.handleResponseException(err);
         }

@@ -1,5 +1,11 @@
-import { Get, JsonController, Param, Params, Post } from 'routing-controllers';
-import { StellarService } from '../services/StellarService';
+import { Body, Get, JsonController, Param, Post, QueryParams } from 'routing-controllers';
+import { StellarService, IAccountBalancesGroup } from '../services/StellarService';
+import { BalanceParams } from '../validators/ApiValidatorBalance';
+import { CreateWalletParams } from '../validators/ApiValidatorCreateWallet';
+import { DepositWithdrawParams } from '../validators/ApiValidatorDepositWithdraw';
+import { HoldParams } from '../validators/ApiValidatorHold';
+import { TransferParams } from '../validators/ApiValidatorTransfer';
+import { ExchangeParams } from '../validators/ApiValidatorExchange';
 
 @JsonController('/wallet')
 export class StellarController {
@@ -8,24 +14,21 @@ export class StellarController {
     }
 
     @Get('/balance/:address')
-    public async balance(@Param('address') address: string): Promise<any> {
+    public async balance(@Param('address') address: string, @QueryParams() payloads: BalanceParams): Promise<IAccountBalancesGroup> {
         /**
          * Account balance.
          * Show balances in native view if no optional arguments passed.
          * @route /api/wallet/balance/:address
          * @param {string} address - Account address.
          * @param {array} [assets] - Array of assets to show.
-         * @param {bool} [include_pending=false] - Array of assets to show.
+         * @param {string} [include_pending=false] - If true show balance of pending account.
          * @returns {array} - Array of account balances.
          */
-        let balance: any;
-        balance = await this.stellarService.getAccountBalance(address);
-
-        return balance;
+        return await this.stellarService.getAccountBalance(address, payloads);
     }
 
     @Post('/create')
-    public async createWallet(@Params() params: object): Promise<any> {
+    public async createWallet(@Body() params: CreateWalletParams): Promise<any> {
         /**
          * Create wallet.
          * Create wallet with trust to following assets.
@@ -35,11 +38,12 @@ export class StellarController {
          * @param {bool} [is_user=true] - Wallet type. true - user wallet, false - external service wallet.
          * @returns {string} - Return public address of new wallet.
          */
+        console.log('Params', params);
         return 'address';
     }
 
     @Post('/deposit')
-    public async deposit(@Params() params: object): Promise<any> {
+    public async deposit(@Body() params: DepositWithdrawParams): Promise<any> {
         /**
          * Deposit.
          * Deposit operation. While process this operation we make three transactions.
@@ -55,11 +59,12 @@ export class StellarController {
          * @param {string} asset - Currency. Without 'c' or 'd' suffix. (ex. DIMO)
          * @returns {array} Array of stellar transactions reference (th_hash, ledger, etc.).
          */
+        console.log('Params: ', params);
         return 'Ok';
     }
 
     @Post('/hold/:address')
-    public async holdMoney(@Param('address') user: string, @Params() params: object): Promise<any> {
+    public async holdMoney(@Param('address') user: string, @Body() params: HoldParams): Promise<any> {
         /**
          * Hold money.
          * Holding {amount} of {asset} in user pending account. Work only with credit money.
@@ -70,11 +75,12 @@ export class StellarController {
          * @param {bool} [reverse=false] - Hold direction. true - [pending => base], false - [base => pending]
          * @returns {array} Array of stellar transactions reference (th_hash, ledger, etc.).
          */
+        console.log('Params', params);
         return 'Ok';
     }
 
     @Post('/withdraw')
-    public async withdraw(@Params() params: object): Promise<any> {
+    public async withdraw(@Body() params: DepositWithdrawParams): Promise<any> {
         /**
          * Withdraw.
          * Withdraw operation. While process this operation we make three transactions.
@@ -94,7 +100,7 @@ export class StellarController {
     }
 
     @Post('/transfer')
-    public async transfer(@Params() params: object): Promise<any> {
+    public async transfer(@Body() params: TransferParams): Promise<any> {
         /**
          * Transfer money.
          * Send money from {sender_acc} to {receiver_acc} in amount {amount}.
@@ -110,11 +116,12 @@ export class StellarController {
          * @param {string} asset - Currency. Without 'c' or 'd' suffix. (ex. DIMO)
          * @returns {array} Array of stellar transactions reference (th_hash, ledger, etc.).
          */
+        console.log('Params', params);
         return 'Ok';
     }
 
     @Post('/exchange')
-    public async exchange(@Params() params: object): Promise<any> {
+    public async exchange(@Body() params: ExchangeParams): Promise<any> {
         /**
          * Exchange money.
          * Exchange {amount_from} money to {amount_to} money.
@@ -135,35 +142,4 @@ export class StellarController {
          */
         return 'Ok';
     }
-
-    // @Get('/test')
-    // public test(@QueryParams() payloads: any): any {
-    //     return payloads;
-    // }
-
-    // @Post('/createWallet')
-    // public async createWallet(): Promise<void> {
-    //     let response: any;
-    //     response = await this.stellarService.createWallet();
-    // }
-
-    // @Post('/put-secret')
-    // public storeSecret(@Body() keys: any): string[] {
-    //     const toStoreKeys: IAccountKeys = {
-    //         base: {
-    //             address: keys.baseAddress,
-    //             private: keys.basePrivate,
-    //         },
-    //         pending: {
-    //             address: keys.pendingAddress,
-    //             private: keys.pendingPrivate,
-    //         },
-    //     };
-    //     try {
-    //         this.storeService.storeAccountKeys(keys.baseAddress, toStoreKeys);
-    //         return ['Keys Saved'];
-    //     } catch (error) {
-    //         return ['Error'];
-    //     }
-    // }
 }
