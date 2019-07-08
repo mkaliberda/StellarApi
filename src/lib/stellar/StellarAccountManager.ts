@@ -1,4 +1,5 @@
 import { StellarBaseManager } from './StellarBaseManager';
+import { BadAddressError } from './StellarError';
 
 export class StellarAccountManager extends StellarBaseManager {
     constructor() {
@@ -10,7 +11,7 @@ export class StellarAccountManager extends StellarBaseManager {
         try {
             account = await this.server.loadAccount(address);
         } catch (err) {
-            throw new Error('TODO ADD EXCEPTION 1' + err);
+            throw new BadAddressError('TODO ADD EXCEPTION 1' + err);
         }
         return account.balances;
     }

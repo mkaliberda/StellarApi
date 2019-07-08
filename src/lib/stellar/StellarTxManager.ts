@@ -5,11 +5,12 @@ import { env } from '../../env';
 import { StellarBaseManager } from './StellarBaseManager';
 
 export class StellarTxManager extends StellarBaseManager {
+
     public pairRoot: Keypair;
 
-    constructor(pairRoot: Keypair) {
+    constructor(pairRoot?: Keypair) {
         super();
-        this.pairRoot = pairRoot;
+        this.pairRoot = pairRoot || Keypair.fromSecret(env.stellar.seeds.ROOT_SEED);
     }
 
     public async createAccount(): Promise<any> {
@@ -34,13 +35,12 @@ export class StellarTxManager extends StellarBaseManager {
         } catch (err) {
             throw new Error('TODO ADD EXCEPTION 2' + err);
         }
-        console.debug(newPair.publicKey(), newPair.secret());
-        return {
+        return Promise.resolve({
             address: newPair.publicKey(),
             secret: newPair.secret(),
             hash: response.hash,
             ledger: response.ledger,
-        };
+        });
     }
 
     public async changeTrustLine(assetToTrust: string[],
@@ -71,12 +71,13 @@ export class StellarTxManager extends StellarBaseManager {
         };
     }
 
-    public async createAndTrustAccount(assetToTrust: string[]): Promise<any> {
+    public async createAndTrustAccount(assetToTrust: string[], balance?: string): Promise<any> {
         if (assetToTrust === undefined || assetToTrust.length === 0) {
             throw new Error('assetToTrust have contain minimum 1 element');
         }
         let transaction: any;
         const newPair = Keypair.random();
+        const initAmt = balance || env.stellar.seeds.init_xlm_amt;
         try {
             transaction = await this._getTxBuilder();
         } catch (err) {
@@ -85,7 +86,7 @@ export class StellarTxManager extends StellarBaseManager {
         transaction.addOperation(
             Operation.createAccount({
                 destination: newPair.publicKey(),
-                startingBalance: env.stellar.seeds.init_xlm_amt,
+                startingBalance: initAmt,
             })
         );
         this.createTrustOperations(assetToTrust,
@@ -133,7 +134,8 @@ export class StellarTxManager extends StellarBaseManager {
         try {
             response = await this.server.submitTransaction(tx);
         } catch (err) {
-            throw new Error('TODO ADD EXCEPTION 2' + err);
+            console.log(err.response.data.extras.result_codes);
+            throw new Error(response);
         }
         return {
             hash: response.hash,

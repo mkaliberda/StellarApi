@@ -8,6 +8,7 @@
     "words": [
         "hsts",
         "timebounds",
+        "typedi",
         "typeorm"
     ],
     // flagWords - list of words to be always considered incorrect

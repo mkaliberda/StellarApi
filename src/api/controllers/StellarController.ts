@@ -1,4 +1,5 @@
 import { Get, JsonController, Param, Params, Post } from 'routing-controllers';
+
 import { StellarService } from '../services/StellarService';
 
 @JsonController('/wallet')
@@ -20,7 +21,6 @@ export class StellarController {
          */
         let balance: any;
         balance = await this.stellarService.getAccountBalance(address);
-
         return balance;
     }
 
@@ -35,6 +35,7 @@ export class StellarController {
          * @param {bool} [is_user=true] - Wallet type. true - user wallet, false - external service wallet.
          * @returns {string} - Return public address of new wallet.
          */
+        console.log('create');
         return 'address';
     }
 
