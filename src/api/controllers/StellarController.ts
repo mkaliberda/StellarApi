@@ -1,11 +1,12 @@
 import { Body, Get, JsonController, Param, Post, QueryParams } from 'routing-controllers';
-import { StellarService, IAccountBalancesGroup } from '../services/StellarService';
+
+import { IAccountBalancesGroup, StellarService } from '../services/StellarService';
 import { BalanceParams } from '../validators/ApiValidatorBalance';
 import { CreateWalletParams } from '../validators/ApiValidatorCreateWallet';
 import { DepositWithdrawParams } from '../validators/ApiValidatorDepositWithdraw';
+import { ExchangeParams } from '../validators/ApiValidatorExchange';
 import { HoldParams } from '../validators/ApiValidatorHold';
 import { TransferParams } from '../validators/ApiValidatorTransfer';
-import { ExchangeParams } from '../validators/ApiValidatorExchange';
 
 @JsonController('/wallet')
 export class StellarController {
@@ -38,7 +39,6 @@ export class StellarController {
          * @param {bool} [is_user=true] - Wallet type. true - user wallet, false - external service wallet.
          * @returns {string} - Return public address of new wallet.
          */
-        console.log('Params', params);
         return 'address';
     }
 

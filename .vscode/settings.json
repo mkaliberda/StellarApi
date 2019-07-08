@@ -9,6 +9,7 @@
     "editor.formatOnSave": false,
     "cSpell.words": [
         "timebounds",
+        "typedi",
         "typeorm"
     ]
 }

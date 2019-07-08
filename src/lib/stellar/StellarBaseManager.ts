@@ -1,12 +1,18 @@
 import { Asset, Keypair, Network, Operation, Server } from 'stellar-sdk';
 
 import { env } from '../../env';
+import { BadAddressError } from './StellarError';
 
 export class StellarBaseManager {
 
     public static getKeyPairFromSecret(secret: string): Keypair {
-        return Keypair.fromSecret(secret);
+        try {
+            return Keypair.fromSecret(secret);
+        } catch (error) {
+            throw new BadAddressError('Bad secret format ' + secret);
+        }
     }
+
     public server: Server;
 
     constructor() {
