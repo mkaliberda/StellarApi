@@ -34,7 +34,16 @@ export class VaultStorage implements IKeysStorage {
         } catch (err) {
             VaultStorage.handleResponseException(err, address);
         }
-        return response.data;
+        return {
+            base: {
+                address: response.data.base.address,
+                secret: response.data.base.secret,
+            },
+            pending: {
+                address: response.data.pending && response.data.pending.address,
+                secret: response.data.pending && response.data.pending.secret,
+            },
+        };
     }
 
     public async saveAccountKeys(address: string, keys: IAccountKeys): Promise<void> {

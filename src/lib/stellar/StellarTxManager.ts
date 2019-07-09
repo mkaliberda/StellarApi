@@ -1,4 +1,3 @@
-import { Asset } from 'stellar-base';
 import { Keypair, Memo, Operation, TransactionBuilder } from 'stellar-sdk';
 import { IKeyPair } from '../../lib/keys-storage/IStorage';
 import { env } from '../../env';
@@ -53,8 +52,8 @@ export class StellarTxManager extends StellarBaseManager {
             throw new Error('TODO ADD EXCEPTION 1' + err);
         }
         this.createTrustOperations(assetToTrust,
-                                   this.pairRoot.publicKey(),
-                                   destKeyPair.publicKey()).forEach(element => {
+            this.pairRoot.publicKey(),
+            destKeyPair.publicKey()).forEach(element => {
             transaction.addOperation(element);
         });
         const tx = transaction.build();
@@ -87,8 +86,8 @@ export class StellarTxManager extends StellarBaseManager {
             })
         );
         this.createTrustOperations(assetToTrust,
-                                   this.pairRoot.publicKey(),
-                                   newPair.publicKey()).forEach(element => {
+            this.pairRoot.publicKey(),
+            newPair.publicKey()).forEach(element => {
             transaction.addOperation(element);
         });
         const tx = transaction.build();
@@ -118,11 +117,12 @@ export class StellarTxManager extends StellarBaseManager {
         transaction.addOperation(
             Operation.payment({
                 destination: destKeyPair.publicKey(),
-                asset: new Asset(asset, this.pairRoot.publicKey()),
+                asset: StellarBaseManager.getAsset(asset),
                 amount,
             })
         );
         const tx = transaction.build();
+        console.log('Transaction', tx);
         tx.sign(...[srcKeyPair]);
         let response: any;
         try {
@@ -141,10 +141,11 @@ export class StellarTxManager extends StellarBaseManager {
         const memoText = Memo.text(memo || '');
         const address = fromPair ? fromPair.publicKey() : this.pairRoot.publicKey();
         const account = await this.server.loadAccount(address);
-        const options = { fee: 100, // await this.server.fetchBaseFee(),
-                          memo: memoText,
-                          timebounds: await this.server.fetchTimebounds(100),
-                        };
+        const options = {
+            fee: 100, // await this.server.fetchBaseFee(),
+            memo: memoText,
+            timebounds: await this.server.fetchTimebounds(100),
+        };
         return new TransactionBuilder(account, options);
     }
 }
