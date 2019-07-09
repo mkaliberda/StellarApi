@@ -32,7 +32,7 @@ export class StellarTxManager extends StellarBaseManager {
         try {
             await this.server.submitTransaction(tx);
         } catch (err) {
-            console.log(err);
+            console.log(err.response.data.extras);
             throw new Error('TODO ADD EXCEPTION 2' + err);
         }
         return {
