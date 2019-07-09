@@ -1,12 +1,6 @@
 ###
 
-GET http://localhost:3000/api/stellar/balance/GBSALEPFZQMIAOMLIBKMRGIA2OM4TE265PT2W6BZO6ASFXJGBRI2QKNJ
-Accept: application/json
-Content-Type: application/json
-
-###
-
-GET http://localhost:3000/api/wallet/balance/GBSALEPFZQMIAOMLIBKMRGIA2OM4TE265PT2W6BZO6ASFXJGBRI2QKNJ?assets[]=USD&assets[]=BTC
+GET http://localhost:3000/api/wallet/balance/GB37BQWUYPIZ3G6DIZOPFFE66LLJ3QOQ5CWN2CFVY7QIQPUATBQJETOY
 Accept: application/json
 Content-Type: application/json
 
@@ -23,54 +17,17 @@ Content-Type: application/json
 
 ###
 
-POST http://localhost:3000/api/wallet/deposit
+POST http://localhost:3000/api/wallet/transfer
 Accept: application/json
 Content-Type: application/json
 
 {
-    "user_acc": "qwerqwer",
-    "service_acc": "asdfasdfa",
-    "asset": "DIMO",
-    "amount": 123.43
+    "sender_acc": "GB37BQWUYPIZ3G6DIZOPFFE66LLJ3QOQ5CWN2CFVY7QIQPUATBQJETOY",
+    "receiver_acc": "GAHAFD4YPLUMNPRG7STAJRKC4YCKLDBXOUHZFPKP7CFU27URKTAONIQ7",
+    "profit_acc": "GB37BQWUYPIZ3G6DIZOPFFE66LLJ3QOQ5CWN2CFVY7QIQPUATBQJETOY",
+    "amount": 100,
+    "fee": 18,
+    "asset": "BTC"
 }
 
 ###
-
-<<<<<<< HEAD
-GET http://localhost:3000/api/wallet/balance/GBSALEPFZQMIAOMLIBKMRGIA2OM4TE265PT2W6BZO6ASFXJGBRI2QKNJ
-=======
-POST http://localhost:3000/api/wallet/withdraw
->>>>>>> 1bc8a6eed994c8118d88bee69048934cd042d606
-Accept: application/json
-Content-Type: application/json
-
-{
-    "user_acc": "qwerqwer",
-    "service_acc": "asdfasdfa",
-    "asset": "DIMO",
-    "amount": 123.43
-}
-
-###
-
-POST http://localhost:3000/api/wallet/hold/GBAEEYWSMLPT4WEIYHWVQJEMQKTDQVS7FBEWXQEMP5SKQMIAMX7BP7O2
-Accept: application/json
-Content-Type: application/json
-
-<<<<<<< HEAD
-
-#######################################
-
-POST http://localhost:3000/api/stellar/wallet/create/
-Accept: application/json
-Content-Type: application/json
-
-#######################################
-=======
-{
-    "asset": "DIMO",
-    "amount": 123123
-}
-
-###
->>>>>>> 1bc8a6eed994c8118d88bee69048934cd042d606

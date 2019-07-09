@@ -1,17 +1,20 @@
 import { Body, Get, JsonController, Param, Post, QueryParams } from 'routing-controllers';
 
 import { IAccountBalancesGroup, StellarService } from '../services/StellarService';
+import { StellarOperationsService } from '../services/StellarOperationsService';
 import { BalanceParams } from '../validators/ApiValidatorBalance';
 import { CreateWalletParams } from '../validators/ApiValidatorCreateWallet';
 import { DepositWithdrawParams } from '../validators/ApiValidatorDepositWithdraw';
 import { ExchangeParams } from '../validators/ApiValidatorExchange';
 import { HoldParams } from '../validators/ApiValidatorHold';
 import { TransferParams } from '../validators/ApiValidatorTransfer';
+import { StellarBaseResponse } from '../../lib/stellar/StellarPatterns';
 
 @JsonController('/wallet')
 export class StellarController {
 
-    constructor(private stellarService: StellarService) {
+    constructor(private stellarService: StellarService,
+                private stellarOperatioSerice: StellarOperationsService) {
     }
 
     @Get('/balance/:address')
@@ -100,7 +103,7 @@ export class StellarController {
     }
 
     @Post('/transfer')
-    public async transfer(@Body() params: TransferParams): Promise<any> {
+    public async transfer(@Body() params: TransferParams): Promise<StellarBaseResponse[]> {
         /**
          * Transfer money.
          * Send money from {sender_acc} to {receiver_acc} in amount {amount}.
@@ -116,8 +119,7 @@ export class StellarController {
          * @param {string} asset - Currency. Without 'c' or 'd' suffix. (ex. DIMO)
          * @returns {array} Array of stellar transactions reference (th_hash, ledger, etc.).
          */
-        console.log('Params', params);
-        return 'Ok';
+        return this.stellarOperatioSerice.transferOperation(params);
     }
 
     @Post('/exchange')

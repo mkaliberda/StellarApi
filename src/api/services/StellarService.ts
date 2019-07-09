@@ -25,7 +25,6 @@ export interface IAccountBalancesGroup {
     pending?: IAccountBalances;
 }
 
-
 @Service()
 export class StellarService {
 
@@ -52,12 +51,12 @@ export class StellarService {
 
     constructor(@Logger(__filename) private log: LoggerInterface,
                 private accountManager: StellarAccountManager = new StellarAccountManager(),
-                private storageManager: VaultStorage = new VaultStorage(),
+                private storageManager: IKeysStorage = new VaultStorage(),
                 private txManager: StellarTxManager = new StellarTxManager()) {
     }
 
     public async getAccountBalance(account: Address, options: BalanceParams): Promise<IAccountBalancesGroup> {
-        const keys = await this.storageManager.getAccountKeys(account);
+        const keys: IAccountKeys = await this.storageManager.getAccountKeys(account);
         const balances = await this.accountManager.getBalances(keys.base.address);
         const result: IAccountBalancesGroup = {};
 
