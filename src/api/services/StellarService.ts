@@ -2,7 +2,7 @@ import { Service } from 'typedi';
 
 import { Logger, LoggerInterface } from '../../decorators/Logger';
 import { toBool } from '../../lib/env';
-import { IKeyPair } from '../../lib/keys-storage/IStorage';
+import { IAccountKeys, IKeyPair, IKeysStorage } from '../../lib/keys-storage/IStorage';
 import { VaultStorage } from '../../lib/keys-storage/VaultStorage';
 import { StellarAccountManager } from '../../lib/stellar/StellarAccountManager';
 import { CREDIT, DEBIT } from '../../lib/stellar/StellarConst';
@@ -57,6 +57,7 @@ export class StellarService {
 
     public async getAccountBalance(account: Address, options: BalanceParams): Promise<IAccountBalancesGroup> {
         const keys: IAccountKeys = await this.storageManager.getAccountKeys(account);
+        console.log('keys', keys);
         const balances = await this.accountManager.getBalances(keys.base.address);
         const result: IAccountBalancesGroup = {};
 
