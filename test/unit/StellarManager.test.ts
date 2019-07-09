@@ -43,12 +43,12 @@ describe('StellarTxManagerSuccess', () => {
         done();
     });
     test('sendAsset', async (done) => {
-        const destPair = StellarTxManager.getKeyPair(userSecret);
-        const srcPair = StellarTxManager.getKeyPair(ROOT_SECRET);
+        const destPair = StellarTxManager.getKeyPair('SAJKFDYQVTEHEVE4YNFFYFBAMQF575TXXEVBS23ZB2UYWDL3HRHVKP5A');
+        const srcPair = StellarTxManager.getKeyPair('SDDSQ7P5JBGTCI7ZUN3L3KJSRWVJNIELRADPLBEVUXTJH2426ZOC5JJD');
         const res = await stellaTx.sendAsset(srcPair,
                                              destPair,
-                                             'DIMO',
-                                             '1');
+                                             'DIMOc',
+                                             '1000');
         console.log(res);
         expect(3).toBe(3);
         done();
