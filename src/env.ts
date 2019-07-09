@@ -80,7 +80,7 @@ export const env = {
             ROOT_SEED: getOsEnv('ROOT_SEED'),
         },
         network: {
-            isTest: getOsEnv('IS_STELLAR_TEST_NETWORK'),
+            isTest: toBool(getOsEnv('IS_STELLAR_TEST_NETWORK')),
             uri: getOsEnv('STELLAR_URI'),
         },
     },

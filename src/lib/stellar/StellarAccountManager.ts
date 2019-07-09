@@ -17,10 +17,10 @@ export class StellarAccountManager extends StellarBaseManager {
         return account.balances;
     }
 
-    public async checkEnoughBalance(address: string, asset: string, amount: number): Promise<void> {
+    public async checkEnoughBalance(address: string, asset: string, amount: Decimal): Promise<void> {
         const balances = await this.getBalances(address);
         const assetBalanceObj = balances.find(item => {
-            return item.asset_code && item.asset_code.slice(0, -1) === asset;
+            return item.asset_code && item.asset_code === asset;
         });
         if (typeof assetBalanceObj === 'undefined') {
             // No trustline error

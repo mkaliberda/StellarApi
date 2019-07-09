@@ -11,7 +11,7 @@ export class KeyStorageService {
         this.storage = new VaultStorage();
     }
 
-    public getAccountKeys(address: string): IAccountKeys {
+    public getAccountKeys(address: string): Promise<IAccountKeys> {
         return this.storage.getAccountKeys(address);
     }
 
