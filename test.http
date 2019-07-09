@@ -1,6 +1,6 @@
 ###
 
-GET http://localhost:3000/api/wallet/balance/GB37BQWUYPIZ3G6DIZOPFFE66LLJ3QOQ5CWN2CFVY7QIQPUATBQJETOY
+GET http://localhost:3000/api/wallet/balance/GA7ZRG6YCNCOYRTWDVWC62JE2C7TAFLFXPZVC7GE735OIN6JG364WSMQ
 Accept: application/json
 Content-Type: application/json
 
@@ -12,7 +12,7 @@ Content-Type: application/json
 
 {
     "assets": "[\"DIMO\", \"ADD\"]",
-    "is_user": false
+    "is_user": true
 }
 
 ###
@@ -22,12 +22,12 @@ Accept: application/json
 Content-Type: application/json
 
 {
-    "sender_acc": "GB37BQWUYPIZ3G6DIZOPFFE66LLJ3QOQ5CWN2CFVY7QIQPUATBQJETOY",
-    "receiver_acc": "GAHAFD4YPLUMNPRG7STAJRKC4YCKLDBXOUHZFPKP7CFU27URKTAONIQ7",
-    "profit_acc": "GB37BQWUYPIZ3G6DIZOPFFE66LLJ3QOQ5CWN2CFVY7QIQPUATBQJETOY",
+    "sender_acc": "GDKGMU2QL6RILIAQV4BKB5AYQSOUJQL5FHXEQ5JWZAQT3TWTNRAQ7VR7",
+    "receiver_acc": "GA7ZRG6YCNCOYRTWDVWC62JE2C7TAFLFXPZVC7GE735OIN6JG364WSMQ",
+    "profit_acc": "GB225PSJUIBHSA5C2CIAO55LPVEQZRV42F57ONRFDSYEXZTUD56WPG6R",
     "amount": 100,
     "fee": 18,
-    "asset": "BTC"
+    "asset": "DIMO"
 }
 
 ###

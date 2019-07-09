@@ -13,10 +13,15 @@ import { CREDIT } from '../../lib/stellar/StellarConst';
 
 @Service()
 export class StellarOperationsService {
-    constructor(@Logger(__filename) private log: LoggerInterface,
-                private accountManager: StellarAccountManager = new StellarAccountManager(),
-                private storageManager: IKeysStorage = new VaultStorage(),
-                private txManager: StellarTxManager = new StellarTxManager()) {
+
+    private accountManager: StellarAccountManager;
+    private storageManager: IKeysStorage;
+    private txManager: StellarTxManager;
+
+    constructor(@Logger(__filename) private log: LoggerInterface) {
+        this.accountManager = new StellarAccountManager();
+        this.storageManager = new VaultStorage();
+        this.txManager = new StellarTxManager();
     }
 
     public async transferOperation(params: TransferParams): Promise<StellarBaseResponse[]> {

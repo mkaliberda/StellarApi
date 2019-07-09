@@ -5,11 +5,12 @@ import { StellarBaseManager } from './StellarBaseManager';
 
 export class StellarTxManager extends StellarBaseManager {
 
-    public pairRoot: Keypair;
+    private static getPairRoot(): Keypair {
+        return Keypair.fromSecret(env.stellar.seeds.ROOT_SEED);
+    }
 
-    constructor(pairRoot?: Keypair) {
+    constructor() {
         super();
-        this.pairRoot = pairRoot || Keypair.fromSecret(env.stellar.seeds.ROOT_SEED);
     }
 
     public async createAccount(balance: string): Promise<IKeyPair> {
@@ -27,7 +28,7 @@ export class StellarTxManager extends StellarBaseManager {
             })
         );
         const tx = transaction.build();
-        tx.sign(...[this.pairRoot]);
+        tx.sign(...[StellarTxManager.getPairRoot]);
         try {
             await this.server.submitTransaction(tx);
         } catch (err) {
@@ -52,7 +53,7 @@ export class StellarTxManager extends StellarBaseManager {
             throw new Error('TODO ADD EXCEPTION 1' + err);
         }
         this.createTrustOperations(assetToTrust,
-            this.pairRoot.publicKey(),
+            StellarTxManager.getPairRoot().publicKey(),
             destKeyPair.publicKey()).forEach(element => {
             transaction.addOperation(element);
         });
@@ -86,12 +87,12 @@ export class StellarTxManager extends StellarBaseManager {
             })
         );
         this.createTrustOperations(assetToTrust,
-            this.pairRoot.publicKey(),
+            StellarTxManager.getPairRoot().publicKey(),
             newPair.publicKey()).forEach(element => {
             transaction.addOperation(element);
         });
         const tx = transaction.build();
-        tx.sign(...[this.pairRoot, newPair]);
+        tx.sign(...[StellarTxManager.getPairRoot(), newPair]);
         try {
             await this.server.submitTransaction(tx);
         } catch (err) {
@@ -139,7 +140,7 @@ export class StellarTxManager extends StellarBaseManager {
 
     private async _getTxBuilder(fromPair?: Keypair, memo?: string): Promise<any> {
         const memoText = Memo.text(memo || '');
-        const address = fromPair ? fromPair.publicKey() : this.pairRoot.publicKey();
+        const address = fromPair ? fromPair.publicKey() : StellarTxManager.getPairRoot().publicKey();
         const account = await this.server.loadAccount(address);
         const options = {
             fee: 100, // await this.server.fetchBaseFee(),

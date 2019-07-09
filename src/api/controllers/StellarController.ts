@@ -8,13 +8,13 @@ import { DepositWithdrawParams } from '../validators/ApiValidatorDepositWithdraw
 import { ExchangeParams } from '../validators/ApiValidatorExchange';
 import { HoldParams } from '../validators/ApiValidatorHold';
 import { TransferParams } from '../validators/ApiValidatorTransfer';
-import { StellarBaseResponse } from '../../lib/stellar/StellarPatterns';
+import { Address, StellarBaseResponse } from '../../lib/stellar/StellarPatterns';
 
 @JsonController('/wallet')
 export class StellarController {
 
     constructor(private stellarService: StellarService,
-                private stellarOperatioSerice: StellarOperationsService) {
+                private stellarOperationService: StellarOperationsService) {
     }
 
     @Get('/balance/:address')
@@ -32,7 +32,7 @@ export class StellarController {
     }
 
     @Post('/create')
-    public async createWallet(@Body() params: CreateWalletParams): Promise<any> {
+    public async createWallet(@Body() params: CreateWalletParams): Promise<Address> {
         /**
          * Create wallet.
          * Create wallet with trust to following assets.
@@ -40,9 +40,9 @@ export class StellarController {
          * @param {array} assets - Assets array. (JSON?).
          * @param {number} [balance=10] - Init balance. Optional. Default = 10 XLM.
          * @param {bool} [is_user=true] - Wallet type. true - user wallet, false - external service wallet.
-         * @returns {string} - Return public address of new wallet.
+         * @returns  {string} - Return public address of new wallet.
          */
-        return 'address';
+        return await this.stellarService.createWallet(JSON.parse(params.assets), params.is_user, params.balance);
     }
 
     @Post('/deposit')
@@ -119,7 +119,7 @@ export class StellarController {
          * @param {string} asset - Currency. Without 'c' or 'd' suffix. (ex. DIMO)
          * @returns {array} Array of stellar transactions reference (th_hash, ledger, etc.).
          */
-        return this.stellarOperatioSerice.transferOperation(params);
+        return this.stellarOperationService.transferOperation(params);
     }
 
     @Post('/exchange')
