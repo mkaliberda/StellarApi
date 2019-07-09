@@ -9,7 +9,7 @@ interface IAccountKeys {
 }
 
 interface IKeysStorage {
-    getAccountKeys(address: string): any;
+    getAccountKeys(address: string): Promise<IAccountKeys>;
     getBasePair(address: string): IKeyPair;
     getPendingPair(address: string): IKeyPair;
     saveAccountKeys(address: string, keys: IAccountKeys): void;

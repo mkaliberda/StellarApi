@@ -1,16 +1,23 @@
 import { IAccountKeys, IKeysStorage } from '../../src/lib/keys-storage/IStorage';
 import { VaultStorage } from '../../src/lib/keys-storage/VaultStorage';
-
+// GBSALEPFZQMIAOMLIBKMRGIA2OM4TE265PT2W6BZO6ASFXJGBRI2QKNJ
 describe('Vault storage tests', () => {
     const storage: IKeysStorage = new VaultStorage();
+    // const keys: IAccountKeys = {
+    //     base: {
+    //         address: 'GB37BQWUYPIZ3G6DIZOPFFE66LLJ3QOQ5CWN2CFVY7QIQPUATBQJETOY',
+    //         secret: 'SB6EJX6VGPEG6X7NYFC4PJ737PCZULIKESYMTT7JUZYFWRA3ESEKHV7H',
+    //     },
+    // };
+
     const keys: IAccountKeys = {
         base: {
-            address: 'GBSALEPFZQMIAOMLIBKMRGIA2OM4TE265PT2W6BZO6ASFXJGBRI2QKNJ',
-            secret: 'SD74CV3NSI5TFFLP2VB6UQE3BGMRRYFJ5Y3YHCHXJ3MMXPQ3XBMO4BET',
+            address: 'GAHAFD4YPLUMNPRG7STAJRKC4YCKLDBXOUHZFPKP7CFU27URKTAONIQ7',
+            secret: 'SCXDWM5SH6STUQTS2G3FJY5TTMPNIPDJWYQX2ZQUCRDBTYRWVZL3J52D',
         },
         pending: {
-            address: 'GD2SFBGZ3J47XSTQE4FPCPCGEGYL2CYR5GCYED35DLVJKLRKRCOUAEZJ',
-            secret: 'SAIQTHEOZSEQ5YT7ZUWFA4H7FVY7MCZYEVJ5366FHIT32LQXG5V7Z2TW',
+            address: 'GDIK35NOE7ZU7AUDZY4MZZQLGHE7SG4R6LCXN2VS3NQYTXLXE5EYY3KU',
+            secret: 'SDO24Q2WDHXH7I6CUN674QGGN6KR7XLULHHBFNH67NWEIMNWXTP2KOT2',
         },
     };
 

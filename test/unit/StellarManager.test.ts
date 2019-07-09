@@ -1,5 +1,5 @@
 import { Keypair } from 'stellar-sdk';
-
+import { Decimal } from 'decimal.js';
 import { StellarAccountManager } from '../../src/lib/stellar/StellarAccountManager';
 import { StellarTxManager } from '../../src/lib/stellar/StellarTxManager';
 
@@ -76,28 +76,28 @@ describe('StellarAccountManager', () => {
 describe('`checkEnoughBalance` member method', () => {
     const stellaAccount = new StellarAccountManager();
 
-    test('`checkEnoughBalance` do nothing when amount is enough', async (done) => {
-        stellaAccount.checkEnoughBalance('GBSALEPFZQMIAOMLIBKMRGIA2OM4TE265PT2W6BZO6ASFXJGBRI2QKNJ', 'UAH', 33438);
+    test('do nothing when amount is enough', async (done) => {
+        stellaAccount.checkEnoughBalance('GBSALEPFZQMIAOMLIBKMRGIA2OM4TE265PT2W6BZO6ASFXJGBRI2QKNJ', 'UAH', new Decimal(33438));
         done();
     });
 
-    test('`checkEnoughBalance` throw error if amount is not enough', async (done) => {
+    test('throw error if amount is not enough', async (done) => {
         try {
-            await stellaAccount.checkEnoughBalance('GBSALEPFZQMIAOMLIBKMRGIA2OM4TE265PT2W6BZO6ASFXJGBRI2QKNJ', 'UAH', 334385.1);
+            await stellaAccount.checkEnoughBalance('GBSALEPFZQMIAOMLIBKMRGIA2OM4TE265PT2W6BZO6ASFXJGBRI2QKNJ', 'UAH', new Decimal(334385.1));
         } catch (err) {
             expect(err).toEqual(new Error(`Account balance 334385.0000000 of UAH is less than 334385.1`));
         }
         done();
     });
 
-    test('`checkEnoughBalance` do nothing when amount is enough', async (done) => {
-        stellaAccount.checkEnoughBalance('GBSALEPFZQMIAOMLIBKMRGIA2OM4TE265PT2W6BZO6ASFXJGBRI2QKNJ', 'UAH', 33438);
+    test('do nothing when amount is enough', async (done) => {
+        stellaAccount.checkEnoughBalance('GBSALEPFZQMIAOMLIBKMRGIA2OM4TE265PT2W6BZO6ASFXJGBRI2QKNJ', 'UAH', new Decimal(33438));
         done();
     });
 
-    test('`checkEnoughBalance` throw error if asset is not found in balances array', async (done) => {
+    test('throw error if asset is not found in balances array', async (done) => {
         try {
-            await stellaAccount.checkEnoughBalance('GBSALEPFZQMIAOMLIBKMRGIA2OM4TE265PT2W6BZO6ASFXJGBRI2QKNJ', 'UAHC', 334385.1);
+            await stellaAccount.checkEnoughBalance('GBSALEPFZQMIAOMLIBKMRGIA2OM4TE265PT2W6BZO6ASFXJGBRI2QKNJ', 'UAHC', new Decimal(334385.1));
         } catch (err) {
             expect(err).toEqual(new Error(`Asset 'UAHC' not found in account trustlines.`));
         }
