@@ -4,6 +4,7 @@
   "description": "RESTful API Service for Stellar Network",
   "main": "src/app.ts",
   "scripts": {
+    "init-stellar": "ts-node ./commands/init-stellar.ts",
     "test-unit": "cross-env NODE_ENV=test jest --testPathPattern=unit --verbose",
     "test-unit-watch": "cross-env NODE_ENV=test jest --testPathPattern=unit --watch --t $TEST_NAME",
     "test-unit-coverage": "cross-env NODE_ENV=test jest --testPathPattern=unit --verbose --coverage",

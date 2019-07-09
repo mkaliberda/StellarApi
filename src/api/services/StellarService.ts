@@ -2,7 +2,7 @@ import { Service } from 'typedi';
 
 import { Logger, LoggerInterface } from '../../decorators/Logger';
 import { toBool } from '../../lib/env';
-import { IAccountKeys, IKeysStorage } from '../../lib/keys-storage/IStorage';
+import { IKeyPair } from '../../lib/keys-storage/IStorage';
 import { VaultStorage } from '../../lib/keys-storage/VaultStorage';
 import { StellarAccountManager } from '../../lib/stellar/StellarAccountManager';
 import { CREDIT, DEBIT } from '../../lib/stellar/StellarConst';
@@ -78,29 +78,15 @@ export class StellarService {
 
     public async createWallet(assets: string[],
                               isUser: boolean = true,
-                              balance: number): Promise<object> {
+                              balance: number): Promise<Address> {
         const typeAsset = isUser ? CREDIT : DEBIT;
         assets.forEach((item, index) => {
             assets[index] = item + typeAsset;
         });
-        let newWalletMain: object;
-        let newWalletPending: object;
-        try {
-            newWalletMain = await this.txManager.createAndTrustAccount(assets, balance.toString());
-            newWalletPending = await this.txManager.createAndTrustAccount(assets, balance.toString());
-            this.log.info(`Created new wallet ${ newWalletMain } ${ newWalletPending }`);
-        } catch (error) {
-            // TODO ADD HANDLER LOGIC
-            this.log.error(`Fail create Wallet in stellar , asset: ${assets}, isUser: ${isUser}`);
-            throw new Error(error);
-        }
-        // try {
-        //     this.storageManager.saveAccountKeys();
-        // } catch (error) {
-        //     // TODO ADD HANDLER LOGIC
-        //     this.log.error(`Fail create new Wallet, asset: ${assets}, isUser: ${isUser}`);
-        //     throw new Error(error);
-        // }
-        return newWalletMain;
+        const newWalletMain: IKeyPair = await this.txManager.createAndTrustAccount(assets, balance.toString());
+        const newWalletPending: IKeyPair = await this.txManager.createAndTrustAccount(assets, balance.toString());
+        this.storageManager.saveAccountKeys(newWalletMain.address, {base: newWalletMain, pending: newWalletPending });
+        this.log.info(`Created new wallet ${ newWalletMain } ${ newWalletPending }`);
+        return newWalletMain.address;
     }
 }

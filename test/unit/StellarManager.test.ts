@@ -5,13 +5,6 @@ import { StellarTxManager } from '../../src/lib/stellar/StellarTxManager';
 
 const ROOT_SECRET = 'SDDSQ7P5JBGTCI7ZUN3L3KJSRWVJNIELRADPLBEVUXTJH2426ZOC5JJD';
 
-const TO_SEND = {
-    address: 'GBSASA52T7B6UEKL5NAOJ6GVVXTUFHFBWPBR3VRJF25GV3MQYFID7Q6N',
-    secret: 'SCOR3XYJ42JGFEE3IWC2ZDYIACKRBVYZBJA4WYXF7LC2NYZCQXSIXLKI',
-};
-
-console.log(TO_SEND);
-
 describe('StellarTxManagerSuccess', () => {
     const rootPair = StellarTxManager.getKeyPair(ROOT_SECRET);
     const stellaTx = new StellarTxManager(rootPair);
@@ -24,7 +17,7 @@ describe('StellarTxManagerSuccess', () => {
         done();
     });
     test('create-account', async (done) => {
-        const res = await stellaTx.createAccount();
+        const res = await stellaTx.createAccount('100');
         userSecret = res.secret;
         userPair = StellarTxManager.getKeyPair(res.secret);
         expect(userPair).toBeInstanceOf(Keypair);
@@ -40,29 +33,32 @@ describe('StellarTxManagerSuccess', () => {
         expect(3).toBe(3);
         done();
     });
-    // test('createAndTrustAccount', async (done) => {
-    //     const array = [
-    //         'DIMO',
-    //     ];
-    //     const res = await stellaTx.createAndTrustAccount(array, );
-    //     console.log(res);
-    //     expect(3).toBe(3);
-    //     done();
-    // });
-    // test('sendAsset', async (done) => {
-    //     const destPair = StellarTxManager.getKeyPair(TO_SEND.secret);
-    //     const srcPair = StellarTxManager.getKeyPair(ROOT_SECRET);
-    //     const res = await stellaTx.sendAsset(srcPair,
-    //                                          destPair,
-    //                                          'DIMOd',
-    //                                          '1');
-    //     console.log(res);
-    //     expect(3).toBe(3);
-    //     done();
-    // });
+
+    test('createAndTrustAccount', async (done) => {
+        const array = [
+            'DIMO',
+        ];
+        const res = await stellaTx.createAndTrustAccount(array, '100');
+        console.log(res);
+        expect(3).toBe(3);
+        done();
+    });
+    test('sendAsset', async (done) => {
+        const destPair = StellarTxManager.getKeyPair(userSecret);
+        const srcPair = StellarTxManager.getKeyPair(ROOT_SECRET);
+        const res = await stellaTx.sendAsset(srcPair,
+                                             destPair,
+                                             'DIMO',
+                                             '1');
+        console.log(res);
+        expect(3).toBe(3);
+        done();
+    });
+
 });
 
 describe('StellarAccountManager', () => {
+    jest.setTimeout(60000);
     const stellaAccount = new StellarAccountManager();
     test('getBalances', async (done) => {
         const address = 'GDKGMU2QL6RILIAQV4BKB5AYQSOUJQL5FHXEQ5JWZAQT3TWTNRAQ7VR7';
