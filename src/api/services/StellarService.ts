@@ -2,7 +2,7 @@ import { Service } from 'typedi';
 
 import { Logger, LoggerInterface } from '../../decorators/Logger';
 import { toBool } from '../../lib/env';
-import { IKeyPair } from '../../lib/keys-storage/IStorage';
+import { IAccountKeys, IKeyPair, IKeysStorage } from '../../lib/keys-storage/IStorage';
 import { VaultStorage } from '../../lib/keys-storage/VaultStorage';
 import { StellarAccountManager } from '../../lib/stellar/StellarAccountManager';
 import { CREDIT, DEBIT } from '../../lib/stellar/StellarConst';
@@ -57,6 +57,7 @@ export class StellarService {
 
     public async getAccountBalance(account: Address, options: BalanceParams): Promise<IAccountBalancesGroup> {
         const keys: IAccountKeys = await this.storageManager.getAccountKeys(account);
+        console.log('keys', keys);
         const balances = await this.accountManager.getBalances(keys.base.address);
         const result: IAccountBalancesGroup = {};
 
@@ -85,8 +86,18 @@ export class StellarService {
         });
         const newWalletMain: IKeyPair = await this.txManager.createAndTrustAccount(assets, balance.toString());
         const newWalletPending: IKeyPair = await this.txManager.createAndTrustAccount(assets, balance.toString());
-        this.storageManager.saveAccountKeys(newWalletMain.address, {base: newWalletMain, pending: newWalletPending });
+        await this.storageManager.saveAccountKeys(newWalletMain.address, {base: newWalletMain, pending: newWalletPending });
         this.log.info(`Created new wallet ${ newWalletMain } ${ newWalletPending }`);
         return newWalletMain.address;
     }
+
+    public async createInternalWallet(assets: string[],
+                                      walletName: string,
+                                      balance: number): Promise<Address> {
+        const newWalletMain: IKeyPair = await this.txManager.createAndTrustAccount(assets, balance.toString());
+        const newWalletPending: IKeyPair = await this.txManager.createAndTrustAccount(assets, balance.toString());
+        this.storageManager.saveAccountKeys(walletName, {base: newWalletMain, pending: newWalletPending });
+        this.log.info(`Created new internal wallet ${ newWalletMain } ${ newWalletPending }`);
+        return newWalletMain.address;
+}
 }

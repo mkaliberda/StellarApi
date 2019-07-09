@@ -24,7 +24,7 @@ export class StellarAccountManager extends StellarBaseManager {
         });
         if (typeof assetBalanceObj === 'undefined') {
             // No trustline error
-            throw new Error(`Asset '${asset}' not found in account trustlines.`);
+            throw new Error(`Asset '${asset}' not found in '${address}' trustlines.`);
         } else if (new Decimal(assetBalanceObj.balance).lessThan(amount)) {
             // Balance error
             throw new Error(`Account balance ${assetBalanceObj.balance} of ${asset} is less than ${amount}`);

@@ -8,7 +8,7 @@ describe('StellarServiceTest', () => {
     let newAddress: Address;
     const log = new LogMock();
     const service = new StellarService(log);
-    test('new-wallet', async (done) => {
+    test('new-wallet', async () => {
         const assets = [
             'DINO',
             'BTC',
@@ -16,9 +16,10 @@ describe('StellarServiceTest', () => {
         const res = await service.createWallet(assets, true, 100);
         console.log(res);
         newAddress = res;
-        done();
+        // done();
     });
-    test('get-balance', async (done) => {
+    test('get-balance', async () => {
+        console.log('newAddress TEST', newAddress);
         const assets = [
             'DINO',
             'BTC',
@@ -27,6 +28,6 @@ describe('StellarServiceTest', () => {
         balParams.assets = assets;
         const res = await service.getAccountBalance(newAddress, balParams);
         console.log(res);
-        done();
+        // done();
     });
 });

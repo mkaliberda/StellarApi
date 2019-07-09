@@ -6,8 +6,7 @@ import { StellarTxManager } from '../../src/lib/stellar/StellarTxManager';
 const ROOT_SECRET = 'SCK562BILSJP3DIHTFQ3B3TCILNFDWPFLAKZ5L4H7R5NDCK5D2PQ5QPE';
 
 describe('StellarTxManagerSuccess', () => {
-    const rootPair = StellarTxManager.getKeyPair(ROOT_SECRET);
-    const stellaTx = new StellarTxManager(rootPair);
+    const stellaTx = new StellarTxManager();
     let userSecret: any;
     let userPair: any;
     jest.setTimeout(30000);
@@ -95,7 +94,7 @@ describe('`checkEnoughBalance` member method', () => {
         try {
             await stellaAccount.checkEnoughBalance('GBSALEPFZQMIAOMLIBKMRGIA2OM4TE265PT2W6BZO6ASFXJGBRI2QKNJ', 'UAHC', new Decimal(334385.1));
         } catch (err) {
-            expect(err).toEqual(new Error(`Asset 'UAHC' not found in account trustlines.`));
+            expect(err).toEqual(new Error(`Asset 'UAHC' not found in 'GBSALEPFZQMIAOMLIBKMRGIA2OM4TE265PT2W6BZO6ASFXJGBRI2QKNJ' trustlines.`));
         }
         done();
     });
