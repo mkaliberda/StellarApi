@@ -123,7 +123,6 @@ export class StellarTxManager extends StellarBaseManager {
             })
         );
         const tx = transaction.build();
-        console.log('Transaction', tx);
         tx.sign(...[srcKeyPair]);
         let response: any;
         try {

@@ -77,12 +77,11 @@ export class StellarController {
          * @param {bool} [reverse=false] - Hold direction. true - [pending => base], false - [base => pending]
          * @returns {array} Array of stellar transactions reference (th_hash, ledger, etc.).
          */
-        console.log('Params', params);
-        return 'Ok';
+        return this.stellarOperationService.holdOperation(user, params);
     }
 
     @Post('/withdraw')
-    public async withdraw(@Body() params: DepositWithdrawParams): Promise<any> {
+    public async withdraw(@Body() params: DepositWithdrawParams): Promise<StellarBaseResponse[]> {
         /**
          * Withdraw.
          * Withdraw operation. While process this operation we make three transactions.
@@ -98,7 +97,7 @@ export class StellarController {
          * @param {string} asset - Currency. Without 'c' or 'd' suffix. (ex. DIMO)
          * @returns {array} Array of stellar transactions reference (th_hash, ledger, etc.).
          */
-        return 'Ok';
+        return this.stellarOperationService.withdrawOperation(params);
     }
 
     @Post('/transfer')
