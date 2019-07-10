@@ -1,12 +1,12 @@
 import { StellarTxManager } from '../src/lib/stellar/StellarTxManager';
 import { VaultStorage } from '../src/lib/keys-storage/VaultStorage';
 import { IKeyPair } from '../src/lib/keys-storage/IStorage';
-import { CREDIT, DEBIT } from '../src/lib/stellar/StellarConst';
+import { CREDIT, DEBIT, SYSTEM_ACCOUNTS } from '../src/lib/stellar/StellarConst';
 import { env } from '../src/env';
 
-const assetsToRSObj = { DIMO: 100 , TNZS: 100 }; // initial Token Pool
-const serviceName = 'RS'; // NAMe of service
-const fundAmt = 5; // NAMe of service
+const assetsToRSObj = { DIMO: 500000 , TNZS: 500000 }; // initial Tokens Pool
+const serviceName = SYSTEM_ACCOUNTS.RS_MAIN; // Name of service
+const fundAmt = 20; // Initial balance
 
 const txManager = new StellarTxManager();
 const storageManager = new VaultStorage();
