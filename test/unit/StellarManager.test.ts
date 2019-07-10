@@ -3,7 +3,7 @@ import { Decimal } from 'decimal.js';
 import { StellarAccountManager } from '../../src/lib/stellar/StellarAccountManager';
 import { StellarTxManager } from '../../src/lib/stellar/StellarTxManager';
 
-const ROOT_SECRET = 'SDDSQ7P5JBGTCI7ZUN3L3KJSRWVJNIELRADPLBEVUXTJH2426ZOC5JJD';
+const ROOT_SECRET = 'SCK562BILSJP3DIHTFQ3B3TCILNFDWPFLAKZ5L4H7R5NDCK5D2PQ5QPE';
 
 describe('StellarTxManagerSuccess', () => {
     const stellaTx = new StellarTxManager();

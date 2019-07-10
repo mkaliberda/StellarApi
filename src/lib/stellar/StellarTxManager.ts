@@ -32,7 +32,7 @@ export class StellarTxManager extends StellarBaseManager {
         try {
             await this.server.submitTransaction(tx);
         } catch (err) {
-            console.log(err);
+            console.log(err.response.data.extras);
             throw new Error('TODO ADD EXCEPTION 2' + err);
         }
         return {
@@ -96,6 +96,7 @@ export class StellarTxManager extends StellarBaseManager {
         try {
             await this.server.submitTransaction(tx);
         } catch (err) {
+            console.log(err.response.data.extras);
             throw new Error('TODO ADD EXCEPTION 2' + err);
         }
         return {
@@ -123,7 +124,6 @@ export class StellarTxManager extends StellarBaseManager {
             })
         );
         const tx = transaction.build();
-        console.log('Transaction', tx);
         tx.sign(...[srcKeyPair]);
         let response: any;
         try {

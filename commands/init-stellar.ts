@@ -1,8 +1,71 @@
 import { StellarTxManager } from '../src/lib/stellar/StellarTxManager';
+import { VaultStorage } from '../src/lib/keys-storage/VaultStorage';
+import { IKeyPair } from '../src/lib/keys-storage/IStorage';
+import { CREDIT, DEBIT } from '../src/lib/stellar/StellarConst';
+import { env } from '../src/env';
 
-const stellaTx = new StellarTxManager();
-stellaTx.createAccount('100')
-.then(res => {
-    console.log(res);
+const assetsToRSObj = { DIMO: 100 , TNZS: 100 }; // initial Token Pool
+const serviceName = 'RS'; // NAMe of service
+const fundAmt = 5; // NAMe of service
+
+const txManager = new StellarTxManager();
+const storageManager = new VaultStorage();
+
+const assetsToRSTyped = {};
+Object.keys(assetsToRSObj).forEach(item => {
+    // modify object to credit and debit type
+    assetsToRSTyped[item + CREDIT] = assetsToRSObj[item];
+    assetsToRSTyped[item + DEBIT] = assetsToRSObj[item];
 });
-console.log('DENCKICk!!!!!!!!!!');
+
+const createInternalWallet = async (
+        assets: object,
+        walletName: string,
+        balance: number
+    ) => {
+    const newWalletMain: IKeyPair = await txManager.createAndTrustAccount(Object.keys(assets), balance.toString());
+    const newWalletPending: IKeyPair = await txManager.createAndTrustAccount(Object.keys(assets), balance.toString());
+    await storageManager.saveAccountKeys(walletName, {base: newWalletMain, pending: newWalletPending });
+    console.log('Created wallet: ', newWalletMain);
+    return newWalletMain;
+};
+
+const asyncForEach = async (array: string[], callback: any) => {
+    for (let index = 0; index < array.length; index++) {
+      await callback(array[index], index, array);
+    }
+};
+
+const FundInternalWallet = async (
+        assets: object,
+        toWallet: IKeyPair
+    ) => {
+    // Fund debit and credit token from ROOT account
+    console.log('Start fund assets to account');
+    const rootPair = StellarTxManager.getKeyPair(env.stellar.seeds.ROOT_SEED);
+    const toWalletPair = StellarTxManager.getKeyPair(toWallet.secret);
+    asyncForEach(Object.keys(assets), async (item) => {
+        await txManager.sendAsset(rootPair, toWalletPair, item, assets[item].toString());
+        console.log(`Fundet ${ assets[item].toString() } of ${item}`);
+    });
+};
+
+createInternalWallet(assetsToRSTyped, serviceName, fundAmt)
+    .then(wallet => {
+        FundInternalWallet(assetsToRSTyped, wallet)
+        .then(() => {
+            console.error('====================');
+            console.log('Success funded');
+            console.error('====================');
+        })
+        .catch(error => {
+            console.error('====================');
+            console.error(error);
+            console.error('====================');
+        });
+    })
+    .catch(error => {
+        console.error('====================');
+        console.error(error);
+        console.error('====================');
+    });

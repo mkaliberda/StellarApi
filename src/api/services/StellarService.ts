@@ -86,8 +86,18 @@ export class StellarService {
         });
         const newWalletMain: IKeyPair = await this.txManager.createAndTrustAccount(assets, balance.toString());
         const newWalletPending: IKeyPair = await this.txManager.createAndTrustAccount(assets, balance.toString());
-        this.storageManager.saveAccountKeys(newWalletMain.address, {base: newWalletMain, pending: newWalletPending });
+        await this.storageManager.saveAccountKeys(newWalletMain.address, {base: newWalletMain, pending: newWalletPending });
         this.log.info(`Created new wallet ${ newWalletMain } ${ newWalletPending }`);
         return newWalletMain.address;
     }
+
+    public async createInternalWallet(assets: string[],
+                                      walletName: string,
+                                      balance: number): Promise<Address> {
+        const newWalletMain: IKeyPair = await this.txManager.createAndTrustAccount(assets, balance.toString());
+        const newWalletPending: IKeyPair = await this.txManager.createAndTrustAccount(assets, balance.toString());
+        this.storageManager.saveAccountKeys(walletName, {base: newWalletMain, pending: newWalletPending });
+        this.log.info(`Created new internal wallet ${ newWalletMain } ${ newWalletPending }`);
+        return newWalletMain.address;
+}
 }
