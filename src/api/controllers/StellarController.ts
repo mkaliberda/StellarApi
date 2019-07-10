@@ -121,7 +121,7 @@ export class StellarController {
     }
 
     @Post('/exchange')
-    public async exchange(@Body() params: ExchangeParams): Promise<any> {
+    public async exchange(@Body() params: ExchangeParams): Promise<StellarBaseResponse[]> {
         /**
          * Exchange money.
          * Exchange {amount_from} money to {amount_to} money.
@@ -140,6 +140,6 @@ export class StellarController {
          * @param {number} [fee=0] - Fee amount
          * @returns {array} Array of stellar transactions reference (th_hash, ledger, etc.).
          */
-        return 'Ok';
+        return this.stellarOperationService.exchangeOperation(params);
     }
 }
