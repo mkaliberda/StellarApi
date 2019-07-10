@@ -1,6 +1,6 @@
 ###
 
-GET http://localhost:3000/api/wallet/balance/GA7ZRG6YCNCOYRTWDVWC62JE2C7TAFLFXPZVC7GE735OIN6JG364WSMQ
+GET http://localhost:3000/api/wallet/balance/RS_MAIN?assets[]=DIMO&include_pending=true
 Accept: application/json
 Content-Type: application/json
 
@@ -22,11 +22,53 @@ Accept: application/json
 Content-Type: application/json
 
 {
-    "sender_acc": "GDKGMU2QL6RILIAQV4BKB5AYQSOUJQL5FHXEQ5JWZAQT3TWTNRAQ7VR7",
-    "receiver_acc": "GA7ZRG6YCNCOYRTWDVWC62JE2C7TAFLFXPZVC7GE735OIN6JG364WSMQ",
+    "sender_acc": "GDCOAHYVR4FVC4F2Y2CWN33QAKAGCH7OSNQ27KESJ7QMXQSPZDRGQJFX",
+    "receiver_acc": "RS_MAIN",
     "profit_acc": "GB225PSJUIBHSA5C2CIAO55LPVEQZRV42F57ONRFDSYEXZTUD56WPG6R",
-    "amount": 100,
-    "fee": 18,
+    "amount": 1,
+    "fee": 0,
+    "asset": "DIMO"
+}
+
+###
+
+POST http://localhost:3000/api/wallet/deposit
+Accept: application/json
+Content-Type: application/json
+
+{
+    "user_acc": "GDCOAHYVR4FVC4F2Y2CWN33QAKAGCH7OSNQ27KESJ7QMXQSPZDRGQJFX",
+    "service_acc": "GBFY3PPRYEHEM27MNKZDTWYTVOIHRCMRT3DPUQVJD6BDJ577TG45PAFA",
+    "profit_acc": "GDAESX6KYYRTHTA3QA4KHLGQDSQEOTJW6R7OJNK5Z3XS6LCEZDN7CYAN",
+    "amount": 20,
+    "fee": 1,
+    "asset": "DIMO"
+}
+
+###
+
+POST http://localhost:3000/api/wallet/hold/GDCOAHYVR4FVC4F2Y2CWN33QAKAGCH7OSNQ27KESJ7QMXQSPZDRGQJFX
+Accept: application/json
+Content-Type: application/json
+
+{
+    "amount": 2,
+    "asset": "DIMO",
+    "reverse": false
+}
+
+###
+
+POST http://localhost:3000/api/wallet/withdraw
+Accept: application/json
+Content-Type: application/json
+
+{
+    "user_acc": "GDCOAHYVR4FVC4F2Y2CWN33QAKAGCH7OSNQ27KESJ7QMXQSPZDRGQJFX",
+    "service_acc": "GBFY3PPRYEHEM27MNKZDTWYTVOIHRCMRT3DPUQVJD6BDJ577TG45PAFA",
+    "profit_acc": "GDAESX6KYYRTHTA3QA4KHLGQDSQEOTJW6R7OJNK5Z3XS6LCEZDN7CYAN",
+    "amount": 2,
+    "fee": 1,
     "asset": "DIMO"
 }
 

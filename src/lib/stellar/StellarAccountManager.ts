@@ -12,6 +12,7 @@ export class StellarAccountManager extends StellarBaseManager {
         try {
             account = await this.server.loadAccount(address);
         } catch (err) {
+            console.log('koqenrvpnweirnvwnpeiruv', err);
             throw new BadAddressError('TODO ADD EXCEPTION 1' + err);
         }
         return account.balances;
@@ -27,7 +28,7 @@ export class StellarAccountManager extends StellarBaseManager {
             throw new Error(`Asset '${asset}' not found in '${address}' trustlines.`);
         } else if (new Decimal(assetBalanceObj.balance).lessThan(amount)) {
             // Balance error
-            throw new Error(`Account balance ${assetBalanceObj.balance} of ${asset} is less than ${amount}`);
+            throw new Error(`Account ${address} balance ${assetBalanceObj.balance} of ${asset} is less than ${amount}`);
         }
     }
 }

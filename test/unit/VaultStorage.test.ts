@@ -1,28 +1,18 @@
 import { IAccountKeys, IKeysStorage } from '../../src/lib/keys-storage/IStorage';
 import { VaultStorage } from '../../src/lib/keys-storage/VaultStorage';
+import { SYSTEM_ACCOUNTS } from '../../src/lib/stellar/StellarConst';
 // GBSALEPFZQMIAOMLIBKMRGIA2OM4TE265PT2W6BZO6ASFXJGBRI2QKNJ
 describe('Vault storage tests', () => {
     const storage: IKeysStorage = new VaultStorage();
     const keys: IAccountKeys = {
         base: {
-            address: 'GB3HXCJ3ESAJ4K7ZMUKRIOZE2SI7W32BWGNJGBVFBGJZS33GBHR4QVXR',
-            secret: 'SCK562BILSJP3DIHTFQ3B3TCILNFDWPFLAKZ5L4H7R5NDCK5D2PQ5QPE',
+            address: 'GCSHY2NI6YJED5IRZIJDKZELBQQH3S5CKH5IPU22SWWX26UYVW54D63O',
+            secret: 'SC3ZJHEUJCDZ72VGLRU3RO5ABPWTM55UOV2XLSNAYANVLBE3NUDDRDPB',
         },
     };
 
-    // const keys: IAccountKeys = {
-    //     base: {
-    //         address: 'GAHAFD4YPLUMNPRG7STAJRKC4YCKLDBXOUHZFPKP7CFU27URKTAONIQ7',
-    //         secret: 'SCXDWM5SH6STUQTS2G3FJY5TTMPNIPDJWYQX2ZQUCRDBTYRWVZL3J52D',
-    //     },
-    //     pending: {
-    //         address: 'GDIK35NOE7ZU7AUDZY4MZZQLGHE7SG4R6LCXN2VS3NQYTXLXE5EYY3KU',
-    //         secret: 'SDO24Q2WDHXH7I6CUN674QGGN6KR7XLULHHBFNH67NWEIMNWXTP2KOT2',
-    //     },
-    // };
-
     test('Check is account keys stored properly', async (done) => {
-        storage.saveAccountKeys(keys.base.address, keys);
+        storage.saveAccountKeys(SYSTEM_ACCOUNTS.RS_MAIN, keys);
         const response = await storage.getAccountKeys(keys.base.address);
         expect(response.base.secret).toBe(keys.base.secret);
         // expect(response.pending.secret).toBe(keys.pending.secret);
