@@ -73,3 +73,20 @@ Content-Type: application/json
 }
 
 ###
+
+POST http://localhost:3000/api/wallet/exchange
+Accept: application/json
+Content-Type: application/json
+
+{
+    "from_acc": "GDCOAHYVR4FVC4F2Y2CWN33QAKAGCH7OSNQ27KESJ7QMXQSPZDRGQJFX",
+    "to_acc": "GBFY3PPRYEHEM27MNKZDTWYTVOIHRCMRT3DPUQVJD6BDJ577TG45PAFA",
+    "profit_acc": "GDAESX6KYYRTHTA3QA4KHLGQDSQEOTJW6R7OJNK5Z3XS6LCEZDN7CYAN",
+    "amount_from": 2,
+    "amount_to": 2,
+    "fee": 1,
+    "asset_from": "DIMO",
+    "asset_to": "TNZS"
+}
+
+###

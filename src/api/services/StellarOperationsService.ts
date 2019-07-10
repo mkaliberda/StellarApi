@@ -1,17 +1,20 @@
-import { Service } from 'typedi';
-import { StellarAccountManager } from '../../lib/stellar/StellarAccountManager';
-import { IKeysStorage } from '../../lib/keys-storage/IStorage';
 import { Logger, LoggerInterface } from '../../decorators/Logger';
+import { IKeysStorage } from '../../lib/keys-storage/IStorage';
 import { VaultStorage } from '../../lib/keys-storage/VaultStorage';
-import { StellarTxManager } from '../../lib/stellar/StellarTxManager';
-import { TransferParams } from '../validators/ApiValidatorTransfer';
-import { Decimal } from 'decimal.js';
 
+import { StellarTxManager } from '../../lib/stellar/StellarTxManager';
+import { StellarAccountManager } from '../../lib/stellar/StellarAccountManager';
 import { Address, StellarBaseResponse } from '../../lib/stellar/StellarPatterns';
-import { Keypair } from 'stellar-base';
 import { CREDIT, DEBIT, SYSTEM_ACCOUNTS } from '../../lib/stellar/StellarConst';
+import { Keypair } from 'stellar-base';
+
+import { TransferParams } from '../validators/ApiValidatorTransfer';
 import { DepositWithdrawParams } from '../validators/ApiValidatorDepositWithdraw';
 import { HoldParams } from '../validators/ApiValidatorHold';
+import { ExchangeParams } from '../validators/ApiValidatorExchange';
+
+import { Decimal } from 'decimal.js';
+import { Service } from 'typedi';
 
 @Service()
 export class StellarOperationsService {
@@ -137,6 +140,38 @@ export class StellarOperationsService {
             serviceKeys, rsKeys,
             params.asset + DEBIT,
             new Decimal(params.amount).minus(params.fee).toString()
+        ));
+
+        return result;
+    }
+
+    public async exchangeOperation(params: ExchangeParams): Promise<StellarBaseResponse[]> {
+        const fromKeys: Keypair = await this.loadKeyPairs(params.from_acc);
+        const toKeys: Keypair = await this.loadKeyPairs(params.to_acc);
+        const profitKeys: Keypair = await this.loadKeyPairs(params.profit_acc);
+        const result: StellarBaseResponse[] = [];
+
+        await this.accountManager.checkEnoughBalance(fromKeys.publicKey(), params.asset_from + CREDIT, new Decimal(params.amount_from).minus(params.fee));
+        await this.accountManager.checkEnoughBalance(toKeys.publicKey(), params.asset_to + CREDIT, new Decimal(params.amount_to));
+
+        result.push(await this.txManager.sendAsset(
+            fromKeys, toKeys,
+            params.asset_from + CREDIT,
+            new Decimal(params.amount_from).minus(params.fee).toString()
+        ));
+
+        if (profitKeys && new Decimal(params.fee)) {
+            result.push(await this.txManager.sendAsset(
+                fromKeys, profitKeys,
+                params.asset_from + CREDIT,
+                params.fee.toString()
+            ));
+        }
+
+        result.push(await this.txManager.sendAsset(
+            toKeys, fromKeys,
+            params.asset_to + CREDIT,
+            params.amount_to.toString()
         ));
 
         return result;
