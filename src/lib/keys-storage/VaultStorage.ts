@@ -13,7 +13,7 @@ export class VaultStorage implements IKeysStorage {
     };
 
     private static handleResponseException(err: any, address?: string): never {
-        if (err.response.statusCode === 404 && address) {
+        if (err.response && err.response.statusCode === 404 && address) {
             throw new Error(`Address ${address} is not found in Vault storage`);
         } else {
             throw new Error(err);
