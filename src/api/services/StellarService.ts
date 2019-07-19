@@ -57,11 +57,10 @@ export class StellarService {
 
     public async getAccountBalance(account: Address, options: BalanceParams): Promise<IAccountBalancesGroup> {
         const keys: IAccountKeys = await this.storageManager.getAccountKeys(account);
-        console.log('keys', keys);
         const balances = await this.accountManager.getBalances(keys.base.address);
         const result: IAccountBalancesGroup = {};
 
-        if (toBool(options.include_pending)) {
+        if (toBool(options.include_pending) && keys.pending.address) {
             const pendingBalances = await this.accountManager.getBalances(keys.pending.address);
 
             result.pending = options.assets ?
