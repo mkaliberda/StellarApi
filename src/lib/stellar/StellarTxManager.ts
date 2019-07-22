@@ -42,6 +42,7 @@ export class StellarTxManager extends StellarBaseManager {
     }
 
     public async changeTrustLine(assetToTrust: string[],
+                                 srcKeyPair: Keypair,
                                  destKeyPair: Keypair): Promise<any> {
         if (assetToTrust === undefined || assetToTrust.length === 0) {
             throw new Error('assetToTrust have contain minimum 1 element');
@@ -53,10 +54,10 @@ export class StellarTxManager extends StellarBaseManager {
             throw new Error('TODO ADD EXCEPTION 1' + err);
         }
         this.createTrustOperations(assetToTrust,
-            StellarTxManager.getPairRoot().publicKey(),
+            srcKeyPair.publicKey(),
             destKeyPair.publicKey()).forEach(element => {
-            transaction.addOperation(element);
-        });
+                transaction.addOperation(element);
+            });
         const tx = transaction.build();
         tx.sign(...[destKeyPair]);
         try {
