@@ -1,14 +1,14 @@
 import { Body, Get, JsonController, Param, Post, QueryParams } from 'routing-controllers';
 
-import { IAccountBalancesGroup, StellarService } from '../services/StellarService';
+import { Address, StellarBaseResponse } from '../../lib/stellar/StellarPatterns';
 import { StellarOperationsService } from '../services/StellarOperationsService';
+import { IAccountBalancesGroup, StellarService } from '../services/StellarService';
 import { BalanceParams } from '../validators/ApiValidatorBalance';
 import { CreateWalletParams } from '../validators/ApiValidatorCreateWallet';
 import { DepositWithdrawParams } from '../validators/ApiValidatorDepositWithdraw';
 import { ExchangeParams } from '../validators/ApiValidatorExchange';
 import { HoldParams } from '../validators/ApiValidatorHold';
 import { TransferParams } from '../validators/ApiValidatorTransfer';
-import { Address, StellarBaseResponse } from '../../lib/stellar/StellarPatterns';
 
 @JsonController('/wallet')
 export class StellarController {
@@ -122,6 +122,29 @@ export class StellarController {
 
     @Post('/exchange')
     public async exchange(@Body() params: ExchangeParams): Promise<StellarBaseResponse[]> {
+        /**
+         * Exchange money.
+         * Exchange {amount_from} money to {amount_to} money.
+         * First send {asset_from} money from {from_acc} to {to_acc} in amount {amount_from} - {fee}
+         * Second send {asset_from} money from {from_acc} to {profit_acc} in amount {fee}
+         * Third send {asset_to} money from {to_acc} to {from_acc} in amount {amount_to}
+         * Work only with credit money.
+         * @route /api/wallet/exchange
+         * @param {string} asset_from - Spend asset
+         * @param {string} asset_to - Receive asset
+         * @param {string} from_acc - Spend account
+         * @param {string} to_acc - Receive account
+         * @param {string} [profit_acc] - Profit account
+         * @param {number} amount_from - Spend amount
+         * @param {number} amount_to - Receive amount
+         * @param {number} [fee=0] - Fee amount
+         * @returns {array} Array of stellar transactions reference (th_hash, ledger, etc.).
+         */
+        return this.stellarOperationService.exchangeOperation(params);
+    }
+
+    @Post('/create-asset')
+    public async createAsset(@Body() params: CreateAssetsParams): Promise<StellarBaseResponse[]> {
         /**
          * Exchange money.
          * Exchange {amount_from} money to {amount_to} money.

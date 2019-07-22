@@ -1,8 +1,8 @@
-import { StellarTxManager } from '../src/lib/stellar/StellarTxManager';
-import { VaultStorage } from '../src/lib/keys-storage/VaultStorage';
-import { IKeyPair } from '../src/lib/keys-storage/IStorage';
-import { CREDIT, DEBIT, SYSTEM_ACCOUNTS } from '../src/lib/stellar/StellarConst';
 import { env } from '../src/env';
+import { IKeyPair } from '../src/lib/keys-storage/IStorage';
+import { VaultStorage } from '../src/lib/keys-storage/VaultStorage';
+import { CREDIT, DEBIT, SYSTEM_ACCOUNTS } from '../src/lib/stellar/StellarConst';
+import { StellarTxManager } from '../src/lib/stellar/StellarTxManager';
 
 const assetsToRSObj = { DIMO: 500000 , TNZS: 500000 }; // initial Tokens Pool
 const serviceName = SYSTEM_ACCOUNTS.RS_MAIN; // Name of service
@@ -19,7 +19,7 @@ Object.keys(assetsToRSObj).forEach(item => {
 });
 
 const createInternalWallet = async (
-        assets: object,
+        assets: any,
         walletName: string,
         balance: number
     ) => {
@@ -36,7 +36,7 @@ const asyncForEach = async (array: string[], callback: any) => {
     }
 };
 
-const FundInternalWallet = async (
+const fundInternalWallet = async (
         assets: object,
         toWallet: IKeyPair
     ) => {
@@ -52,7 +52,7 @@ const FundInternalWallet = async (
 
 createInternalWallet(assetsToRSTyped, serviceName, fundAmt)
     .then(wallet => {
-        FundInternalWallet(assetsToRSTyped, wallet)
+        fundInternalWallet(assetsToRSTyped, wallet)
         .then(() => {
             console.error('====================');
             console.log('Success funded');
