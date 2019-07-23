@@ -22,17 +22,6 @@ describe('StellarTxManagerSuccess', () => {
         expect(userPair).toBeInstanceOf(Keypair);
         done();
     });
-    test('changeTrustLine', async (done) => {
-        const array = [
-            'DIMO',
-            'SIMO',
-        ];
-        userPair = StellarTxManager.getKeyPair(userSecret);
-        await stellaTx.changeTrustLine(array, userPair);
-        expect(3).toBe(3);
-        done();
-    });
-
     test('createAndTrustAccount', async (done) => {
         const array = [
             'DIMO',
@@ -62,6 +51,13 @@ describe('StellarAccountManager', () => {
     test('getBalances', async (done) => {
         const address = 'GDKGMU2QL6RILIAQV4BKB5AYQSOUJQL5FHXEQ5JWZAQT3TWTNRAQ7VR7';
         const info = await stellaAccount.getBalances(address);
+        console.log(info);
+        expect(3).toBe(3);
+        done();
+    });
+    test('getHistory', async (done) => {
+        const address = 'GDKGMU2QL6RILIAQV4BKB5AYQSOUJQL5FHXEQ5JWZAQT3TWTNRAQ7VR7';
+        const info = await stellaAccount.getHistory(address, 3, 1);
         console.log(info);
         expect(3).toBe(3);
         done();
