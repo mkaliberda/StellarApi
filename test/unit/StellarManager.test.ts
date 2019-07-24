@@ -66,6 +66,13 @@ describe('StellarAccountManager', () => {
         expect(3).toBe(3);
         done();
     });
+    test('get-history', async (done) => {
+        const address = 'GBPY2Y7ZOL4AP4W44326KG3OG7FPC4ZHJAK2OJQ5VBDOQ24FOJFP43UQ';
+        const info = await stellaAccount.getHistory(address);
+        console.log(info);
+        expect(3).toBe(3);
+        done();
+    });
 });
 
 describe('`checkEnoughBalance` member method', () => {
