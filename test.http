@@ -1,11 +1,16 @@
 ###
 
-GET http://localhost:3000/api/wallet/balance/RS_MAIN?assets[]=DIMO&include_pending=false
+GET http://localhost:3000/api/wallet/tx-history/GDKGMU2QL6RILIAQV4BKB5AYQSOUJQL5FHXEQ5JWZAQT3TWTNRAQ7VR7?limit=10&page=1
 Accept: application/json
 Content-Type: application/json
 
 ###
 
+GET http://localhost:3000/api/wallet/balance/RS_MAIN?assets[]=DIMO&include_pending=false
+Accept: application/json
+Content-Type: application/json
+
+###
 POST http://localhost:3000/api/wallet/create
 Accept: application/json
 Content-Type: application/json
@@ -22,9 +27,9 @@ Accept: application/json
 Content-Type: application/json
 
 {
-    "sender_acc": "GDCOAHYVR4FVC4F2Y2CWN33QAKAGCH7OSNQ27KESJ7QMXQSPZDRGQJFX",
+    "sender_acc": "GALOCWKVIZGOVJI67VXHL2SZSH64GHFNYGLOOI3KBFAAPVDCGNGRPOTK",
     "receiver_acc": "RS_MAIN",
-    "profit_acc": "GB225PSJUIBHSA5C2CIAO55LPVEQZRV42F57ONRFDSYEXZTUD56WPG6R",
+    "profit_acc": "GALOCWKVIZGOVJI67VXHL2SZSH64GHFNYGLOOI3KBFAAPVDCGNGRPOTK",
     "amount": 1,
     "fee": 0,
     "asset": "DIMO"

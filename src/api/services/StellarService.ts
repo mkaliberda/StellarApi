@@ -98,5 +98,11 @@ export class StellarService {
         this.storageManager.saveAccountKeys(walletName, {base: newWalletMain, pending: newWalletPending });
         this.log.info(`Created new internal wallet ${ newWalletMain } ${ newWalletPending }`);
         return newWalletMain.address;
-}
+    }
+
+    public async getTxHistory(address: string,
+                              limit: string,
+                              page: string): Promise<any> {
+        return await this.accountManager.getTxHistory(address, Number(limit), Number(page));
+    }
 }
