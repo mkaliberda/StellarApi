@@ -2,6 +2,7 @@ import { Decimal } from 'decimal.js';
 
 import { StellarBaseManager } from './StellarBaseManager';
 import { BadAddressError } from './StellarError';
+import { TxHistoryResponse } from './StellarPatterns';
 
 export class StellarAccountManager extends StellarBaseManager {
     constructor() {
@@ -18,18 +19,17 @@ export class StellarAccountManager extends StellarBaseManager {
         return account.balances;
     }
 
-    public async getTxHistory(address: string, limit: number, page: number): Promise<any> {
+    public async getTxHistory(address: string, limit: number, page: number): Promise<TxHistoryResponse[]> {
         if (limit > 200) {
             throw new Error('200 its Max value for limit');
         }
         let tx = await this.server.transactions().forAccount(address).limit(limit.toString()).call();
-        if (page === 1) {
-            return await this.historyToResponse(tx.records);
+        if (page !== 1) {
+            for (let index = 0; index < page - 1; index++) {
+                tx = await tx.next();
+            }
         }
-        for (let index = 0; index < page - 1; index++) {
-            tx = await tx.next();
-            return await this.historyToResponse(tx.records);
-        }
+        return await this.historyToResponse(tx.records);
     }
 
     public async checkEnoughBalance(address: string, asset: string, amount: Decimal): Promise<void> {
@@ -64,7 +64,7 @@ export class StellarAccountManager extends StellarBaseManager {
         });
     }
 
-    private async historyToResponse(records: any): Promise<any> {
+    private async historyToResponse(records: any): Promise<TxHistoryResponse[]> {
         return await Promise.all(records.map(async (tx: any) => {
             const operations = await this.getOperationsFromTx(tx);
             return {
