@@ -53,7 +53,7 @@ export class StellarAccountManager extends StellarBaseManager {
             payment
         */
         const operations = await tx.operations();
-        return operations.records.map((operation) => {
+        return operations.records.map((operation: any) => {
             delete(operation._links);
             delete(operation.self);
             delete(operation.transaction);
@@ -65,7 +65,7 @@ export class StellarAccountManager extends StellarBaseManager {
     }
 
     private async historyToResponse(records: any): Promise<any> {
-        return await Promise.all(records.map(async (tx, index) => {
+        return await Promise.all(records.map(async (tx: any) => {
             const operations = await this.getOperationsFromTx(tx);
             return {
                 id: tx.id,

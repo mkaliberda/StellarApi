@@ -1,20 +1,15 @@
-import { IsOptional, IsPositive, Max, Min } from 'routing-controllers/node_modules/class-validator';
+import { IsOptional } from 'routing-controllers/node_modules/class-validator';
 
 export class HistoryTxParams {
 
     @IsOptional()
-    @IsPositive()
-    @Min(1)
-    @Max(20)
-    public limit: number;
+    public limit: string;
 
     @IsOptional()
-    @IsPositive()
-    @Min(1)
-    public page: number;
+    public page: string;
 
-    constructor(limit: number = 10,
-                page: number = 1) {
+    constructor(limit: string = '10',
+                page: string = '1') {
         this.limit = limit;
         this.page = page;
     }

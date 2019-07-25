@@ -101,8 +101,8 @@ export class StellarService {
     }
 
     public async getTxHistory(address: string,
-                              limit: number,
-                              page: number): Promise<any> {
-        return await this.accountManager.getTxHistory(address, limit, page);
+                              limit: string,
+                              page: string): Promise<any> {
+        return await this.accountManager.getTxHistory(address, Number(limit), Number(page));
     }
 }

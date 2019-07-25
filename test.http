@@ -1,6 +1,6 @@
 ###
 
-GET http://localhost:3000/api/wallet/tx-history/GDKGMU2QL6RILIAQV4BKB5AYQSOUJQL5FHXEQ5JWZAQT3TWTNRAQ7VR7?limit=12&page=3
+GET http://localhost:3000/api/wallet/tx-history/GDKGMU2QL6RILIAQV4BKB5AYQSOUJQL5FHXEQ5JWZAQT3TWTNRAQ7VR7?limit=10&page=1
 Accept: application/json
 Content-Type: application/json
 
