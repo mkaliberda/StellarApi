@@ -1,11 +1,16 @@
 ###
 
-GET http://localhost:3000/api/wallet/balance/RS_MAIN?assets[]=DIMO&include_pending=true
+GET http://localhost:3000/api/wallet/tx-history/GDKGMU2QL6RILIAQV4BKB5AYQSOUJQL5FHXEQ5JWZAQT3TWTNRAQ7VR7?limit=12&page=3
 Accept: application/json
 Content-Type: application/json
 
 ###
 
+GET http://localhost:3000/api/wallet/balance/RS_MAIN?assets[]=DIMO&include_pending=false
+Accept: application/json
+Content-Type: application/json
+
+###
 POST http://localhost:3000/api/wallet/create
 Accept: application/json
 Content-Type: application/json
@@ -37,9 +42,9 @@ Accept: application/json
 Content-Type: application/json
 
 {
-    "user_acc": "GDCOAHYVR4FVC4F2Y2CWN33QAKAGCH7OSNQ27KESJ7QMXQSPZDRGQJFX",
-    "service_acc": "GBFY3PPRYEHEM27MNKZDTWYTVOIHRCMRT3DPUQVJD6BDJ577TG45PAFA",
-    "profit_acc": "GDAESX6KYYRTHTA3QA4KHLGQDSQEOTJW6R7OJNK5Z3XS6LCEZDN7CYAN",
+    "user_acc": "GBGVBZZT725ELLW7FEMPVSZHMOLZBS76UQ7LU32EYJ52AQ7S5DB4XT73",
+    "service_acc": "RS_MAIN",
+    "profit_acc": "RS_MAIN",
     "amount": 20,
     "fee": 1,
     "asset": "DIMO"
@@ -87,6 +92,17 @@ Content-Type: application/json
     "fee": 1,
     "asset_from": "DIMO",
     "asset_to": "TNZS"
+}
+
+###
+
+POST http://localhost:3000/api/wallet/create-asset/
+Accept: application/json
+Content-Type: application/json
+
+{
+    "asset_name": "ARTIST",
+    "amount": 23
 }
 
 ###

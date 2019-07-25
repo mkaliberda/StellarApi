@@ -1,8 +1,9 @@
-import { StellarTxManager } from '../src/lib/stellar/StellarTxManager';
-import { VaultStorage } from '../src/lib/keys-storage/VaultStorage';
-import { IKeyPair } from '../src/lib/keys-storage/IStorage';
-import { CREDIT, DEBIT, SYSTEM_ACCOUNTS } from '../src/lib/stellar/StellarConst';
 import { env } from '../src/env';
+import { IKeyPair } from '../src/lib/keys-storage/IStorage';
+import { VaultStorage } from '../src/lib/keys-storage/VaultStorage';
+import { CREDIT, DEBIT, SYSTEM_ACCOUNTS } from '../src/lib/stellar/StellarConst';
+import { StellarTxManager } from '../src/lib/stellar/StellarTxManager';
+import asyncForEach from '../src/lib/utils/AsyncForEach';
 
 const assetsToRSObj = { DIMO: 500000 , TNZS: 500000 }; // initial Tokens Pool
 const serviceName = SYSTEM_ACCOUNTS.RS_MAIN; // Name of service
@@ -18,25 +19,29 @@ Object.keys(assetsToRSObj).forEach(item => {
     assetsToRSTyped[item + DEBIT] = assetsToRSObj[item];
 });
 
+const saveRootAccount = async () => {
+    const rootPair = StellarTxManager.getKeyPair(env.stellar.seeds.ROOT_SEED);
+    const rootWaller: IKeyPair = {
+        address: rootPair.publicKey(),
+        secret: rootPair.secret(),
+    };
+    await storageManager.saveAccountKeys(SYSTEM_ACCOUNTS.ROOT, { base: rootWaller, pending: rootWaller });
+    console.log('Saved ROOT to Vault');
+};
+
 const createInternalWallet = async (
-        assets: object,
+        assets: any,
         walletName: string,
         balance: number
     ) => {
     const newWalletMain: IKeyPair = await txManager.createAndTrustAccount(Object.keys(assets), balance.toString());
     const newWalletPending: IKeyPair = await txManager.createAndTrustAccount(Object.keys(assets), balance.toString());
-    await storageManager.saveAccountKeys(walletName, {base: newWalletMain, pending: newWalletPending });
+    await storageManager.saveAccountKeys(walletName, { base: newWalletMain, pending: newWalletPending });
     console.log('Created wallet: ', newWalletMain);
     return newWalletMain;
 };
 
-const asyncForEach = async (array: string[], callback: any) => {
-    for (let index = 0; index < array.length; index++) {
-      await callback(array[index], index, array);
-    }
-};
-
-const FundInternalWallet = async (
+const fundInternalWallet = async (
         assets: object,
         toWallet: IKeyPair
     ) => {
@@ -46,23 +51,31 @@ const FundInternalWallet = async (
     const toWalletPair = StellarTxManager.getKeyPair(toWallet.secret);
     asyncForEach(Object.keys(assets), async (item) => {
         await txManager.sendAsset(rootPair, toWalletPair, item, assets[item].toString());
-        console.log(`Fundet ${ assets[item].toString() } of ${item}`);
+        console.log(`Funded ${ assets[item].toString() } of ${item}`);
     });
 };
 
-createInternalWallet(assetsToRSTyped, serviceName, fundAmt)
-    .then(wallet => {
-        FundInternalWallet(assetsToRSTyped, wallet)
-        .then(() => {
-            console.error('====================');
-            console.log('Success funded');
-            console.error('====================');
-        })
-        .catch(error => {
-            console.error('====================');
-            console.error(error);
-            console.error('====================');
-        });
+saveRootAccount()
+    .then(() => {
+        createInternalWallet(assetsToRSTyped, serviceName, fundAmt)
+            .then(wallet => {
+                fundInternalWallet(assetsToRSTyped, wallet)
+                .then(() => {
+                    console.error('====================');
+                    console.log('Success funded');
+                    console.error('====================');
+                })
+                .catch(error => {
+                    console.error('====================');
+                    console.error(error);
+                    console.error('====================');
+                });
+            })
+            .catch(error => {
+                console.error('====================');
+                console.error(error);
+                console.error('====================');
+            });
     })
     .catch(error => {
         console.error('====================');

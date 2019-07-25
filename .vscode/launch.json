@@ -6,25 +6,12 @@
     "configurations": [
         {
             "type": "node",
-            "request": "launch",
-            "name": "Debug",
-            "program": "${workspaceRoot}/src/app.js",
-            "smartStep": true,
-            "outFiles": [
-                "../dist/**/*.js"
-            ],
-            "protocol": "inspector",
-            "env": {
-                "NODE_ENV": "test"
-            }
-        },
-        {
-            "type": "node",
             "request": "attach",
             "name": "Node: Nodemon",
-            "processId": "${command:PickProcess}",
-            "restart": true,
-            "protocol": "inspector"
+            "port": 9229,
+            // "processId": "${command:PickProcess}",
+            // "restart": true,
+            // "protocol": "inspector"
         }
     ]
 }

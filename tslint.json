@@ -15,6 +15,9 @@
             "avoid-escape"
         ],
         "interface-name": false,
+        "compilerOptions": {
+            "experimentalDecorators": true
+        },
         "no-empty-interface": false,
         "no-namespace": false,
         "ordered-imports": false,

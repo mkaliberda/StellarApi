@@ -1,12 +1,7 @@
-import { StellarBaseManager } from './StellarBaseManager';
-import { BadAddressError } from './StellarError';
 import { Decimal } from 'decimal.js';
 
-const asyncForEach = async (array: any, callback: any) => {
-    for (let index = 0; index < array.length; index++) {
-      await callback(array[index], index, array);
-    }
-};
+import { StellarBaseManager } from './StellarBaseManager';
+import { BadAddressError } from './StellarError';
 
 export class StellarAccountManager extends StellarBaseManager {
     constructor() {
@@ -18,40 +13,23 @@ export class StellarAccountManager extends StellarBaseManager {
         try {
             account = await this.server.loadAccount(address);
         } catch (err) {
-            console.log('koqenrvpnweirnvwnpeiruv', err);
             throw new BadAddressError('TODO ADD EXCEPTION 1' + err);
         }
         return account.balances;
     }
 
-    public async getHistory(address: string): Promise<any> {
-        let account: any;
-        // console.log('address', address);
-        const tx = await this.server.operations().forAccount(address).limit('100').call();
-        const response = tx.records.map((item, index) => {
-            console.log('-----------');
-            console.log(item);
-            console.log('-----------');
-        });
-        // for (let item in tx.records) {
-        //     console.log('-----');
-        //     console.log(tx.records[item]);
-        //     console.log('-----');
-        // }
-        // tx.then((page) => {
-        //     console.log('Page 1: ', page);
-        //     console.log(page.records);
-        // });
-        // .catch((err) => {
-        //     console.log(err);
-        // });
-        // try {w
-        //     account = await this.server.loadAccount(address);
-        // } catch (err) {
-        //     console.log('koqenrvpnweirnvwnpeiruv', err);
-        //     throw new BadAddressError('TODO ADD EXCEPTION 1' + err);
-        // }
-        // return account.balances;
+    public async getTxHistory(address: string, limit: number, page: number): Promise<any> {
+        if (limit > 200) {
+            throw new Error('200 its Max value for limit');
+        }
+        let tx = await this.server.transactions().forAccount(address).limit(limit.toString()).call();
+        if (page === 1) {
+            return await this.historyToResponse(tx.records);
+        }
+        for (let index = 0; index < page - 1; index++) {
+            tx = await tx.next();
+            return await this.historyToResponse(tx.records);
+        }
     }
 
     public async checkEnoughBalance(address: string, asset: string, amount: Decimal): Promise<void> {
@@ -66,5 +44,38 @@ export class StellarAccountManager extends StellarBaseManager {
             // Balance error
             throw new Error(`Account ${address} balance ${assetBalanceObj.balance} of ${asset} is less than ${amount}`);
         }
+    }
+
+    private async getOperationsFromTx(tx: any): Promise<any> {
+        /* know operation types:
+            change_trust
+            create_account
+            payment
+        */
+        const operations = await tx.operations();
+        return operations.records.map((operation) => {
+            delete(operation._links);
+            delete(operation.self);
+            delete(operation.transaction);
+            delete(operation.effects);
+            delete(operation.succeeds);
+            delete(operation.precedes);
+            return operation;
+        });
+    }
+
+    private async historyToResponse(records: any): Promise<any> {
+        return await Promise.all(records.map(async (tx, index) => {
+            const operations = await this.getOperationsFromTx(tx);
+            return {
+                id: tx.id,
+                success: tx.successful,
+                tx_hash: tx.hash,
+                created_at: tx.created_at,
+                memo_type: tx.memo_type,
+                source_account: tx.source_account,
+                operations,
+            };
+        }));
     }
 }

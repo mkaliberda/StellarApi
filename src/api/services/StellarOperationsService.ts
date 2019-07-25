@@ -7,11 +7,13 @@ import { StellarAccountManager } from '../../lib/stellar/StellarAccountManager';
 import { Address, StellarBaseResponse } from '../../lib/stellar/StellarPatterns';
 import { CREDIT, DEBIT, SYSTEM_ACCOUNTS } from '../../lib/stellar/StellarConst';
 import { Keypair } from 'stellar-base';
+import asyncForEach from '../../lib/utils/AsyncForEach';
 
 import { TransferParams } from '../validators/ApiValidatorTransfer';
 import { DepositWithdrawParams } from '../validators/ApiValidatorDepositWithdraw';
 import { HoldParams } from '../validators/ApiValidatorHold';
 import { ExchangeParams } from '../validators/ApiValidatorExchange';
+import { CreateAssetParams } from '../validators/ApiValidatorCreateAsset';
 
 import { Decimal } from 'decimal.js';
 import { Service } from 'typedi';
@@ -174,6 +176,25 @@ export class StellarOperationsService {
             params.amount_to.toString()
         ));
 
+        return result;
+    }
+
+    public async createAsset(params: CreateAssetParams): Promise<any> {
+        const ownerAccount: Keypair = await this.loadKeyPairs(params.from_acc);
+        const trustAccount: Keypair = await this.loadKeyPairs(params.to_acc);
+        const trust =  await this.txManager.changeTrustLine([params.asset_name + CREDIT,
+                                                             params.asset_name + DEBIT],
+                                                            ownerAccount,
+                                                            trustAccount);
+        const result: StellarBaseResponse[] = [];
+        await asyncForEach(trust.assets, async (item) => {
+            result.push(await this.txManager.sendAsset(
+                ownerAccount,
+                trustAccount,
+                item,
+                params.amount.toString()
+            ));
+        });
         return result;
     }
 
