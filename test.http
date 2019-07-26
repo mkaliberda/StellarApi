@@ -1,6 +1,6 @@
 ###
 
-GET http://localhost:3000/api/wallet/balance/RS_MAIN?assets[]=DIMO&include_pending=false
+GET http://localhost:3000/api/wallet/balance/GC5ISBSIW3ZFIGHZ4AC3UA2OW23FFXHLJ5SWFXDCXC4WE63BKUVPIEUU?assets[]=DIMO&assets[]=ADD&include_pending=false
 Accept: application/json
 Content-Type: application/json
 
