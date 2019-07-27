@@ -1,0 +1,18 @@
+language: node_js
+node_js:
+  - "8.9.4"
+install:
+  - npm install
+env:
+  - VAULT_URL=https://vault.dimo.cash
+  - VAULT_TOKEN=s.Em6U0Ds8EShWJ31nCDiNnjlx
+  - IS_STELLAR_TEST_NETWORK=true
+  - STELLAR_URI=https://horizon-testnet.stellar.org
+  - ROOT_SEED=SAAQIGAMIN4UEU7BZAJDSHTU2FBP3DZOQ42QRNEUW7ATD6VT6XZNABWU
+  - INIT_XLM_AMT=100
+
+script:
+  - npm run test-unit
+
+notifications:
+  email: false
