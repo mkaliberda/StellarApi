@@ -64,7 +64,7 @@ env:
   - INIT_XLM_AMT=100
 
 script:
-  - test-unit-coverage
+  - npm run test-unit-coverage
 
 
 notifications:
