@@ -11,11 +11,11 @@ describe('StellarTxManagerSuccess', () => {
     let userSecret: any;
     let userPair: any;
     jest.setTimeout(30000);
-    test('get-pair', async (done) => {
-        userPair = StellarTxManager.getKeyPair(ROOT_SECRET);
-        expect(userPair).toBeInstanceOf(Keypair);
-        done();
-    });
+    // test('get-pair', async (done) => {
+    //     userPair = StellarTxManager.getKeyPair(ROOT_SECRET);
+    //     expect(userPair).toBeInstanceOf(Keypair);
+    //     done();
+    // });
     // test('create-account', async (done) => {
     //     const res = await stellaTx.createAccount('100');
     //     userSecret = res.secret;
@@ -23,14 +23,14 @@ describe('StellarTxManagerSuccess', () => {
     //     expect(userPair).toBeInstanceOf(Keypair);
     //     done();
     // });
-    // test('createAndTrustAccount', async (done) => {
-    //     const array = [
-    //         'DIMO',
-    //     ];
-    //     const res = await stellaTx.createAndTrustAccount(array, '100');
-    //     expect(3).toBe(3);
-    //     done();
-    // });
+    test('createAndTrustAccount', async (done) => {
+        const array = [
+            'DIMO',
+        ];
+        const res = await stellaTx.createAndTrustAccount(array, '100');
+        expect(3).toBe(3);
+        done();
+    });
     // test('sendAsset', async (done) => {
     //     const destPair = StellarTxManager.getKeyPair('SC3ZJHEUJCDZ72VGLRU3RO5ABPWTM55UOV2XLSNAYANVLBE3NUDDRDPB');
     //     const srcPair = StellarTxManager.getKeyPair('SAAQIGAMIN4UEU7BZAJDSHTU2FBP3DZOQ42QRNEUW7ATD6VT6XZNABWU');
@@ -45,27 +45,28 @@ describe('StellarTxManagerSuccess', () => {
 
 });
 
-// describe('StellarAccountManager', () => {
-//     jest.setTimeout(60000);
-//     const stellaAccount = new StellarAccountManager();
-//     test('getBalances', async (done) => {
-//         const address = 'GDKGMU2QL6RILIAQV4BKB5AYQSOUJQL5FHXEQ5JWZAQT3TWTNRAQ7VR7';
-//         const info = await stellaAccount.getBalances(address);
-//         // console.log('test result', info);
-//         expect(3).toBe(3);
-//         done();
-//     });
-//     test('getHistory', async (done) => {
-//         const address = 'GDKGMU2QL6RILIAQV4BKB5AYQSOUJQL5FHXEQ5JWZAQT3TWTNRAQ7VR7';
-//         const info = await stellaAccount.getHistory(address, 50, 3);
-//         console.log('test resp', info);
-//         // info.forEach(element => {
-//         //     console.log(element);
-//         // });
-//         expect(3).toBe(3);
-//         done();
-//     });
-// });
+describe('StellarAccountManager', () => {
+    jest.setTimeout(60000);
+    const stellaAccount = new StellarAccountManager();
+
+    test('getBalances', async (done) => {
+        const address = 'GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7';
+        const info = await stellaAccount.getBalances(address);
+        console.log('balanse test response', info);
+        expect(3).toBe(3);
+        done();
+    });
+    // test('getHistory', async (done) => {
+    //     const address = 'GALKWTGZ46HFDJOBTBH6O5JMZOSHVLHITTCD3SWJOTKZRWGLNGQIJGIA';
+    //     const info = await stellaAccount.getHistory(address, 50, 3);
+    //     console.log('test resp', info);
+    //     // info.forEach(element => {
+    //     //     console.log(element);
+    //     // });
+    //     expect(3).toBe(3);
+    //     done();
+    // });
+});
 
 // describe('`checkEnoughBalance` member method', () => {
 //     const stellaAccount = new StellarAccountManager();
