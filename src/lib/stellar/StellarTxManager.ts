@@ -29,7 +29,8 @@ export class StellarTxManager extends StellarBaseManager {
             })
         );
         const tx = transaction.build();
-        tx.sign(...[StellarTxManager.getPairRoot]);
+        console.log('tx!!!!!!!!!', tx);
+        tx.sign(...[StellarTxManager.getPairRoot()]);
         try {
             await this.server.submitTransaction(tx);
         } catch (err) {

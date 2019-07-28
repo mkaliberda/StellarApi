@@ -1,5 +1,5 @@
 {
-  "name": "StellarApi",
+  "name": "stellar-api",
   "version": "1.0.0",
   "description": "RESTful API Service for Stellar Network",
   "main": "src/app.ts",
