@@ -15,42 +15,44 @@ describe('StellarTxManagerBase', () => {
         'TNZSc',
     ];
     const stellaTx = new StellarTxManager();
-    let userSepTrust;
+    let rootPair: Keypair;
+    let accountFirst;
+    let accountSecond;
     jest.setTimeout(30000);
-    test('create account without trust', async (done) => {
-        userSepTrust = await stellaTx.createAccount('100');
-        const userSepTrustKeyPair = StellarTxManager.getKeyPair(userSepTrust.secret);
+
+    beforeAll(async () => {
+        accountFirst = await stellaTx.createAndTrustAccount(assetArray, '100');
+        accountSecond = await stellaTx.createAndTrustAccount(assetArray, '100');
+    });
+    test('base get pair for root', async (done) => {
+        rootPair = StellarTxManager.getKeyPair(ROOT_SECRET);
+        expect(rootPair).toBeInstanceOf(Keypair);
+        done();
+    });
+    test('create-account-and-trust-after', async (done) => {
+        const userSepTrust: IKeyPair = await stellaTx.createAccount('100');
+        const userSepTrustKeyPair: Keypair  = StellarTxManager.getKeyPair(userSepTrust.secret);
         expect(userSepTrustKeyPair).toBeInstanceOf(Keypair);
         expect(userSepTrust).toHaveProperty('secret');
         expect(userSepTrust).toHaveProperty('address');
+        const destKeyPair =  StellarTxManager.getKeyPair(userSepTrust.secret);
+        await stellaTx.changeTrustLine(assetArray,
+                                       rootPair,
+                                       destKeyPair);
         done();
     });
-    // test('get-pair', async (done) => {
-    //     userPair = StellarTxManager.getKeyPair(ROOT_SECRET);
-    //     expect(userPair).toBeInstanceOf(Keypair);
-    //     done();
-    // });
+    test('createAndTrustAccount', async (done) => {
+        const respAcc = await stellaTx.createAndTrustAccount(assetArray, '100');
+        expect(respAcc).toHaveProperty('secret');
+        expect(respAcc).toHaveProperty('address');
+        expect(3).toBe(3);
+        done();
+    });
 
-    // test('createAndTrustAccount', async (done) => {
-    //     const array = [
-    //         'DIMO',
-    //     ];
-    //     const res = await stellaTx.createAndTrustAccount(array, '100');
-    //     expect(3).toBe(3);
-    //     done();
-    // });
-    // test('sendAsset', async (done) => {
-    //     const destPair = StellarTxManager.getKeyPair('SC3ZJHEUJCDZ72VGLRU3RO5ABPWTM55UOV2XLSNAYANVLBE3NUDDRDPB');
-    //     const srcPair = StellarTxManager.getKeyPair('SAAQIGAMIN4UEU7BZAJDSHTU2FBP3DZOQ42QRNEUW7ATD6VT6XZNABWU');
-    //     const res = await stellaTx.sendAsset(srcPair,
-    //                                          destPair,
-    //                                          'DIMOd',
-    //                                          '1000');
-    //     console.log(res);
-    //     expect(3).toBe(3);
-    //     done();
-    // });
-
+    test('accountFirst', async (done) => {
+        console.log('accountFirst', accountFirst);
+        done();
+    });
 });
 
 // describe('StellarAccountManager', () => {
