@@ -10,6 +10,7 @@ export class StellarAccountManager extends StellarBaseManager {
     }
 
     public async getBalances(address: string): Promise<any> {
+
         let account: any;
         try {
             account = await this.server.loadAccount(address);

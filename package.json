@@ -5,11 +5,11 @@
   "main": "src/app.ts",
   "scripts": {
     "init-stellar": "ts-node ./commands/init-stellar.ts",
-    "lint": "ts-node lint",
+    "lint": "tslint -c tslint.json 'src/**/*.ts' --format stylish",
     "test-unit": "cross-env NODE_ENV=test jest --testPathPattern=unit --verbose",
     "test-unit-watch": "cross-env NODE_ENV=test jest --testPathPattern=unit --watch --t $TEST_NAME",
     "test-unit-coverage": "cross-env NODE_ENV=test jest --testPathPattern=unit --verbose --coverage",
-    "build": "tsc --project ./tsconfig.json",
+    "build": "≈ --project ./tsconfig.json",
     "dev": "nodemon --watch src --watch .env --inspect",
     "start": "cross-env NODE_ENV=production node dist/src/app.js",
     "typeorm": "ts-node ./node_modules/typeorm/cli.js"
