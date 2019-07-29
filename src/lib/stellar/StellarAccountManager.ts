@@ -1,6 +1,7 @@
 import { StellarBaseManager } from './StellarBaseManager';
-import { BadAddressError } from './StellarError';
+import { BadAddressError, BalanceError, NoTrustlineError } from './StellarError';
 import { Decimal } from 'decimal.js';
+import { Address } from './StellarPatterns';
 
 export class StellarAccountManager extends StellarBaseManager {
     constructor() {
@@ -12,7 +13,6 @@ export class StellarAccountManager extends StellarBaseManager {
         try {
             account = await this.server.loadAccount(address);
         } catch (err) {
-            console.log('koqenrvpnweirnvwnpeiruv', err);
             throw new BadAddressError('TODO ADD EXCEPTION 1' + err);
         }
         return account.balances;
@@ -77,17 +77,17 @@ export class StellarAccountManager extends StellarBaseManager {
         // return account.balances;
     }
 
-    public async checkEnoughBalance(address: string, asset: string, amount: Decimal): Promise<void> {
+    public async checkEnoughBalance(address: string, asset: Address, amount: Decimal = new Decimal(0)): Promise<void> {
         const balances = await this.getBalances(address);
         const assetBalanceObj = balances.find(item => {
             return item.asset_code && item.asset_code === asset;
         });
         if (typeof assetBalanceObj === 'undefined') {
             // No trustline error
-            throw new Error(`Asset '${asset}' not found in '${address}' trustlines.`);
+            throw new NoTrustlineError(address, asset);
         } else if (new Decimal(assetBalanceObj.balance).lessThan(amount)) {
             // Balance error
-            throw new Error(`Account ${address} balance ${assetBalanceObj.balance} of ${asset} is less than ${amount}`);
+            throw new BalanceError(address, asset, assetBalanceObj.balance);
         }
     }
 
