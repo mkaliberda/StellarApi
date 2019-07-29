@@ -99,4 +99,10 @@ export class StellarService {
         this.log.info(`Created new internal wallet ${ newWalletMain } ${ newWalletPending }`);
         return newWalletMain.address;
     }
+
+    public async getTxHistory(address: string,
+                              limit: string,
+                              page: string): Promise<any> {
+        return await this.accountManager.getTxHistory(address, Number(limit), Number(page));
+    }
 }

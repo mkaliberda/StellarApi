@@ -8,8 +8,14 @@
     "files.trimTrailingWhitespace": true,
     "editor.formatOnSave": false,
     "cSpell.words": [
+        "UAHC",
         "timebounds",
+        "trustline",
+        "trustlines",
         "typedi",
         "typeorm"
+    ],
+    "cSpell.ignoreWords": [
+        "dimo"
     ]
 }

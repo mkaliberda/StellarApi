@@ -4,12 +4,13 @@ import { Address, StellarBaseResponse } from '../../lib/stellar/StellarPatterns'
 import { StellarOperationsService } from '../services/StellarOperationsService';
 import { IAccountBalancesGroup, StellarService } from '../services/StellarService';
 import { BalanceParams } from '../validators/ApiValidatorBalance';
+import { CreateAssetParams } from '../validators/ApiValidatorCreateAsset';
 import { CreateWalletParams } from '../validators/ApiValidatorCreateWallet';
 import { DepositWithdrawParams } from '../validators/ApiValidatorDepositWithdraw';
 import { ExchangeParams } from '../validators/ApiValidatorExchange';
+import { HistoryTxParams } from '../validators/ApiValidatorHistoryTx';
 import { HoldParams } from '../validators/ApiValidatorHold';
 import { TransferParams } from '../validators/ApiValidatorTransfer';
-import { CreateAssetParams } from '../validators/ApiValidatorCreateAsset';
 
 @JsonController('/wallet')
 export class StellarController {
@@ -30,6 +31,20 @@ export class StellarController {
          * @returns {array} - Array of account balances.
          */
         return await this.stellarService.getAccountBalance(address, payloads);
+    }
+
+    @Get('/tx-history/:address')
+    public async history(@Param('address') address: string, @QueryParams() payloads: HistoryTxParams): Promise<IAccountBalancesGroup> {
+        /**
+         * Account balance.
+         * Show balances in native view if no optional arguments passed.
+         * @route /api/wallet/balance/:address
+         * @param {string} address - Account address.
+         * @param {number} [limit=10] - Limit tx per page max 30 min 1
+         * @param {string} [page=1] - Pagination page
+         * @returns {array} - Array of tx.
+         */
+        return await this.stellarService.getTxHistory(address, payloads.limit, payloads.page);
     }
 
     @Post('/create')
