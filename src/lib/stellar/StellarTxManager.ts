@@ -132,7 +132,6 @@ export class StellarTxManager extends StellarBaseManager {
         try {
             response = await this.server.submitTransaction(tx);
         } catch (err) {
-            console.log(err.response.data.extras.result_codes);
             throw new Error(response);
         }
         return {
