@@ -1,6 +1,9 @@
 import * as Vault from 'node-vault';
 
 import { env } from '../../env';
+import { IAccountKeys, IKeyPair, IKeysStorage } from './IStorage';
+import { HttpError } from 'routing-controllers';
+import { ERR_NAMES } from '../../api/errors/constants';
 import { IAccountKeys, IKeysStorage } from './IStorage';
 
 export class VaultStorage implements IKeysStorage {
@@ -13,11 +16,24 @@ export class VaultStorage implements IKeysStorage {
     };
 
     private static handleResponseException(err: any, address?: string): never {
+        let msg;
+        const respError = new HttpError(200);
+
+        console.log(`Address with error [${address}]`);
+
         if (err.response && err.response.statusCode === 404 && address) {
-            throw new Error(`Address ${address} is not found in Vault storage`);
+            respError.httpCode = 404;
+            msg = `Address ${address} is not found in Vault storage`;
+        } else if (err.response.statusCode) {
+            respError.httpCode = err.response.statusCode;
         } else {
-            throw new Error(err);
+            respError.httpCode = 400;
         }
+
+        respError.name = ERR_NAMES.vault;
+        respError.message = msg || err.message;
+
+        throw respError;
     }
 
     private vault;
