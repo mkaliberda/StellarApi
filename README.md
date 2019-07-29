@@ -1,4 +1,4 @@
-## Stellar microservice
+## Stellar Private Network microservice
 
 [![Build Status](https://travis-ci.com/mkaliberda/StellarApi.svg?token=6bfZmbby9wfWj9uzzAgb&branch=dev)](https://travis-ci.com/mkaliberda/StellarApi)
 
