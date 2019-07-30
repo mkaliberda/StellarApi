@@ -1,10 +1,10 @@
-import { any } from 'bluebird';
 import { Decimal } from 'decimal.js';
 import { Keypair } from 'stellar-sdk';
 
 import { env } from '../../src/env';
 import { IKeyPair } from '../../src/lib/keys-storage/IStorage';
 import { StellarAccountManager } from '../../src/lib/stellar/StellarAccountManager';
+import { BalanceError, NoTrustlineError } from '../../src/lib/stellar/StellarError';
 import { StellarTxManager } from '../../src/lib/stellar/StellarTxManager';
 
 let rootPair: Keypair;
@@ -45,17 +45,16 @@ describe('StellarTxManagerBase', () => {
         const respAcc = await stellaTx.createAndTrustAccount(assetArray, '100');
         expect(respAcc).toHaveProperty('secret');
         expect(respAcc).toHaveProperty('address');
-        expect(3).toBe(3);
         done();
     });
 
     test('sendAssetFromRootToFirst 3', async (done) => {
         const haveBalance = '1.9999999';
         const accountFirstPair = StellarTxManager.getKeyPair(accountFirst.secret);
-        const respAcc = await stellaTx.sendAsset(rootPair,
-                                                 accountFirstPair,
-                                                 assetArray[0],
-                                                 haveBalance);
+        await stellaTx.sendAsset(rootPair,
+                                accountFirstPair,
+                                assetArray[0],
+                                haveBalance);
         const balancesFirst = await stellaAccount.getBalances(accountFirstPair.publicKey());
         balancesFirst.forEach(item => {
             if (item.asset_code === assetArray[0]) {
@@ -94,6 +93,16 @@ describe('StellarTxManagerBase', () => {
         done();
     });
 
+    // test('get bad address', async (done) => {
+    //     const badAddress = 'BAD ADDRESS';
+    //     try {
+    //         await stellaAccount.getBalances(badAddress);
+    //     } catch (err) {
+    //         expect(err).toThrowError();
+    //     }
+    //     done();
+    // });
+
     test('do nothing when amount is enough', async (done) => {
         await stellaAccount.checkEnoughBalance(accountSecond.address, assetArray[0], new Decimal(1.9999999));
         done();
@@ -101,18 +110,18 @@ describe('StellarTxManagerBase', () => {
 
     test('throw error if amount is not enough', async (done) => {
         try {
-            await stellaAccount.checkEnoughBalance(accountSecond.address, assetArray[0], new Decimal(2));
+            await stellaAccount.checkEnoughBalance(accountSecond.address, 'DIMOr', new Decimal(1.9999999));
         } catch (err) {
-            expect(err).toEqual(new Error(`Account ${accountSecond.address} balance 1.9999999 of ${assetArray[0]} is less than 2`));
+            expect(err).toEqual(new NoTrustlineError(accountSecond.address, 'DIMOr'));
         }
         done();
     });
 
     test('throw error if asset is not found in balances array', async (done) => {
         try {
-            await stellaAccount.checkEnoughBalance(accountSecond.address, 'DIMOr', new Decimal(2));
+            await stellaAccount.checkEnoughBalance(accountSecond.address, assetArray[0], new Decimal(1.9999999));
         } catch (err) {
-            expect(err).toEqual(new Error(`Asset 'DIMOr' not found in ${accountSecond.address} trustlines.`));
+            expect(err).toEqual(new BalanceError(accountSecond.address, assetArray[0], 1.9999999));
         }
         done();
     });

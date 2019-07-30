@@ -1,9 +1,8 @@
 import * as Vault from 'node-vault';
-
-import { env } from '../../env';
-import { IAccountKeys, IKeyPair, IKeysStorage } from './IStorage';
 import { HttpError } from 'routing-controllers';
+
 import { ERR_NAMES } from '../../api/errors/constants';
+import { env } from '../../env';
 import { IAccountKeys, IKeysStorage } from './IStorage';
 
 export class VaultStorage implements IKeysStorage {

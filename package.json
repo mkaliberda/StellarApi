@@ -8,8 +8,10 @@
     "lint": "tslint -c tslint.json 'src/**/*.ts' --format stylish",
     "test-unit": "cross-env NODE_ENV=test jest --testPathPattern=unit --verbose",
     "test-unit-watch": "cross-env NODE_ENV=test jest --testPathPattern=unit --watch -t",
-    "test-unit-coverage": "cross-env NODE_ENV=test jest --testPathPattern=unit --verbose --coverage",
-    "build": "≈ --project ./tsconfig.json",
+    "test-integration-watch": "cross-env NODE_ENV=test jest --testPathPattern=integration --watch --verbose=false -t",
+    "test-e2e": "cross-env NODE_ENV=test jest --testPathPattern=e2e",
+    "test-coverage": "cross-env NODE_ENV=test jest --testPathPattern=unit integration --runInBand --verbose --coverage",
+    "build": "tsc --project ./tsconfig.json",
     "dev": "nodemon --watch src --watch .env --inspect",
     "start": "cross-env NODE_ENV=production node dist/src/app.js",
     "typeorm": "ts-node ./node_modules/typeorm/cli.js"

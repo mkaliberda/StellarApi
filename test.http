@@ -1,12 +1,12 @@
 ###
 
-GET http://localhost:3000/api/wallet/balance/GB4MQVYUH2OLYSNFTTZSI2HY3J7IUW7ADWAROZC5ZWB5WKIAIEOZ57IY?assets[]=DIMO&assets[]=TNZS&include_pending=false
+GET http://localhost:3000/api/wallet/balance/RS_MAIN?assets[]=DIMO&assets[]=TNZS&include_pending=false
 Accept: application/json
 Content-Type: application/json
 
 ###
 
-GET http://localhost:3000/api/wallet/balance/RS_MAIN?assets[]=DIMO&include_pending=false
+GET http://localhost:3000/api/wallet/balance/GC3RW5AWIBA5DNV5OI4LPG4DSQOUPAAMQITXGUGUPR4VQE4KL76PKSMX?assets[]=DIMO&include_pending=false
 Accept: application/json
 Content-Type: application/json
 

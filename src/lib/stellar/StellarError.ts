@@ -1,4 +1,5 @@
 import { HttpError } from 'routing-controllers';
+
 import { Address } from './StellarPatterns';
 
 class StellarError extends HttpError {
