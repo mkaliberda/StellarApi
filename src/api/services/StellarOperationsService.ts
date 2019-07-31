@@ -218,6 +218,22 @@ export class StellarOperationsService {
         return result;
     }
 
+    public async trustWallet(assets: string[],
+                             from_acc: Address,
+                             to_acc: Address,
+                             isUser: boolean = true): Promise<string[]> {
+        const typeAsset = isUser ? CREDIT : DEBIT;
+        assets.forEach((item, index) => {
+            assets[index] = item + typeAsset;
+        });
+        const fromKeys: Keypair = await this.loadKeyPairs(from_acc);
+        const toKeys: Keypair = await this.loadKeyPairs(to_acc);
+        await this.txManager.changeTrustLine(assets,
+                                             fromKeys,
+                                             toKeys);
+        return assets;
+    }
+
     private async loadKeyPairs(account: Address, pending: boolean = false): Promise<Keypair> | undefined {
         if (!account) {
             return undefined;
