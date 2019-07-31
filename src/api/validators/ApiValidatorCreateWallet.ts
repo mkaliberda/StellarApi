@@ -1,4 +1,6 @@
-import { IsJSON, IsNumber, IsOptional, IsBoolean } from 'routing-controllers/node_modules/class-validator';
+import {
+    IsBoolean, IsJSON, IsNumber, IsOptional
+} from 'routing-controllers/node_modules/class-validator';
 
 export class CreateWalletParams {
 
@@ -13,7 +15,7 @@ export class CreateWalletParams {
     @IsBoolean()
     public is_user: boolean;
 
-    constructor(balance: number = 10,
+    constructor(balance: number = 100,
                 is_user: boolean = true) {
         this.balance = balance;
         this.is_user = is_user;
