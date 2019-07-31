@@ -1,11 +1,16 @@
 ###
 
-GET http://localhost:3000/api/wallet/balance/RS_MAIN?assets[]=DIMO&include_pending=true
+GET http://localhost:3000/api/wallet/balance/RS_MAIN?assets[]=DIMO&assets[]=TNZS&include_pending=false
 Accept: application/json
 Content-Type: application/json
 
 ###
 
+GET http://localhost:3000/api/wallet/balance/GC3RW5AWIBA5DNV5OI4LPG4DSQOUPAAMQITXGUGUPR4VQE4KL76PKSMX?assets[]=DIMO&include_pending=false
+Accept: application/json
+Content-Type: application/json
+
+###
 POST http://localhost:3000/api/wallet/create
 Accept: application/json
 Content-Type: application/json
@@ -22,9 +27,9 @@ Accept: application/json
 Content-Type: application/json
 
 {
-    "sender_acc": "GDCOAHYVR4FVC4F2Y2CWN33QAKAGCH7OSNQ27KESJ7QMXQSPZDRGQJFX",
+    "sender_acc": "GALOCWKVIZGOVJI67VXHL2SZSH64GHFNYGLOOI3KBFAAPVDCGNGRPOTK",
     "receiver_acc": "RS_MAIN",
-    "profit_acc": "GB225PSJUIBHSA5C2CIAO55LPVEQZRV42F57ONRFDSYEXZTUD56WPG6R",
+    "profit_acc": "GALOCWKVIZGOVJI67VXHL2SZSH64GHFNYGLOOI3KBFAAPVDCGNGRPOTK",
     "amount": 1,
     "fee": 0,
     "asset": "DIMO"
@@ -37,11 +42,11 @@ Accept: application/json
 Content-Type: application/json
 
 {
-    "user_acc": "GDCOAHYVR4FVC4F2Y2CWN33QAKAGCH7OSNQ27KESJ7QMXQSPZDRGQJFX",
-    "service_acc": "GBFY3PPRYEHEM27MNKZDTWYTVOIHRCMRT3DPUQVJD6BDJ577TG45PAFA",
-    "profit_acc": "GDAESX6KYYRTHTA3QA4KHLGQDSQEOTJW6R7OJNK5Z3XS6LCEZDN7CYAN",
-    "amount": 20,
-    "fee": 1,
+    "user_acc": "GB3Y27EUGF3SU3PQHSQNBHX4RYQYDHV4R3KH6XIRKDREAG6VQADHD4MP",
+    "service_acc": "GB4MQVYUH2OLYSNFTTZSI2HY3J7IUW7ADWAROZC5ZWB5WKIAIEOZ57IY",
+    "profit_acc": "",
+    "amount": 100,
+    "fee": 10,
     "asset": "DIMO"
 }
 
@@ -64,9 +69,9 @@ Accept: application/json
 Content-Type: application/json
 
 {
-    "user_acc": "GDCOAHYVR4FVC4F2Y2CWN33QAKAGCH7OSNQ27KESJ7QMXQSPZDRGQJFX",
-    "service_acc": "GBFY3PPRYEHEM27MNKZDTWYTVOIHRCMRT3DPUQVJD6BDJ577TG45PAFA",
-    "profit_acc": "GDAESX6KYYRTHTA3QA4KHLGQDSQEOTJW6R7OJNK5Z3XS6LCEZDN7CYAN",
+    "user_acc": "",
+    "service_acc": "",
+    "profit_acc": "",
     "amount": 2,
     "fee": 1,
     "asset": "DIMO"
@@ -79,14 +84,25 @@ Accept: application/json
 Content-Type: application/json
 
 {
-    "from_acc": "GDCOAHYVR4FVC4F2Y2CWN33QAKAGCH7OSNQ27KESJ7QMXQSPZDRGQJFX",
-    "to_acc": "GBFY3PPRYEHEM27MNKZDTWYTVOIHRCMRT3DPUQVJD6BDJ577TG45PAFA",
-    "profit_acc": "GDAESX6KYYRTHTA3QA4KHLGQDSQEOTJW6R7OJNK5Z3XS6LCEZDN7CYAN",
+    "from_acc": "",
+    "to_acc": "",
+    "profit_acc": "",
     "amount_from": 2,
     "amount_to": 2,
     "fee": 1,
     "asset_from": "DIMO",
     "asset_to": "TNZS"
+}
+
+###
+
+POST http://localhost:3000/api/wallet/create-asset/
+Accept: application/json
+Content-Type: application/json
+
+{
+    "asset_name": "ARTIST",
+    "amount": 23
 }
 
 ###

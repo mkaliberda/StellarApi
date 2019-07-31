@@ -1,7 +1,9 @@
 import { IAccountKeys, IKeysStorage } from '../../src/lib/keys-storage/IStorage';
 import { VaultStorage } from '../../src/lib/keys-storage/VaultStorage';
 import { SYSTEM_ACCOUNTS } from '../../src/lib/stellar/StellarConst';
-// GBSALEPFZQMIAOMLIBKMRGIA2OM4TE265PT2W6BZO6ASFXJGBRI2QKNJ
+
+// // GBSALEPFZQMIAOMLIBKMRGIA2OM4TE265PT2W6BZO6ASFXJGBRI2QKNJ
+
 describe('Vault storage tests', () => {
     const storage: IKeysStorage = new VaultStorage();
     const keys: IAccountKeys = {
@@ -9,14 +11,17 @@ describe('Vault storage tests', () => {
             address: 'GCSHY2NI6YJED5IRZIJDKZELBQQH3S5CKH5IPU22SWWX26UYVW54D63O',
             secret: 'SC3ZJHEUJCDZ72VGLRU3RO5ABPWTM55UOV2XLSNAYANVLBE3NUDDRDPB',
         },
+        pending: {
+            address: 'GCSHY2NI6YJED5IRZIJDKZELBQQH3S5CKH5IPU22SWWX26UYVW54D63O',
+            secret: 'SC3ZJHEUJCDZ72VGLRU3RO5ABPWTM55UOV2XLSNAYANVLBE3NUDDRDPB',
+        },
     };
 
     test('Check is account keys stored properly', async (done) => {
         storage.saveAccountKeys(SYSTEM_ACCOUNTS.RS_MAIN, keys);
-        const response = await storage.getAccountKeys(keys.base.address);
+        const response = await storage.getAccountKeys(SYSTEM_ACCOUNTS.RS_MAIN);
+        console.log('response', response.base.secret);
         expect(response.base.secret).toBe(keys.base.secret);
-        // expect(response.pending.secret).toBe(keys.pending.secret);
-        // expect(response.pending.address).toBe(keys.pending.address);
         done();
     });
 

@@ -85,7 +85,7 @@ export class StellarService {
         });
         const newWalletMain: IKeyPair = await this.txManager.createAndTrustAccount(assets, balance.toString());
         const newWalletPending: IKeyPair = await this.txManager.createAndTrustAccount(assets, balance.toString());
-        await this.storageManager.saveAccountKeys(newWalletMain.address, {base: newWalletMain, pending: newWalletPending });
+        await this.storageManager.saveAccountKeys(newWalletMain.address, {base: newWalletMain, pending: newWalletPending});
         this.log.info(`Created new wallet ${ newWalletMain } ${ newWalletPending }`);
         return newWalletMain.address;
     }
@@ -95,8 +95,14 @@ export class StellarService {
                                       balance: number): Promise<Address> {
         const newWalletMain: IKeyPair = await this.txManager.createAndTrustAccount(assets, balance.toString());
         const newWalletPending: IKeyPair = await this.txManager.createAndTrustAccount(assets, balance.toString());
-        this.storageManager.saveAccountKeys(walletName, {base: newWalletMain, pending: newWalletPending });
+        this.storageManager.saveAccountKeys(walletName, {base: newWalletMain, pending: newWalletPending});
         this.log.info(`Created new internal wallet ${ newWalletMain } ${ newWalletPending }`);
         return newWalletMain.address;
-}
+    }
+
+    public async getTxHistory(address: string,
+                              limit: string,
+                              page: string): Promise<any> {
+        return await this.accountManager.getTxHistory(address, Number(limit), Number(page));
+    }
 }

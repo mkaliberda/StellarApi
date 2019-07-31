@@ -1,13 +1,12 @@
+import { HttpError } from 'routing-controllers';
 import { Asset, Keypair, Network, Operation, Server } from 'stellar-sdk';
 
 import { env } from '../../env';
-import { BadAddressError } from './StellarError';
 
-if (env.stellar.network.isTest) {
-    Network.useTestNetwork();
+if (env.stellar.network.passphrase) {
+    Network.use(new Network(env.stellar.network.passphrase));
 } else {
-    // :TODO adjust network passphrase to import from .env
-    Network.usePublicNetwork();
+    Network.useTestNetwork();
 }
 
 export class StellarBaseManager {
@@ -16,8 +15,13 @@ export class StellarBaseManager {
         try {
             return Keypair.fromSecret(secret);
         } catch (error) {
-            throw new BadAddressError('Bad secret format ' + secret);
+            return StellarBaseManager.handleResponseException(error);
         }
+    }
+
+    public static handleResponseException(err: any): never {
+        console.log('Error!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
+        throw new HttpError(400, 'Not found???? n_n' + err.response.message);
     }
 
     protected static getAsset(asset: string): Asset {

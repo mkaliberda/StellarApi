@@ -1,14 +1,16 @@
 import { Body, Get, JsonController, Param, Post, QueryParams } from 'routing-controllers';
 
-import { IAccountBalancesGroup, StellarService } from '../services/StellarService';
+import { Address, StellarBaseResponse } from '../../lib/stellar/StellarPatterns';
 import { StellarOperationsService } from '../services/StellarOperationsService';
+import { IAccountBalancesGroup, StellarService } from '../services/StellarService';
 import { BalanceParams } from '../validators/ApiValidatorBalance';
+import { CreateAssetParams } from '../validators/ApiValidatorCreateAsset';
 import { CreateWalletParams } from '../validators/ApiValidatorCreateWallet';
 import { DepositWithdrawParams } from '../validators/ApiValidatorDepositWithdraw';
 import { ExchangeParams } from '../validators/ApiValidatorExchange';
+import { HistoryTxParams } from '../validators/ApiValidatorHistoryTx';
 import { HoldParams } from '../validators/ApiValidatorHold';
 import { TransferParams } from '../validators/ApiValidatorTransfer';
-import { Address, StellarBaseResponse } from '../../lib/stellar/StellarPatterns';
 
 @JsonController('/wallet')
 export class StellarController {
@@ -29,6 +31,20 @@ export class StellarController {
          * @returns {array} - Array of account balances.
          */
         return await this.stellarService.getAccountBalance(address, payloads);
+    }
+
+    @Get('/tx-history/:address')
+    public async history(@Param('address') address: string, @QueryParams() payloads: HistoryTxParams): Promise<IAccountBalancesGroup> {
+        /**
+         * Account balance.
+         * Show balances in native view if no optional arguments passed.
+         * @route /api/wallet/balance/:address
+         * @param {string} address - Account address.
+         * @param {number} [limit=10] - Limit tx per page max 30 min 1
+         * @param {string} [page=1] - Pagination page
+         * @returns {array} - Array of tx.
+         */
+        return await this.stellarService.getTxHistory(address, payloads.limit, payloads.page);
     }
 
     @Post('/create')
@@ -141,5 +157,20 @@ export class StellarController {
          * @returns {array} Array of stellar transactions reference (th_hash, ledger, etc.).
          */
         return this.stellarOperationService.exchangeOperation(params);
+    }
+
+    @Post('/create-asset')
+    public async createAsset(@Body() params: CreateAssetParams): Promise<StellarBaseResponse[]> {
+        /**
+         * Create asset and fund to account.
+         * For standard operation its create
+         * asset from ROOT, and Trust and fund to RS
+         * @route /api/wallet/create-asset
+         * @param {string} asset_name - Symbol like BTC, DIMO
+         * @param {string} [from_acc='ROOT'] - Owner account
+         * @param {string} [to_acc='RS'] - Receive account
+         * @param {number} amount - Accept Amount
+         */
+        return this.stellarOperationService.createAsset(params);
     }
 }
