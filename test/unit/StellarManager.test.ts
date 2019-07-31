@@ -24,13 +24,13 @@ describe('StellarTxManagerBase', () => {
     jest.setTimeout(30000);
 
     beforeAll(async () => {
-        accountFirst = await stellaTx.createAndTrustAccount(assetArray, '100');
-        accountSecond = await stellaTx.createAndTrustAccount(assetArray, '100');
+        accountFirst = await stellaTx.createAndTrustAccount(assetArray, '10');
+        accountSecond = await stellaTx.createAndTrustAccount(assetArray, '10');
         rootPair = StellarTxManager.getKeyPair(ROOT_SECRET);
     });
 
     test('create-account-and-trust-after 1', async (done) => {
-        const userSepTrust: IKeyPair = await stellaTx.createAccount('100');
+        const userSepTrust: IKeyPair = await stellaTx.createAccount('10');
         const userSepTrustKeyPair: Keypair  = StellarTxManager.getKeyPair(userSepTrust.secret);
         expect(userSepTrustKeyPair).toBeInstanceOf(Keypair);
         expect(userSepTrust).toHaveProperty('secret');
@@ -42,7 +42,7 @@ describe('StellarTxManagerBase', () => {
         done();
     });
     test('createAndTrustAccount 2', async (done) => {
-        const respAcc = await stellaTx.createAndTrustAccount(assetArray, '100');
+        const respAcc = await stellaTx.createAndTrustAccount(assetArray, '10');
         expect(respAcc).toHaveProperty('secret');
         expect(respAcc).toHaveProperty('address');
         done();
