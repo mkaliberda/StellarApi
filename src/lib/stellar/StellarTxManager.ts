@@ -1,6 +1,7 @@
 import { Keypair, Memo, Operation, TransactionBuilder } from 'stellar-sdk';
-import { IKeyPair } from '../../lib/keys-storage/IStorage';
+
 import { env } from '../../env';
+import { IKeyPair } from '../../lib/keys-storage/IStorage';
 import { StellarBaseManager } from './StellarBaseManager';
 import { StellarAccountManager } from './StellarAccountManager';
 

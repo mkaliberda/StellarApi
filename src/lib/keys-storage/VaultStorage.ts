@@ -4,6 +4,7 @@ import { env } from '../../env';
 import { IAccountKeys, IKeyPair, IKeysStorage } from './IStorage';
 import { HttpError } from 'routing-controllers';
 import { ERR_NAMES } from '../../api/errors/constants';
+import { IAccountKeys, IKeysStorage } from './IStorage';
 
 export class VaultStorage implements IKeysStorage {
     private static SECRET_PATH = 'secret/stellarKeys/';
@@ -75,15 +76,5 @@ export class VaultStorage implements IKeysStorage {
         } catch (err) {
             VaultStorage.handleResponseException(err);
         }
-    }
-
-    public getBasePair(address: string): IKeyPair {
-        const keys: any = this.getAccountKeys(address);
-        return keys.base;
-    }
-
-    public getPendingPair(address: string): IKeyPair {
-        const keys: any = this.getAccountKeys(address);
-        return keys.private;
     }
 }
