@@ -1,6 +1,6 @@
 export const SYSTEM_ACCOUNTS = {
     ROOT: 'ROOT',
-    RS_MAIN: 'RS_MAIN',
+    RS_MAIN: 'RS_MAIN_1',
 };
 
 export const ERROR = {

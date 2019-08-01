@@ -1,6 +1,6 @@
 ###
 
-GET http://localhost:3000/api/wallet/balance/GB4MQVYUH2OLYSNFTTZSI2HY3J7IUW7ADWAROZC5ZWB5WKIAIEOZ57IY?assets[]=DIMO&assets[]=TNZS&include_pending=false
+GET http://localhost:3000/api/wallet/balance/GCY7N6WABJWDOM44QLDBO375DWWVAEXH5U2CPF3ULXG6JTGV6QFLKUZL?assets[]=DIMO&assets[]=TNZS&include_pending=false
 Accept: application/json
 Content-Type: application/json
 
@@ -12,7 +12,7 @@ Content-Type: application/json
 
 {
     "assets": "[\"DIMO\", \"ADD\"]",
-    "is_user": true
+    "is_user": false
 }
 
 ###
@@ -35,11 +35,11 @@ Accept: application/json
 Content-Type: application/json
 
 {
-    "user_acc": "GB3Y27EUGF3SU3PQHSQNBHX4RYQYDHV4R3KH6XIRKDREAG6VQADHD4MP",
-    "service_acc": "GB4MQVYUH2OLYSNFTTZSI2HY3J7IUW7ADWAROZC5ZWB5WKIAIEOZ57IY",
-    "profit_acc": "",
+    "user_acc": "GCI57H47MFFNEMMPCXCKC6PPCVTSLDH7SEHCXYOMDRXBFMC272GFH2GX",
+    "service_acc": "GCY7N6WABJWDOM44QLDBO375DWWVAEXH5U2CPF3ULXG6JTGV6QFLKUZL",
+    "profit_acc": "GASTRZKR227P6HD3NJSQVDJ7PXVMFJJXGDNNMB3MCVTGB6QGZEHMSQWD",
     "amount": 100,
-    "fee": 10,
+    "fee": 1000,
     "asset": "DIMO"
 }
 

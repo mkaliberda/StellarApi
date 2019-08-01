@@ -20,7 +20,7 @@ export class StellarBaseManager {
         }
     }
 
-    public static handleResponseException(err: any): never {
+    protected static handleResponseException(err: any): never {
         console.log('Error!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
         throw new HttpError(400, 'Not found???? n_n' + err.response.message);
     }
