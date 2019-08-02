@@ -1,22 +1,20 @@
+import { Decimal } from 'decimal.js';
+import { Keypair } from 'stellar-base';
+import { Service } from 'typedi';
+
 import { Logger, LoggerInterface } from '../../decorators/Logger';
 import { IKeysStorage } from '../../lib/keys-storage/IStorage';
 import { VaultStorage } from '../../lib/keys-storage/VaultStorage';
-
-import { StellarTxManager } from '../../lib/stellar/StellarTxManager';
 import { StellarAccountManager } from '../../lib/stellar/StellarAccountManager';
-import { Address, StellarBaseResponse } from '../../lib/stellar/StellarPatterns';
 import { CREDIT, DEBIT, SYSTEM_ACCOUNTS } from '../../lib/stellar/StellarConst';
-import { Keypair } from 'stellar-base';
+import { Address, StellarBaseResponse } from '../../lib/stellar/StellarPatterns';
+import { StellarTxManager } from '../../lib/stellar/StellarTxManager';
 import asyncForEach from '../../lib/utils/AsyncForEach';
-
-import { TransferParams } from '../validators/ApiValidatorTransfer';
-import { DepositWithdrawParams } from '../validators/ApiValidatorDepositWithdraw';
-import { HoldParams } from '../validators/ApiValidatorHold';
-import { ExchangeParams } from '../validators/ApiValidatorExchange';
 import { CreateAssetParams } from '../validators/ApiValidatorCreateAsset';
-
-import { Decimal } from 'decimal.js';
-import { Service } from 'typedi';
+import { DepositWithdrawParams } from '../validators/ApiValidatorDepositWithdraw';
+import { ExchangeParams } from '../validators/ApiValidatorExchange';
+import { HoldParams } from '../validators/ApiValidatorHold';
+import { TransferParams } from '../validators/ApiValidatorTransfer';
 
 @Service()
 export class StellarOperationsService {
@@ -205,7 +203,7 @@ export class StellarOperationsService {
         const ownerAccount: Keypair = await this.loadKeyPairs(params.from_acc);
         const trustAccount: Keypair = await this.loadKeyPairs(params.to_acc);
         const trust = await this.txManager.changeTrustLine([params.asset_name + CREDIT,
-                params.asset_name + DEBIT],
+            params.asset_name + DEBIT],
             ownerAccount,
             trustAccount);
         const result: StellarBaseResponse[] = [];

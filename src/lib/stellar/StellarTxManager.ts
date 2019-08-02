@@ -3,6 +3,7 @@ import { Keypair, Memo, Operation, TransactionBuilder } from 'stellar-sdk';
 import { env } from '../../env';
 import { IKeyPair } from '../../lib/keys-storage/IStorage';
 import { StellarBaseManager } from './StellarBaseManager';
+import { StellarBaseResponse } from './StellarPatterns';
 
 export class StellarTxManager extends StellarBaseManager {
 
@@ -29,7 +30,7 @@ export class StellarTxManager extends StellarBaseManager {
             })
         );
         const tx = transaction.build();
-        tx.sign(...[StellarTxManager.getPairRoot]);
+        tx.sign(...[StellarTxManager.getPairRoot()]);
         try {
             await this.server.submitTransaction(tx);
         } catch (err) {
@@ -111,7 +112,7 @@ export class StellarTxManager extends StellarBaseManager {
                            destKeyPair: Keypair,
                            asset: string,
                            amount: string,
-                           memo?: string): Promise<any> {
+                           memo?: string): Promise<StellarBaseResponse> {
         let transaction: any;
         try {
             transaction = await this._getTxBuilder(srcKeyPair);
@@ -131,7 +132,6 @@ export class StellarTxManager extends StellarBaseManager {
         try {
             response = await this.server.submitTransaction(tx);
         } catch (err) {
-            console.log(err.response.data.extras.result_codes);
             throw new Error(response);
         }
         return {
