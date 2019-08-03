@@ -1,11 +1,12 @@
+
+import { Decimal } from 'decimal.js';
 import request from 'supertest';
 
 import { SYSTEM_ACCOUNTS } from '../../../src/lib/stellar/StellarConst';
 import { Address } from '../../../src/lib/stellar/StellarPatterns';
-// import { env } from '../../../src/env';
 import { bootstrapApp, BootstrapSettings } from '../utils/bootstrap';
 
-describe('/api', () => {
+describe('apiWallet', () => {
     // -------------------------------------------------------------------------
     // Setup up
     // -------------------------------------------------------------------------
@@ -26,7 +27,6 @@ describe('/api', () => {
         const response = await request(settings.app).post('/api/wallet/create')
             .set('Accept', 'application/json')
             .send(newAddrParams);
-        console.log(response.text);
         firstAddress = JSON.parse(response.text);
     });
 
@@ -43,27 +43,58 @@ describe('/api', () => {
             assets: JSON.stringify(newAssets),
             from_acc: firstAddress,
         };
-        const response = await request(settings.app).post('/api/wallet/trust')
+        await request(settings.app).post('/api/wallet/trust')
             .set('Accept', 'application/json')
             .send(params);
-        expect(response.body).toBe(newAssets);
+        const balBTC = await request(settings.app).get(`/api/wallet/balance/${firstAddress}`)
+            .query({ 'assets[]': ['BTC'] });
+        expect(balBTC.body).toHaveProperty('base');
         done();
     });
 
-    test('deposit-to-first-address', async (done) => {
+    test('simple-get-balance', async (done) => {
         // deposit to setUp account
-        let response;
-        response = await request(settings.app).post('/api/wallet/deposit')
+        const balance = await request(settings.app).get(`/api/wallet/balance/${firstAddress}`)
+            .query({ 'assets[]': ['DIMO'] });
+        expect(balance.body.base.credit[0].balance).toBe('0.0000000');
+        done();
+    });
+
+    test('simple-deposit-to-first-address', async (done) => {
+        // deposit to setUp account
+        await request(settings.app).post('/api/wallet/deposit')
             .set('Accept', 'application/json')
             .send({
                 user_acc: firstAddress,
-                service_acc: SYSTEM_ACCOUNTS.RS_MAIN,
-                amount: 10,
-                fee: 0,
+                amount: 100,
                 asset: 'DIMO',
             });
+        const balance = await request(settings.app).get(`/api/wallet/balance/${firstAddress}`)
+            .query({ 'assets[]': ['DIMO'] });
+        const base = JSON.parse(balance.text).base;
+        expect(base.credit[0].balance).toBe('100.0000000');
         done();
-        console.log(response.body);
+    });
+
+    test('core-service-fee-deposit-to-first-address', async (done) => {
+        // deposit to setUp account
+        const fee = 0.99;
+        const balanceProfitBefore = await request(settings.app).get(`/api/wallet/balance/${ SYSTEM_ACCOUNTS.CORE_MAIN }`)
+            .query({ 'assets[]': ['DIMO'] });
+        const balBeforeDec =  new Decimal(JSON.parse(balanceProfitBefore.text).base.credit[0].balance);
+        await request(settings.app).post('/api/wallet/deposit')
+            .set('Accept', 'application/json')
+            .send({
+                user_acc: firstAddress,
+                amount: 100,
+                fee,
+                asset: 'DIMO',
+            });
+        const balanceProfitAfter = await request(settings.app).get(`/api/wallet/balance/${ SYSTEM_ACCOUNTS.CORE_MAIN }`)
+            .query({ 'assets[]': ['DIMO'] });
+        const balAfterDec =  new Decimal(JSON.parse(balanceProfitAfter.text).base.credit[0].balance);
+        expect(new Decimal(fee)).toEqual(balAfterDec.minus(balBeforeDec));
+        done();
     });
 
 });

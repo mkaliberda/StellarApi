@@ -1,10 +1,10 @@
 import { CREDIT, DEBIT, SYSTEM_ACCOUNTS } from '../src/lib/stellar/StellarConst';
 import { createInternalWallet, fundInternalWallet } from './stellar-comand';
 
-const assetsToRSObj = { DIMO: 500000 , TNZS: 500000 }; // initial Tokens Pool
+const assetsToRSObj = { DIMO: 3000 , TNZS: 3000 }; // initial Tokens Pool
 const coreMainName = SYSTEM_ACCOUNTS.CORE_MAIN; // Name of CORE ACCOUNT
-// const coreServiceName = SYSTEM_ACCOUNTS.CORE_SERVICE; // Name of CORE ACCOUNT
-const fundAmt = 1000; // Initial balance
+const coreServiceName = SYSTEM_ACCOUNTS.CORE_SERVICE; // Name of CORE ACCOUNT
+const fundAmt = 100; // Initial balance
 
 const assetsOnlyDebit = {};
 const assetsOnlyCredit = {};
@@ -18,16 +18,16 @@ Object.keys(assetsToRSObj).forEach(item => {
 // Create Core Main Account
 
 createInternalWallet(assetsOnlyCredit, coreMainName, fundAmt)
-    .then(wallet => {
-        fundInternalWallet(assetsOnlyCredit, wallet, SYSTEM_ACCOUNTS.RS_MAIN)
+    .then(coreWallet => {
+        fundInternalWallet(assetsOnlyCredit, coreWallet, SYSTEM_ACCOUNTS.RS_MAIN)
         .then(() => {
             console.error('====================');
             console.log('Success Main Core funded');
             console.error('====================');
             // Create Core Main Account
-            createInternalWallet(assetsOnlyDebit, coreMainName, fundAmt)
-            .then(wallet => {
-                fundInternalWallet(assetsOnlyDebit, wallet, SYSTEM_ACCOUNTS.RS_MAIN)
+            createInternalWallet(assetsOnlyDebit, coreServiceName, fundAmt)
+            .then(serviceWallet => {
+                fundInternalWallet(assetsOnlyDebit, serviceWallet, SYSTEM_ACCOUNTS.RS_MAIN)
                 .then(() => {
                     console.error('====================');
                     console.log('Success Service Core funded');
