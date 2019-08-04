@@ -245,7 +245,19 @@ describe('apiWallet', () => {
         const astFrom = assetArray[1];
         const astTo = assetArray[0];
         const accountFrom = SYSTEM_ACCOUNTS.RS_MAIN; //firstAddress;
-        const accountTo = secondAddress;
+        const accountTo = SYSTEM_ACCOUNTS.CORE_MAIN; //secondAddress;
+
+        const balanceBeforeFrom = await request(settings.app).get(`/api/wallet/balance/${accountFrom}`)
+            .query({ 'assets[]': [astFrom] });
+        const balanceBeforeTo = await request(settings.app).get(`/api/wallet/balance/${accountTo}`)
+            .query({ 'assets[]': [astFrom] });
+        const balanceBeforeProfit = await request(settings.app).get(`/api/wallet/balance/${SYSTEM_ACCOUNTS.CORE_MAIN}`)
+            .query({ 'assets[]': [astFrom] });
+
+        const balanceBeforeFromDec = new Decimal(balanceBeforeFrom.body.base.credit[0].balance);
+        const balanceBeforeToDec = new Decimal(balanceBeforeTo.body.base.credit[0].balance);
+        const balanceBeforeProfitDec = new Decimal(balanceBeforeProfit.body.base.credit[0].balance);
+
         const resp = await request(settings.app).post(`/api/wallet/exchange/`)
             .set('Accept', 'application/json')
             .send({
@@ -255,8 +267,26 @@ describe('apiWallet', () => {
                 to_acc: accountTo,
                 amount_from: amt_from,
                 amount_to: amt_to,
+                fee,
             });
-        console.log(resp.body);
+
+        const balanceAfterFrom = await request(settings.app).get(`/api/wallet/balance/${accountFrom}`)
+            .query({ 'assets[]': [astFrom] });
+        const balanceAfterTo = await request(settings.app).get(`/api/wallet/balance/${accountTo}`)
+            .query({ 'assets[]': [astFrom] });
+        const balanceAfterProfit = await request(settings.app).get(`/api/wallet/balance/${SYSTEM_ACCOUNTS.CORE_MAIN}`)
+            .query({ 'assets[]': [astFrom] });
+
+        const amtFromWFee = new Decimal(amt_from).plus(fee);
+        const balanceAfterFromDec = new Decimal(balanceAfterFrom.body.base.credit[0].balance);
+        const balanceAfterToDec = new Decimal(balanceAfterTo.body.base.credit[0].balance);
+        const balanceProfitToDec = new Decimal(balanceAfterProfit.body.base.credit[0].balance);
+        console.log(amtFromWFee, balanceBeforeFromDec, balanceAfterFromDec);
+
+        // expect(balanceBeforeFromDec.minus(balanceAfterFromDec)).toEqual(amtFromWFee);
+        // expect(balanceBeforeToDec.minus(balanceAfterToDec)).toEqual(new Decimal(amt_to));
+        // expect(balanceBeforeProfitDec.minus(balanceProfitToDec)).toEqual(new Decimal(fee));
+
         done();
     });
 });
