@@ -35,7 +35,6 @@ export class StellarOperationsService {
         const profitKeys: Keypair = params.profit_acc ? await this.loadKeyPairs(params.profit_acc) : undefined;
         const result: StellarBaseResponse[] = [];
         const fee = profitKeys && params.fee ? params.fee : 0;
-
         await Promise.all([
             this.accountManager.checkEnoughBalance(srcKeys.publicKey(), params.asset + CREDIT, new Decimal(params.amount).plus(fee)),
             this.accountManager.checkEnoughBalance(dstKeys.publicKey(), params.asset + CREDIT),
@@ -167,35 +166,40 @@ export class StellarOperationsService {
         const result: StellarBaseResponse[] = [];
         const fee = profitKeys && params.fee ? params.fee : 0;
 
-        await Promise.all([
-            this.accountManager.checkEnoughBalance(fromKeys.publicKey(), params.asset_from + CREDIT, new Decimal(params.amount_from)),
-            this.accountManager.checkEnoughBalance(toKeys.publicKey(), params.asset_to + CREDIT, new Decimal(params.amount_to)),
-            this.accountManager.checkEnoughBalance(fromKeys.publicKey(), params.asset_to + CREDIT),
-            this.accountManager.checkEnoughBalance(toKeys.publicKey(), params.asset_from + CREDIT),
-            this.accountManager.checkEnoughBalance(profitKeys.publicKey(), params.asset_from + CREDIT),
-        ]);
+        console.log(fromKeys);
+        console.log(toKeys);
+        console.log(profitKeys);
+        console.log(result);
+        console.log(fee);
+        // await Promise.all([
+        //     this.accountManager.checkEnoughBalance(fromKeys.publicKey(), params.asset_from + CREDIT, new Decimal(params.amount_from)),
+        //     this.accountManager.checkEnoughBalance(toKeys.publicKey(), params.asset_to + CREDIT, new Decimal(params.amount_to)),
+        //     this.accountManager.checkEnoughBalance(fromKeys.publicKey(), params.asset_to + CREDIT),
+        //     this.accountManager.checkEnoughBalance(toKeys.publicKey(), params.asset_from + CREDIT),
+        //     this.accountManager.checkEnoughBalance(profitKeys.publicKey(), params.asset_from + CREDIT),
+        // ]);
 
-        result.push(await this.txManager.sendAsset(
-            fromKeys, toKeys,
-            params.asset_from + CREDIT,
-            new Decimal(params.amount_from).minus(fee).toString()
-        ));
+        // result.push(await this.txManager.sendAsset(
+        //     fromKeys, toKeys,
+        //     params.asset_from + CREDIT,
+        //     new Decimal(params.amount_from).minus(fee).toString()
+        // ));
 
-        if (profitKeys && fee) {
-            result.push(await this.txManager.sendAsset(
-                fromKeys, profitKeys,
-                params.asset_from + CREDIT,
-                fee.toString()
-            ));
-        }
+        // if (profitKeys && fee) {
+        //     result.push(await this.txManager.sendAsset(
+        //         fromKeys, profitKeys,
+        //         params.asset_from + CREDIT,
+        //         fee.toString()
+        //     ));
+        // }
 
-        result.push(await this.txManager.sendAsset(
-            toKeys, fromKeys,
-            params.asset_to + CREDIT,
-            params.amount_to.toString()
-        ));
+        // result.push(await this.txManager.sendAsset(
+        //     toKeys, fromKeys,
+        //     params.asset_to + CREDIT,
+        //     params.amount_to.toString()
+        // ));
 
-        return result;
+        return 'result';
     }
 
     public async createAsset(params: CreateAssetParams): Promise<any> {
