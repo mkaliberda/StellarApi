@@ -73,7 +73,7 @@ describe('StellarTxManagerBase', () => {
                                  assetArray[0],
                                  haveBalance);
         const balancesFirst = await stellaAccount.getBalances(accountFirstPair.publicKey());
-        let getAsset: number = 0;
+        let getAsset = 0;
         balancesFirst.forEach(item => {
             if (item.asset_code === assetArray[0]) {
                 expect(item.balance).toBe('0.0000000');

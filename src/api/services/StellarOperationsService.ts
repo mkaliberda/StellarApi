@@ -35,7 +35,6 @@ export class StellarOperationsService {
         const profitKeys: Keypair = params.profit_acc ? await this.loadKeyPairs(params.profit_acc) : undefined;
         const result: StellarBaseResponse[] = [];
         const fee = profitKeys && params.fee ? params.fee : 0;
-
         await Promise.all([
             this.accountManager.checkEnoughBalance(srcKeys.publicKey(), params.asset + CREDIT, new Decimal(params.amount).plus(fee)),
             this.accountManager.checkEnoughBalance(dstKeys.publicKey(), params.asset + CREDIT),
