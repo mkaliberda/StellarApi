@@ -11,7 +11,7 @@
     "test-unit-watch": "cross-env NODE_ENV=test jest --testPathPattern=unit --watch -t",
     "test-integration-watch": "cross-env NODE_ENV=test jest --testPathPattern=integration --watch --verbose=false -t",
     "test-e2e": "cross-env NODE_ENV=test jest --testPathPattern=e2e --detectOpenHandles --t",
-    "test-coverage": "cross-env NODE_ENV=test jest --testPathPattern=unit integration --runInBand --verbose --coverage",
+    "test-coverage": "cross-env NODE_ENV=test jest --testPathPattern=unit integration e2e --runInBand --verbose --coverage",
     "build": "tsc --project ./tsconfig.json",
     "dev": "nodemon --watch src --watch .env --inspect",
     "start": "cross-env NODE_ENV=production node dist/src/app.js",
