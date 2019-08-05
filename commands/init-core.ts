@@ -4,7 +4,7 @@ import { createInternalWallet, fundInternalWallet } from './stellar-comand';
 const assetsToRSObj = { DIMO: 3000 , TNZS: 3000 }; // initial Tokens Pool
 const coreMainName = SYSTEM_ACCOUNTS.CORE_MAIN; // Name of CORE ACCOUNT
 const coreServiceName = SYSTEM_ACCOUNTS.CORE_SERVICE; // Name of CORE ACCOUNT
-const fundAmt = 100; // Initial balance
+const fundAmt = 10000; // Initial balance
 
 const assetsOnlyDebit = {};
 const assetsOnlyCredit = {};
