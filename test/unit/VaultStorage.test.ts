@@ -1,11 +1,11 @@
 import { IAccountKeys, IKeysStorage } from '../../src/lib/keys-storage/IStorage';
 import { VaultStorage } from '../../src/lib/keys-storage/VaultStorage';
-import { SYSTEM_ACCOUNTS } from '../../src/lib/stellar/StellarConst';
 
 // // GBSALEPFZQMIAOMLIBKMRGIA2OM4TE265PT2W6BZO6ASFXJGBRI2QKNJ
 
 describe('Vault storage tests', () => {
     const storage: IKeysStorage = new VaultStorage();
+    const NAME = 'TEST';
     const keys: IAccountKeys = {
         base: {
             address: 'GCSHY2NI6YJED5IRZIJDKZELBQQH3S5CKH5IPU22SWWX26UYVW54D63O',
@@ -18,8 +18,8 @@ describe('Vault storage tests', () => {
     };
 
     test('Check is account keys stored properly', async (done) => {
-        storage.saveAccountKeys(SYSTEM_ACCOUNTS.RS_MAIN, keys);
-        const response = await storage.getAccountKeys(SYSTEM_ACCOUNTS.RS_MAIN);
+        storage.saveAccountKeys(NAME, keys);
+        const response = await storage.getAccountKeys(NAME);
         console.log('response', response.base.secret);
         expect(response.base.secret).toBe(keys.base.secret);
         done();
