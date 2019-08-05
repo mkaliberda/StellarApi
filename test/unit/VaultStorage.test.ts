@@ -1,6 +1,5 @@
 import { IAccountKeys, IKeysStorage } from '../../src/lib/keys-storage/IStorage';
 import { VaultStorage } from '../../src/lib/keys-storage/VaultStorage';
-import { SYSTEM_ACCOUNTS } from '../../src/lib/stellar/StellarConst';
 
 // // GBSALEPFZQMIAOMLIBKMRGIA2OM4TE265PT2W6BZO6ASFXJGBRI2QKNJ
 
