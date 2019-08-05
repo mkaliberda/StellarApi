@@ -38,6 +38,7 @@ export class StellarOperationsService {
         await Promise.all([
             this.accountManager.checkEnoughBalance(srcKeys.publicKey(), params.asset + CREDIT, new Decimal(params.amount).plus(fee)),
             this.accountManager.checkEnoughBalance(dstKeys.publicKey(), params.asset + CREDIT),
+            this.accountManager.checkEnoughBalance(profitKeys ? profitKeys.publicKey() : undefined, params.asset + CREDIT),
         ]);
 
         result.push(await this.txManager.sendAsset(
@@ -73,6 +74,7 @@ export class StellarOperationsService {
             this.accountManager.checkEnoughBalance(rsKeys.publicKey(), params.asset + CREDIT, new Decimal(params.amount)),
             this.accountManager.checkEnoughBalance(rsKeys.publicKey(), params.asset + DEBIT, new Decimal(params.amount)),
             this.accountManager.checkEnoughBalance(usrKeys.publicKey(), params.asset + CREDIT),
+            this.accountManager.checkEnoughBalance(profitKeys ? profitKeys.publicKey() : undefined, params.asset + CREDIT),
             this.accountManager.checkEnoughBalance(serviceKeys.publicKey(), params.asset + DEBIT),
         ]);
         if (profitKeys) {
@@ -136,6 +138,9 @@ export class StellarOperationsService {
         await Promise.all([
             this.accountManager.checkEnoughBalance(usrKeys.publicKey(), params.asset + CREDIT, new Decimal(params.amount)),
             this.accountManager.checkEnoughBalance(serviceKeys.publicKey(), params.asset + DEBIT, new Decimal(params.amount)),
+            this.accountManager.checkEnoughBalance(rsKeys.publicKey(), params.asset + CREDIT),
+            this.accountManager.checkEnoughBalance(rsKeys.publicKey(), params.asset + DEBIT),
+            this.accountManager.checkEnoughBalance(profitKeys ? profitKeys.publicKey() : undefined, params.asset + CREDIT),
         ]);
         result.push(await this.txManager.sendAsset(
             usrKeys, rsKeys,
@@ -171,7 +176,7 @@ export class StellarOperationsService {
             this.accountManager.checkEnoughBalance(toKeys.publicKey(), params.asset_to + CREDIT, new Decimal(params.amount_to)),
             this.accountManager.checkEnoughBalance(fromKeys.publicKey(), params.asset_to + CREDIT),
             this.accountManager.checkEnoughBalance(toKeys.publicKey(), params.asset_from + CREDIT),
-            this.accountManager.checkEnoughBalance(profitKeys.publicKey(), params.asset_from + CREDIT),
+            this.accountManager.checkEnoughBalance(profitKeys ? profitKeys.publicKey() : undefined, params.asset_from + CREDIT),
         ]);
 
         result.push(await this.txManager.sendAsset(
