@@ -3,13 +3,11 @@ import { IKeyPair } from '../src/lib/keys-storage/IStorage';
 import { VaultStorage } from '../src/lib/keys-storage/VaultStorage';
 import { CREDIT, DEBIT, SYSTEM_ACCOUNTS } from '../src/lib/stellar/StellarConst';
 import { StellarTxManager } from '../src/lib/stellar/StellarTxManager';
-import asyncForEach from '../src/lib/utils/AsyncForEach';
+import { createInternalWallet, fundInternalWallet } from './stellar-comand';
 
-const assetsToRSObj = { DIMO: 500000 , TNZS: 500000 }; // initial Tokens Pool
+const assetsToRSObj = { DIMO: 10000 , TNZS: 10000 }; // initial Tokens Pool
 const serviceName = SYSTEM_ACCOUNTS.RS_MAIN; // Name of service
 const fundAmt = 100; // Initial balance
-
-const txManager = new StellarTxManager();
 const storageManager = new VaultStorage();
 
 const assetsToRSTyped = {};
@@ -27,32 +25,6 @@ const saveRootAccount = async () => {
     };
     await storageManager.saveAccountKeys(SYSTEM_ACCOUNTS.ROOT, { base: rootWaller, pending: rootWaller });
     console.log('Saved ROOT to Vault');
-};
-
-const createInternalWallet = async (
-        assets: any,
-        walletName: string,
-        balance: number
-    ) => {
-    const newWalletMain: IKeyPair = await txManager.createAndTrustAccount(Object.keys(assets), balance.toString());
-    const newWalletPending: IKeyPair = await txManager.createAndTrustAccount(Object.keys(assets), balance.toString());
-    await storageManager.saveAccountKeys(walletName, { base: newWalletMain, pending: newWalletPending });
-    console.log('Created wallet: ', newWalletMain);
-    return newWalletMain;
-};
-
-const fundInternalWallet = async (
-        assets: object,
-        toWallet: IKeyPair
-    ) => {
-    // Fund debit and credit token from ROOT account
-    console.log('Start fund assets to account');
-    const rootPair = StellarTxManager.getKeyPair(env.stellar.seeds.ROOT_SEED);
-    const toWalletPair = StellarTxManager.getKeyPair(toWallet.secret);
-    asyncForEach(Object.keys(assets), async (item) => {
-        await txManager.sendAsset(rootPair, toWalletPair, item, assets[item].toString());
-        console.log(`Funded ${ assets[item].toString() } of ${item}`);
-    });
 };
 
 saveRootAccount()

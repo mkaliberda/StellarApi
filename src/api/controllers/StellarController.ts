@@ -72,8 +72,8 @@ export class StellarController {
          * Third we send debit money from RS to external service account {service_acc} in amount = {amount}.
          * @route /api/wallet/deposit
          * @param {string} user_acc - User wallet address.
-         * @param {string} [service_acc=RS_MAIN] - External service account address.
-         * @param {string} [profit_acc] - Account for profit aggregation. Optional
+         * @param {string} [service_acc=CORE_SERVICE] - External service account address.
+         * @param {string} [profit_acc=CORE_MAIN] - Account for profit aggregation. Optional
          * @param {number} amount - Amount.
          * @param {number} [fee=0] - Profit amount for current operation. Optional
          * @param {string} asset - Currency. Without 'c' or 'd' suffix. (ex. DIMO)
@@ -89,7 +89,7 @@ export class StellarController {
          * Holding {amount} of {asset} in user pending account. Work only with credit money.
          * @route /api/wallet/hold/:address
          * @param {string} address - User wallet address.
-         * @param {string} asset - Holding asset.
+         * @param {string} asset - Holding asset. Without 'c' or 'd' suffix. (ex. DIMO)
          * @param {number} amount - Holding money amount.
          * @param {bool} [reverse=false] - Hold direction. true - [pending => base], false - [base => pending]
          * @returns {array} Array of stellar transactions reference (th_hash, ledger, etc.).
@@ -107,8 +107,8 @@ export class StellarController {
          * Third we send debit money from service account {service_acc} to RS in amount = {amount}.
          * @route /api/wallet/withdraw
          * @param {string} user_acc - User wallet address
-         * @param {string} service_acc - External service account address.
-         * @param {string} [profit_acc] - Account for profit aggregation. Optional
+         * @param {string} [service_acc=CORE_SERVICE] - External service account address.
+         * @param {string} [profit_acc=CORE_MAIN] - Account for profit aggregation. Optional
          * @param {number} amount - Amount.
          * @param {number} [fee=0] - Profit amount for current operation. Optional
          * @param {string} asset - Currency. Without 'c' or 'd' suffix. (ex. DIMO)

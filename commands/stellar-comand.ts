@@ -21,7 +21,7 @@ export const createInternalWallet = async (
 export const fundInternalWallet = async (
     assets: object,
     toWallet: IKeyPair,
-    fromService: string = SYSTEM_ACCOUNTS.RS_MAIN
+    fromService: string = SYSTEM_ACCOUNTS.ROOT
 ) => {
     // Fund debit and credit token
     console.log(`Start fund from ${ SYSTEM_ACCOUNTS.RS_MAIN } to account`);

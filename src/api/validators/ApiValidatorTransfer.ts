@@ -1,4 +1,6 @@
-import { IsOptional, IsNumber, IsString } from 'routing-controllers/node_modules/class-validator';
+import { IsNumber, IsOptional, IsString } from 'routing-controllers/node_modules/class-validator';
+
+import { SYSTEM_ACCOUNTS } from '../../lib/stellar/StellarConst';
 
 export class TransferParams {
     @IsString()
@@ -21,7 +23,7 @@ export class TransferParams {
     @IsNumber()
     public fee: number;
 
-    constructor(profit_acc: string = '',
+    constructor(profit_acc: string = SYSTEM_ACCOUNTS.CORE_MAIN,
                 fee: number = 0) {
         this.fee = fee;
         this.profit_acc = profit_acc;

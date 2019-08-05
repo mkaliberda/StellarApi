@@ -35,7 +35,6 @@ export class StellarOperationsService {
         const profitKeys: Keypair = params.profit_acc ? await this.loadKeyPairs(params.profit_acc) : undefined;
         const result: StellarBaseResponse[] = [];
         const fee = profitKeys && params.fee ? params.fee : 0;
-
         await Promise.all([
             this.accountManager.checkEnoughBalance(srcKeys.publicKey(), params.asset + CREDIT, new Decimal(params.amount).plus(fee)),
             this.accountManager.checkEnoughBalance(dstKeys.publicKey(), params.asset + CREDIT),
@@ -70,14 +69,6 @@ export class StellarOperationsService {
         const rsKeys: Keypair = await this.loadKeyPairs(SYSTEM_ACCOUNTS.RS_MAIN);
         const fee = profitKeys && params.fee ? params.fee : 0;
         const result: StellarBaseResponse[] = [];
-        console.log(
-            usrKeys,
-            serviceKeys,
-            profitKeys,
-            rsKeys,
-            fee,
-            result
-        );
         await Promise.all([
             this.accountManager.checkEnoughBalance(rsKeys.publicKey(), params.asset + CREDIT, new Decimal(params.amount)),
             this.accountManager.checkEnoughBalance(rsKeys.publicKey(), params.asset + DEBIT, new Decimal(params.amount)),
@@ -87,6 +78,7 @@ export class StellarOperationsService {
         if (profitKeys) {
             this.accountManager.checkEnoughBalance(profitKeys.publicKey(), params.asset + CREDIT);
         }
+        // TODO IS IT FROM SUM
         result.push(await this.txManager.sendAsset(
             rsKeys, usrKeys,
             params.asset + CREDIT,
@@ -141,18 +133,15 @@ export class StellarOperationsService {
         const rsKeys: Keypair = await this.loadKeyPairs(SYSTEM_ACCOUNTS.RS_MAIN);
         const result: StellarBaseResponse[] = [];
         const fee = profitKeys && params.fee ? params.fee : 0;
-        console.log('FIRST!!!!!!!!!');
         await Promise.all([
             this.accountManager.checkEnoughBalance(usrKeys.publicKey(), params.asset + CREDIT, new Decimal(params.amount)),
             this.accountManager.checkEnoughBalance(serviceKeys.publicKey(), params.asset + DEBIT, new Decimal(params.amount)),
         ]);
-        console.log('SECOND!!!!!!!!!');
         result.push(await this.txManager.sendAsset(
             usrKeys, rsKeys,
             params.asset + CREDIT,
             new Decimal(params.amount).minus(fee).toString()
         ));
-        console.log('3!!!!!!!!!');
         if (profitKeys && fee) {
             result.push(await this.txManager.sendAsset(
                 usrKeys, profitKeys,
