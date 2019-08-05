@@ -55,7 +55,7 @@ export class StellarController {
          * Create wallet with trust to following assets.
          * @route /api/wallet/create
          * @param {array} assets - Assets array. (JSON?).
-         * @param {number} [balance=10] - Init balance. Optional. Default = 10 XLM.
+         * @param {number} [balance=100] - Init balance. Optional. Default = 10 XLM.
          * @param {bool} [is_user=true] - Wallet type. true - user wallet, false - external service wallet.
          * @returns  {string} - Return public address of new wallet.
          */
@@ -72,7 +72,7 @@ export class StellarController {
          * Third we send debit money from RS to external service account {service_acc} in amount = {amount}.
          * @route /api/wallet/deposit
          * @param {string} user_acc - User wallet address.
-         * @param {string} service_acc - External service account address.
+         * @param {string} [service_acc=RS_MAIN] - External service account address.
          * @param {string} [profit_acc] - Account for profit aggregation. Optional
          * @param {number} amount - Amount.
          * @param {number} [fee=0] - Profit amount for current operation. Optional
@@ -182,7 +182,7 @@ export class StellarController {
          * @route /api/wallet/create
          * @param {array} assets - Assets array. (JSON?).
          * @param {string} from_acc - Wallet address.
-         * @param {string} [to_acc='RS'] - Trust to account
+         * @param {string} [to_acc='ROOT'] - Trust to account
          * @param {bool} [is_user=true] - Wallet type. true - user wallet, false - external service wallet.
          * @returns {string} - Return public address of new wallet.
          */

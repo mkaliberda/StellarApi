@@ -1,10 +1,11 @@
 import request from 'supertest';
 
-import { env } from '../../../src/env';
+import { SYSTEM_ACCOUNTS } from '../../../src/lib/stellar/StellarConst';
+import { Address } from '../../../src/lib/stellar/StellarPatterns';
+// import { env } from '../../../src/env';
 import { bootstrapApp, BootstrapSettings } from '../utils/bootstrap';
 
 describe('/api', () => {
-
     // -------------------------------------------------------------------------
     // Setup up
     // -------------------------------------------------------------------------
@@ -13,32 +14,56 @@ describe('/api', () => {
         'TNZS',
     ];
     let settings: BootstrapSettings;
-    let accountFirst;
+    let firstAddress: Address;
+
     beforeAll(async () => {
-        const newAddrParams = {
-            "assets": "[\"DIMO\", \"TNZS\"]",
-            "is_user": true,
-            "amount": 100,
-        };
         settings = await bootstrapApp();
-        accountFirst = await request(settings.app).post('/api/wallet/create')
-        .send(newAddrParams)
-        .set('Accept', 'application/json');
+        const newAddrParams = {
+            assets: JSON.stringify(assetArray),
+            is_user: true,
+            amount: 100,
+        };
+        const response = await request(settings.app).post('/api/wallet/create')
+            .set('Accept', 'application/json')
+            .send(newAddrParams);
+        console.log(response.text);
+        firstAddress = JSON.parse(response.text);
     });
+
+    jest.setTimeout(30000);
 
     // -------------------------------------------------------------------------
     // Test cases
     // -------------------------------------------------------------------------
 
-    test('GET: / should return the api-version', async (done) => {
-        console.log('accountFirst', accountFirst);
-        // const response = await request(settings.app)
-        //     .get(`/api/wallet/balance/${ accountFirst }`)
-        //     .expect(200);
-        // const respJson = JSON.parse(response.text);
-        // console.log(respJson);
-        // expect(response.text.base).toBe('0.0000000');
+    test('trust-to-another-asset', async (done) => {
+        // trust to new asset
+        const newAssets = ['BTC'];
+        const params = {
+            assets: JSON.stringify(newAssets),
+            from_acc: firstAddress,
+        };
+        const response = await request(settings.app).post('/api/wallet/trust')
+            .set('Accept', 'application/json')
+            .send(params);
+        expect(response.body).toBe(newAssets);
         done();
+    });
+
+    test('deposit-to-first-address', async (done) => {
+        // deposit to setUp account
+        let response;
+        response = await request(settings.app).post('/api/wallet/deposit')
+            .set('Accept', 'application/json')
+            .send({
+                user_acc: firstAddress,
+                service_acc: SYSTEM_ACCOUNTS.RS_MAIN,
+                amount: 10,
+                fee: 0,
+                asset: 'DIMO',
+            });
+        done();
+        console.log(response.body);
     });
 
 });

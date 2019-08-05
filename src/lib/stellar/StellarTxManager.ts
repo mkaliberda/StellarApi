@@ -117,6 +117,8 @@ export class StellarTxManager extends StellarBaseManager {
         try {
             transaction = await this._getTxBuilder(srcKeyPair);
         } catch (err) {
+            console.log(srcKeyPair, destKeyPair);
+            console.error(err);
             throw new Error('TODO ADD EXCEPTION 1' + err);
         }
         transaction.addOperation(
@@ -132,6 +134,7 @@ export class StellarTxManager extends StellarBaseManager {
         try {
             response = await this.server.submitTransaction(tx);
         } catch (err) {
+            console.log(response);
             throw new Error(response);
         }
         return {
