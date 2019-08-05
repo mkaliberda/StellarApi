@@ -268,7 +268,7 @@ describe('apiWallet', () => {
         const astFrom = assetArray[1];
         const astTo = assetArray[0];
         const accountFrom = firstAddress;
-        const accountTo = SYSTEM_ACCOUNTS.CORE_MAIN; //secondAddress;
+        const accountTo = SYSTEM_ACCOUNTS.CORE_MAIN;
         const accountProfit = secondAddress;
 
         const balanceBeforeFrom = await request(settings.app).get(`/api/wallet/balance/${accountFrom}`)
@@ -281,8 +281,6 @@ describe('apiWallet', () => {
         const balanceBeforeFromSec = await request(settings.app).get(`/api/wallet/balance/${accountFrom}`)
             .query({ 'assets[]': [astTo] });
         const balanceBeforeToSec = await request(settings.app).get(`/api/wallet/balance/${accountTo}`)
-            .query({ 'assets[]': [astTo] });
-        const balanceBeforeProfitSec = await request(settings.app).get(`/api/wallet/balance/${accountProfit}`)
             .query({ 'assets[]': [astTo] });
 
         const balanceBeforeFromDec = new Decimal(balanceBeforeFrom.body.base.credit[0].balance);
@@ -316,8 +314,6 @@ describe('apiWallet', () => {
             .query({ 'assets[]': [astTo] });
         const balanceAfterToSec = await request(settings.app).get(`/api/wallet/balance/${accountTo}`)
             .query({ 'assets[]': [astTo] });
-        const balanceAfterProfitSec = await request(settings.app).get(`/api/wallet/balance/${accountProfit}`)
-            .query({ 'assets[]': [astTo] });
 
         const amtFromWFee = new Decimal(amt_from).plus(fee);
         const balanceAfterFromDec = new Decimal(balanceAfterFrom.body.base.credit[0].balance);
@@ -326,7 +322,6 @@ describe('apiWallet', () => {
 
         const balanceAfterFromDecSec = new Decimal(balanceAfterFromSec.body.base.credit[0].balance);
         const balanceAfterToDecSec = new Decimal(balanceAfterToSec.body.base.credit[0].balance);
-        const balanceProfitAfterDecSec = new Decimal(balanceAfterProfitSec.body.base.credit[0].balance);
 
         console.log(amtFromWFee, balanceBeforeFromDec, balanceAfterFromDec);
 
