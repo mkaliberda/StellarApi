@@ -29,8 +29,8 @@ Content-Type: application/json
 
 {
     "assets": "[\"DIMO\"]",
-    "from_acc": "GDE645YPGQHXEJOGSRQ5HF7Z2CZYFW5Q3RSOUFUVJXUYR6GFSA4EWFUJ",
-    "is_user": false
+    "from_acc": "GBX5X7EDXRXJ7Q4E7V5A32EFZNM4XTVMBSNN7FBT2PEAKMNS3GWSJHZY",
+    "is_user": true
 }
 
 ###
@@ -55,11 +55,9 @@ Accept: application/json
 Content-Type: application/json
 
 {
-    "user_acc": "GCI57H47MFFNEMMPCXCKC6PPCVTSLDH7SEHCXYOMDRXBFMC272GFH2GX",
-    "service_acc": "GCY7N6WABJWDOM44QLDBO375DWWVAEXH5U2CPF3ULXG6JTGV6QFLKUZL",
-    "profit_acc": "GASTRZKR227P6HD3NJSQVDJ7PXVMFJJXGDNNMB3MCVTGB6QGZEHMSQWD",
+    "user_acc": "GBX5X7EDXRXJ7Q4E7V5A32EFZNM4XTVMBSNN7FBT2PEAKMNS3GWSJHZY",
     "amount": 100,
-    "fee": 1000,
+    "fee": 1,
     "asset": "DIMO"
 }
 
