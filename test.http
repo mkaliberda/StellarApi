@@ -1,6 +1,10 @@
 ###
 
+<<<<<<< HEAD
 GET http://localhost:3000/api/wallet/balance/GCY7N6WABJWDOM44QLDBO375DWWVAEXH5U2CPF3ULXG6JTGV6QFLKUZL?assets[]=DIMO&assets[]=TNZS&include_pending=false
+=======
+GET http://localhost:3000/api/wallet/balance/RS_MAIN?assets[]=DIMO&assets[]=TNZS&include_pending=false
+>>>>>>> cf18e9860475990bc96dcdd339362330bb6d2ff6
 Accept: application/json
 Content-Type: application/json
 
@@ -16,7 +20,25 @@ Accept: application/json
 Content-Type: application/json
 
 {
+<<<<<<< HEAD
     "assets": "[\"DIMO\", \"ADD\"]",
+    "is_user": false
+=======
+    "assets": "[\"BTC\", \"TNZS\"]",
+    "is_user": true
+>>>>>>> cf18e9860475990bc96dcdd339362330bb6d2ff6
+}
+
+###
+
+###
+POST http://localhost:3000/api/wallet/trust
+Accept: application/json
+Content-Type: application/json
+
+{
+    "assets": "[\"DIMO\"]",
+    "from_acc": "GDE645YPGQHXEJOGSRQ5HF7Z2CZYFW5Q3RSOUFUVJXUYR6GFSA4EWFUJ",
     "is_user": false
 }
 

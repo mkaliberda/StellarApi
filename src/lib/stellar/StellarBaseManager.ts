@@ -1,7 +1,7 @@
+import { HttpError } from 'routing-controllers';
 import { Asset, Keypair, Network, Operation, Server } from 'stellar-sdk';
 
 import { env } from '../../env';
-import { HttpError } from 'routing-controllers';
 
 if (env.stellar.network.passphrase) {
     Network.use(new Network(env.stellar.network.passphrase));
@@ -12,7 +12,6 @@ if (env.stellar.network.passphrase) {
 export class StellarBaseManager {
 
     public static getKeyPair(secret: string): Keypair {
-        console.log('Get keypair from secret', secret);
         try {
             return Keypair.fromSecret(secret);
         } catch (error) {

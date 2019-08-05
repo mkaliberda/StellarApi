@@ -2,10 +2,7 @@ import { Decimal } from 'decimal.js';
 
 import { StellarBaseManager } from './StellarBaseManager';
 import { BadAddressError, BalanceError, NoTrustlineError } from './StellarError';
-import { Decimal } from 'decimal.js';
-import { Address } from './StellarPatterns';
-import { BadAddressError } from './StellarError';
-import { TxHistoryResponse } from './StellarPatterns';
+import { Address, TxHistoryResponse } from './StellarPatterns';
 
 export class StellarAccountManager extends StellarBaseManager {
     constructor() {
@@ -13,6 +10,7 @@ export class StellarAccountManager extends StellarBaseManager {
     }
 
     public async getBalances(address: string): Promise<any> {
+
         let account: any;
         try {
             account = await this.server.loadAccount(address);
@@ -71,7 +69,7 @@ export class StellarAccountManager extends StellarBaseManager {
         });
     }
 
-    private async historyToResponse(records: any): Promise<TxHistoryResponse[]> {
+    private async historyToResponse(records: any): Promise<any> {
         return await Promise.all(records.map(async (tx: any) => {
             const operations = await this.getOperationsFromTx(tx);
             return {

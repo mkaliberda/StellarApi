@@ -1,22 +1,20 @@
+import { Decimal } from 'decimal.js';
+import { Keypair } from 'stellar-base';
+import { Service } from 'typedi';
+
 import { Logger, LoggerInterface } from '../../decorators/Logger';
 import { IKeysStorage } from '../../lib/keys-storage/IStorage';
 import { VaultStorage } from '../../lib/keys-storage/VaultStorage';
-
-import { StellarTxManager } from '../../lib/stellar/StellarTxManager';
 import { StellarAccountManager } from '../../lib/stellar/StellarAccountManager';
-import { Address, StellarBaseResponse } from '../../lib/stellar/StellarPatterns';
 import { CREDIT, DEBIT, SYSTEM_ACCOUNTS } from '../../lib/stellar/StellarConst';
-import { Keypair } from 'stellar-base';
+import { Address, StellarBaseResponse } from '../../lib/stellar/StellarPatterns';
+import { StellarTxManager } from '../../lib/stellar/StellarTxManager';
 import asyncForEach from '../../lib/utils/AsyncForEach';
-
-import { TransferParams } from '../validators/ApiValidatorTransfer';
-import { DepositWithdrawParams } from '../validators/ApiValidatorDepositWithdraw';
-import { HoldParams } from '../validators/ApiValidatorHold';
-import { ExchangeParams } from '../validators/ApiValidatorExchange';
 import { CreateAssetParams } from '../validators/ApiValidatorCreateAsset';
-
-import { Decimal } from 'decimal.js';
-import { Service } from 'typedi';
+import { DepositWithdrawParams } from '../validators/ApiValidatorDepositWithdraw';
+import { ExchangeParams } from '../validators/ApiValidatorExchange';
+import { HoldParams } from '../validators/ApiValidatorHold';
+import { TransferParams } from '../validators/ApiValidatorTransfer';
 
 @Service()
 export class StellarOperationsService {
@@ -73,7 +71,6 @@ export class StellarOperationsService {
         const rsKeys: Keypair = await this.loadKeyPairs(SYSTEM_ACCOUNTS.RS_MAIN);
         const fee = profitKeys && params.fee ? params.fee : 0;
         const result: StellarBaseResponse[] = [];
-
         await Promise.all([
             this.accountManager.checkEnoughBalance(rsKeys.publicKey(), params.asset + CREDIT, new Decimal(params.amount)),
             this.accountManager.checkEnoughBalance(rsKeys.publicKey(), params.asset + DEBIT, new Decimal(params.amount)),
@@ -81,7 +78,10 @@ export class StellarOperationsService {
             this.accountManager.checkEnoughBalance(profitKeys ? profitKeys.publicKey() : undefined, params.asset + CREDIT),
             this.accountManager.checkEnoughBalance(serviceKeys.publicKey(), params.asset + DEBIT),
         ]);
-
+        if (profitKeys) {
+            this.accountManager.checkEnoughBalance(profitKeys.publicKey(), params.asset + CREDIT);
+        }
+        // TODO IS IT FROM SUM
         result.push(await this.txManager.sendAsset(
             rsKeys, usrKeys,
             params.asset + CREDIT,
@@ -101,6 +101,7 @@ export class StellarOperationsService {
             params.asset + DEBIT,
             params.amount.toString()
         ));
+        // return 'ADdress';
 
         this.log.info(
             `Deposit ${params.amount} ${params.asset} to user ${usrKeys.publicKey()} and
@@ -135,7 +136,6 @@ export class StellarOperationsService {
         const rsKeys: Keypair = await this.loadKeyPairs(SYSTEM_ACCOUNTS.RS_MAIN);
         const result: StellarBaseResponse[] = [];
         const fee = profitKeys && params.fee ? params.fee : 0;
-
         await Promise.all([
             this.accountManager.checkEnoughBalance(usrKeys.publicKey(), params.asset + CREDIT, new Decimal(params.amount)),
             this.accountManager.checkEnoughBalance(serviceKeys.publicKey(), params.asset + DEBIT, new Decimal(params.amount)),
@@ -143,13 +143,11 @@ export class StellarOperationsService {
             this.accountManager.checkEnoughBalance(rsKeys.publicKey(), params.asset + DEBIT),
             this.accountManager.checkEnoughBalance(profitKeys ? profitKeys.publicKey() : undefined, params.asset + CREDIT),
         ]);
-
         result.push(await this.txManager.sendAsset(
             usrKeys, rsKeys,
             params.asset + CREDIT,
             new Decimal(params.amount).minus(fee).toString()
         ));
-
         if (profitKeys && fee) {
             result.push(await this.txManager.sendAsset(
                 usrKeys, profitKeys,
@@ -209,7 +207,7 @@ export class StellarOperationsService {
         const ownerAccount: Keypair = await this.loadKeyPairs(params.from_acc);
         const trustAccount: Keypair = await this.loadKeyPairs(params.to_acc);
         const trust = await this.txManager.changeTrustLine([params.asset_name + CREDIT,
-                params.asset_name + DEBIT],
+            params.asset_name + DEBIT],
             ownerAccount,
             trustAccount);
         const result: StellarBaseResponse[] = [];
@@ -224,7 +222,23 @@ export class StellarOperationsService {
         return result;
     }
 
-    private async loadKeyPairs(account: Address, pending: boolean = false): Promise<Keypair> | undefined {
+    public async trustWallet(assets: string[],
+                             from_acc: Address,
+                             to_acc: Address,
+                             isUser: boolean = true): Promise<string[]> {
+        const typeAsset = isUser ? CREDIT : DEBIT;
+        assets.forEach((item, index) => {
+            assets[index] = item + typeAsset;
+        });
+        const fromKeys: Keypair = await this.loadKeyPairs(from_acc);
+        const toKeys: Keypair = await this.loadKeyPairs(to_acc);
+        await this.txManager.changeTrustLine(assets,
+                                             fromKeys,
+                                             toKeys);
+        return assets;
+    }
+
+    private async loadKeyPairs(account: any, pending: boolean = false): Promise<Keypair> | undefined {
         if (!account) {
             return undefined;
         }

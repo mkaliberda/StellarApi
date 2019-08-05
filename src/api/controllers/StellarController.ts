@@ -11,6 +11,7 @@ import { ExchangeParams } from '../validators/ApiValidatorExchange';
 import { HistoryTxParams } from '../validators/ApiValidatorHistoryTx';
 import { HoldParams } from '../validators/ApiValidatorHold';
 import { TransferParams } from '../validators/ApiValidatorTransfer';
+import { TrustWalletParams } from '../validators/ApiValidatorTrustWallet';
 
 @JsonController('/wallet')
 export class StellarController {
@@ -54,7 +55,7 @@ export class StellarController {
          * Create wallet with trust to following assets.
          * @route /api/wallet/create
          * @param {array} assets - Assets array. (JSON?).
-         * @param {number} [balance=10] - Init balance. Optional. Default = 10 XLM.
+         * @param {number} [balance=100] - Init balance. Optional. Default = 10 XLM.
          * @param {bool} [is_user=true] - Wallet type. true - user wallet, false - external service wallet.
          * @returns  {string} - Return public address of new wallet.
          */
@@ -71,8 +72,8 @@ export class StellarController {
          * Third we send debit money from RS to external service account {service_acc} in amount = {amount}.
          * @route /api/wallet/deposit
          * @param {string} user_acc - User wallet address.
-         * @param {string} service_acc - External service account address.
-         * @param {string} [profit_acc] - Account for profit aggregation. Optional
+         * @param {string} [service_acc=CORE_SERVICE] - External service account address.
+         * @param {string} [profit_acc=CORE_MAIN] - Account for profit aggregation. Optional
          * @param {number} amount - Amount.
          * @param {number} [fee=0] - Profit amount for current operation. Optional
          * @param {string} asset - Currency. Without 'c' or 'd' suffix. (ex. DIMO)
@@ -173,4 +174,19 @@ export class StellarController {
          */
         return this.stellarOperationService.createAsset(params);
     }
+
+    @Post('/trust')
+    public async trustWallet(@Body() params: TrustWalletParams): Promise<string[]> {
+        /**
+         * Trust from the one account to another following assets.
+         * @route /api/wallet/create
+         * @param {array} assets - Assets array. (JSON?).
+         * @param {string} from_acc - Wallet address.
+         * @param {string} [to_acc='ROOT'] - Trust to account
+         * @param {bool} [is_user=true] - Wallet type. true - user wallet, false - external service wallet.
+         * @returns {string} - Return public address of new wallet.
+         */
+        return await this.stellarOperationService.trustWallet(JSON.parse(params.assets), params.from_acc, params.to_acc, params.is_user);
+    }
+
 }
