@@ -7,7 +7,7 @@ import { createInternalWallet, fundInternalWallet } from './stellar-comand';
 
 const assetsToRSObj = { DIMO: 10000 , TNZS: 10000 }; // initial Tokens Pool
 const serviceName = SYSTEM_ACCOUNTS.RS_MAIN; // Name of service
-const fundAmt = 100; // Initial balance
+const fundAmt = 1000; // Initial balance
 const storageManager = new VaultStorage();
 
 const assetsToRSTyped = {};
