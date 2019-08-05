@@ -47,6 +47,7 @@ export class StellarAccountManager extends StellarBaseManager {
             throw new NoTrustlineError(address, asset);
         } else if (new Decimal(assetBalanceObj.balance).lessThan(amount)) {
             // Balance error
+            console.log("BALANCE ERROR!!!!!!!!!!!!", assetBalanceObj.balance, amount);
             throw new BalanceError(address, asset, assetBalanceObj.balance);
         }
     }

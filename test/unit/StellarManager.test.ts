@@ -24,13 +24,13 @@ describe('StellarTxManagerBase', () => {
     jest.setTimeout(30000);
 
     beforeAll(async () => {
-        accountFirst = await stellaTx.createAndTrustAccount(assetArray, '10');
-        accountSecond = await stellaTx.createAndTrustAccount(assetArray, '10');
+        accountFirst = await stellaTx.createAndTrustAccount(assetArray, '100');
+        accountSecond = await stellaTx.createAndTrustAccount(assetArray, '100');
         rootPair = StellarTxManager.getKeyPair(ROOT_SECRET);
     });
 
     test('create-account-and-trust-after 1', async (done) => {
-        const userSepTrust: IKeyPair = await stellaTx.createAccount('10');
+        const userSepTrust: IKeyPair = await stellaTx.createAccount('100');
         const userSepTrustKeyPair: Keypair  = StellarTxManager.getKeyPair(userSepTrust.secret);
         expect(userSepTrustKeyPair).toBeInstanceOf(Keypair);
         expect(userSepTrust).toHaveProperty('secret');
@@ -42,7 +42,7 @@ describe('StellarTxManagerBase', () => {
         done();
     });
     test('createAndTrustAccount 2', async (done) => {
-        const respAcc = await stellaTx.createAndTrustAccount(assetArray, '10');
+        const respAcc = await stellaTx.createAndTrustAccount(assetArray, '100');
         expect(respAcc).toHaveProperty('secret');
         expect(respAcc).toHaveProperty('address');
         done();
@@ -68,6 +68,7 @@ describe('StellarTxManagerBase', () => {
         const haveBalance = '1.9999999';
         const accountFirstPair = StellarTxManager.getKeyPair(accountFirst.secret);
         const accountSecondPair = StellarTxManager.getKeyPair(accountSecond.secret);
+        console.log(accountFirstPair, assetArray, haveBalance);
         await stellaTx.sendAsset(accountFirstPair,
                                  accountSecondPair,
                                  assetArray[0],
@@ -89,7 +90,7 @@ describe('StellarTxManagerBase', () => {
                 getAsset += 1;
             }
         });
-        // expect(getAsset).toBe(1);
+        expect(getAsset).toBe(1);
         done();
     });
 

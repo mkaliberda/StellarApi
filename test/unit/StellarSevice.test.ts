@@ -18,7 +18,7 @@ describe('StellarServiceTest', () => {
     const service = new StellarService(log);
 
     beforeAll(async () => {
-        accountFirst = await service.createWallet(assetArray, true, 10);
+        accountFirst = await service.createWallet(assetArray, true, 100);
     });
 
     test('get-balance', async (done) => {
@@ -36,7 +36,7 @@ describe('StellarServiceTest', () => {
             assets: ['DIMO', 'TNZS'],
             include_pending: 'true',
         };
-        await service.createInternalWallet(assetArray, 'RS_TEST_MAIN', 10);
+        await service.createInternalWallet(assetArray, 'RS_TEST_MAIN', 100);
         const balance = await service.getAccountBalance('RS_TEST_MAIN', balParams);
         expect(balance.base.credit[0].balance).toBe('0.0000000');
         done();
