@@ -1,6 +1,6 @@
 ###
 
-GET http://localhost:3000/api/wallet/tx-history/GDKGMU2QL6RILIAQV4BKB5AYQSOUJQL5FHXEQ5JWZAQT3TWTNRAQ7VR7?limit=10&page=1
+GET http://localhost:3000/api/wallet/balance/GCY7N6WABJWDOM44QLDBO375DWWVAEXH5U2CPF3ULXG6JTGV6QFLKUZL?assets[]=DIMO&assets[]=TNZS&include_pending=false
 Accept: application/json
 Content-Type: application/json
 
@@ -17,7 +17,7 @@ Content-Type: application/json
 
 {
     "assets": "[\"DIMO\", \"ADD\"]",
-    "is_user": true
+    "is_user": false
 }
 
 ###
@@ -42,11 +42,11 @@ Accept: application/json
 Content-Type: application/json
 
 {
-    "user_acc": "GBGVBZZT725ELLW7FEMPVSZHMOLZBS76UQ7LU32EYJ52AQ7S5DB4XT73",
-    "service_acc": "RS_MAIN",
-    "profit_acc": "RS_MAIN",
-    "amount": 20,
-    "fee": 1,
+    "user_acc": "GCI57H47MFFNEMMPCXCKC6PPCVTSLDH7SEHCXYOMDRXBFMC272GFH2GX",
+    "service_acc": "GCY7N6WABJWDOM44QLDBO375DWWVAEXH5U2CPF3ULXG6JTGV6QFLKUZL",
+    "profit_acc": "GASTRZKR227P6HD3NJSQVDJ7PXVMFJJXGDNNMB3MCVTGB6QGZEHMSQWD",
+    "amount": 100,
+    "fee": 1000,
     "asset": "DIMO"
 }
 
@@ -69,9 +69,9 @@ Accept: application/json
 Content-Type: application/json
 
 {
-    "user_acc": "GDCOAHYVR4FVC4F2Y2CWN33QAKAGCH7OSNQ27KESJ7QMXQSPZDRGQJFX",
-    "service_acc": "GBFY3PPRYEHEM27MNKZDTWYTVOIHRCMRT3DPUQVJD6BDJ577TG45PAFA",
-    "profit_acc": "GDAESX6KYYRTHTA3QA4KHLGQDSQEOTJW6R7OJNK5Z3XS6LCEZDN7CYAN",
+    "user_acc": "",
+    "service_acc": "",
+    "profit_acc": "",
     "amount": 2,
     "fee": 1,
     "asset": "DIMO"
@@ -84,9 +84,9 @@ Accept: application/json
 Content-Type: application/json
 
 {
-    "from_acc": "GDCOAHYVR4FVC4F2Y2CWN33QAKAGCH7OSNQ27KESJ7QMXQSPZDRGQJFX",
-    "to_acc": "GBFY3PPRYEHEM27MNKZDTWYTVOIHRCMRT3DPUQVJD6BDJ577TG45PAFA",
-    "profit_acc": "GDAESX6KYYRTHTA3QA4KHLGQDSQEOTJW6R7OJNK5Z3XS6LCEZDN7CYAN",
+    "from_acc": "",
+    "to_acc": "",
+    "profit_acc": "",
     "amount_from": 2,
     "amount_to": 2,
     "fee": 1,

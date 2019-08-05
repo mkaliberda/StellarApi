@@ -7,7 +7,7 @@ import asyncForEach from '../src/lib/utils/AsyncForEach';
 
 const assetsToRSObj = { DIMO: 500000 , TNZS: 500000 }; // initial Tokens Pool
 const serviceName = SYSTEM_ACCOUNTS.RS_MAIN; // Name of service
-const fundAmt = 20; // Initial balance
+const fundAmt = 100; // Initial balance
 
 const txManager = new StellarTxManager();
 const storageManager = new VaultStorage();

@@ -1,6 +1,9 @@
 import { Decimal } from 'decimal.js';
 
 import { StellarBaseManager } from './StellarBaseManager';
+import { BadAddressError, BalanceError, NoTrustlineError } from './StellarError';
+import { Decimal } from 'decimal.js';
+import { Address } from './StellarPatterns';
 import { BadAddressError } from './StellarError';
 import { TxHistoryResponse } from './StellarPatterns';
 
@@ -32,17 +35,21 @@ export class StellarAccountManager extends StellarBaseManager {
         return await this.historyToResponse(tx.records);
     }
 
-    public async checkEnoughBalance(address: string, asset: string, amount: Decimal): Promise<void> {
+    public async checkEnoughBalance(address: string | undefined, asset: Address, amount: Decimal = new Decimal(0)): Promise<void> {
+        if (!address) {
+            return;
+        }
         const balances = await this.getBalances(address);
         const assetBalanceObj = balances.find(item => {
             return item.asset_code && item.asset_code === asset;
         });
+
         if (typeof assetBalanceObj === 'undefined') {
             // No trustline error
-            throw new Error(`Asset '${asset}' not found in '${address}' trustlines.`);
+            throw new NoTrustlineError(address, asset);
         } else if (new Decimal(assetBalanceObj.balance).lessThan(amount)) {
             // Balance error
-            throw new Error(`Account ${address} balance ${assetBalanceObj.balance} of ${asset} is less than ${amount}`);
+            throw new BalanceError(address, asset, assetBalanceObj.balance);
         }
     }
 
