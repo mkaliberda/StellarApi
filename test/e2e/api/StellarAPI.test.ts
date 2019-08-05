@@ -34,6 +34,8 @@ describe('apiWallet', () => {
             .set('Accept', 'application/json')
             .send(newAddrParams);
         secondAddress = responseSec.body;
+        const amt = 100;
+        const asset = assetArray[0];
     });
 
     jest.setTimeout(60000);
@@ -88,7 +90,7 @@ describe('apiWallet', () => {
             .query({ 'assets[]': [asset] });
         const base = balance.body.base;
         console.log(balance.body);
-        expect(base.credit[0].balance).toBe("10.0000000");
+        expect(base.credit[0].balance).toBe('10.0000000');
         done();
     });
 
@@ -97,29 +99,44 @@ describe('apiWallet', () => {
         const fee = 0.99;
         const amt = 10;
         const asset = assetArray[0];
+        const toAccount = firstAddress;
+
         const balanceProfitBefore = await request(settings.app).get(`/api/wallet/balance/${ SYSTEM_ACCOUNTS.CORE_MAIN }`)
             .query({ 'assets[]': [asset] });
-        const balBeforeDec =  new Decimal(JSON.parse(balanceProfitBefore.text).base.credit[0].balance);
+        const balanceToAccountBefore = await request(settings.app).get(`/api/wallet/balance/${toAccount}`)
+            .query({ 'assets[]': [asset] });
+
+        const balanceProfitBeforeDec =  new Decimal(balanceProfitBefore.body.base.credit[0].balance);
+        const balanceToAccountBeforeDec = new Decimal(balanceToAccountBefore.body.base.credit[0].balance);
+
         await request(settings.app).post('/api/wallet/deposit')
             .set('Accept', 'application/json')
             .send({
-                user_acc: firstAddress,
+                user_acc: toAccount,
                 amount: amt,
                 fee,
                 asset,
             });
+
         const balanceProfitAfter = await request(settings.app).get(`/api/wallet/balance/${ SYSTEM_ACCOUNTS.CORE_MAIN }`)
             .query({ 'assets[]': [asset] });
-        const balAfterDec =  new Decimal(JSON.parse(balanceProfitAfter.text).base.credit[0].balance);
-        expect(new Decimal(fee)).toEqual(balAfterDec.minus(balBeforeDec));
+        const balanceToAccountAfter = await request(settings.app).get(`/api/wallet/balance/${toAccount}`)
+            .query({ 'assets[]': [asset] });
+
+        const balanceProfitAfterDec =  new Decimal(JSON.parse(balanceProfitAfter.text).base.credit[0].balance);
+        const balanceToAccountAfterDec = new Decimal(JSON.parse(balanceToAccountAfter.text).base.credit[0].balance);
+
+        expect(new Decimal(fee)).toEqual(balanceProfitAfterDec.minus(balanceProfitBeforeDec));
+        expect(new Decimal(amt)).toEqual(balanceToAccountAfterDec.minus(balanceToAccountBeforeDec));
+
         done();
     });
 
-    test('hold-monney-and-unhold-after', async (done) => {
+    test('hold-money-and-un-hold-after', async (done) => {
         // hold-monney to setUp account
         const amt = 0.99;
         const astName = 'DIMO';
-        const accountHold = firstAddress;
+        const accountHold = firstAddress; //SYSTEM_ACCOUNTS.RS_MAIN;
         const balanceStart = await request(settings.app).get(`/api/wallet/balance/${ accountHold}`)
             .query({ 'assets[]': [astName] });
         const balStartDec =  new Decimal(balanceStart.body.base.credit[0].balance);
@@ -146,16 +163,18 @@ describe('apiWallet', () => {
 
         const balanceAfterReverse  = await request(settings.app).get(`/api/wallet/balance/${ accountHold }`)
             .query({ 'assets[]': [astName] });
-        const balbalanceAfterReverseDec =  new Decimal(balanceAfterReverse.body.base.credit[0].balance);
-        expect(balbalanceAfterReverseDec.minus(balAfterHoldDec)).toEqual(new Decimal(amt));
+        const balanceAfterReverseDec =  new Decimal(balanceAfterReverse.body.base.credit[0].balance);
+        expect(balanceAfterReverseDec.minus(balAfterHoldDec)).toEqual(new Decimal(amt));
         done();
     });
 
     test('hold-money-and-withdraw-after', async (done) => {
         // hold-monney to setUp account
+        const toHold = 1.99;
         const amt = 0.99;
+        const fee = 1;
         const astName = 'DIMO';
-        const accountHold = firstAddress;
+        const accountHold = firstAddress; //SYSTEM_ACCOUNTS.RS_MAIN;
         const balanceStart = await request(settings.app).get(`/api/wallet/balance/${ accountHold}`)
             .query({ 'assets[]': [astName] });
 
@@ -165,28 +184,32 @@ describe('apiWallet', () => {
             .set('Accept', 'application/json')
             .send({
                 asset: astName,
-                amount: amt,
+                amount: toHold,
             });
+
         const balanceAfterHold = await request(settings.app).get(`/api/wallet/balance/${ accountHold }`)
             .query({ 'assets[]': [astName], 'include_pending': true });
 
         const balAfterHoldDec =  new Decimal(balanceAfterHold.body.base.credit[0].balance);
         const balAfterHoldPendingDec =  new Decimal(balanceAfterHold.body.pending.credit[0].balance);
 
-        expect(balStartDec.minus(balAfterHoldDec)).toEqual(new Decimal(amt));
+        expect(balStartDec.minus(balAfterHoldDec)).toEqual(new Decimal(toHold));
+
         await request(settings.app).post(`/api/wallet/withdraw/`)
             .set('Accept', 'application/json')
             .send({
                 user_acc: accountHold,
                 amount: amt,
                 asset: astName,
+                fee,
             });
 
         const balanceAfterWithdrawHold = await request(settings.app).get(`/api/wallet/balance/${ accountHold }`)
             .query({ 'assets[]': [astName], 'include_pending': true });
-        const balanceAfterWithdrawDec =  new Decimal(balanceAfterWithdrawHold.body.pending.credit[0].balance);
-
-        expect(balAfterHoldPendingDec.minus(balanceAfterWithdrawDec)).toEqual(new Decimal(amt));
+        const balanceAfterWithdrawHoldDec =  new Decimal(balanceAfterWithdrawHold.body.pending.credit[0].balance);
+        console.log('balanceAfterWithdrawHoldDec', balanceAfterWithdrawHoldDec);
+        console.log('balAfterHoldPendingDec', balAfterHoldPendingDec);
+        expect(balAfterHoldPendingDec.minus(balanceAfterWithdrawHoldDec)).toEqual(new Decimal(toHold));
         done();
     });
 
@@ -244,21 +267,30 @@ describe('apiWallet', () => {
         const fee = 0.11;
         const astFrom = assetArray[1];
         const astTo = assetArray[0];
-        const accountFrom = SYSTEM_ACCOUNTS.RS_MAIN; //firstAddress;
-        const accountTo = SYSTEM_ACCOUNTS.CORE_MAIN; //secondAddress;
+        const accountFrom = firstAddress;
+        const accountTo = SYSTEM_ACCOUNTS.CORE_MAIN;
+        const accountProfit = secondAddress;
 
         const balanceBeforeFrom = await request(settings.app).get(`/api/wallet/balance/${accountFrom}`)
             .query({ 'assets[]': [astFrom] });
         const balanceBeforeTo = await request(settings.app).get(`/api/wallet/balance/${accountTo}`)
             .query({ 'assets[]': [astFrom] });
-        const balanceBeforeProfit = await request(settings.app).get(`/api/wallet/balance/${SYSTEM_ACCOUNTS.CORE_MAIN}`)
+        const balanceBeforeProfit = await request(settings.app).get(`/api/wallet/balance/${accountProfit}`)
             .query({ 'assets[]': [astFrom] });
+
+        const balanceBeforeFromSec = await request(settings.app).get(`/api/wallet/balance/${accountFrom}`)
+            .query({ 'assets[]': [astTo] });
+        const balanceBeforeToSec = await request(settings.app).get(`/api/wallet/balance/${accountTo}`)
+            .query({ 'assets[]': [astTo] });
 
         const balanceBeforeFromDec = new Decimal(balanceBeforeFrom.body.base.credit[0].balance);
         const balanceBeforeToDec = new Decimal(balanceBeforeTo.body.base.credit[0].balance);
         const balanceBeforeProfitDec = new Decimal(balanceBeforeProfit.body.base.credit[0].balance);
 
-        const resp = await request(settings.app).post(`/api/wallet/exchange/`)
+        const balanceBeforeFromDecSec = new Decimal(balanceBeforeFromSec.body.base.credit[0].balance);
+        const balanceBeforeToDecSec = new Decimal(balanceBeforeToSec.body.base.credit[0].balance);
+
+        await request(settings.app).post(`/api/wallet/exchange/`)
             .set('Accept', 'application/json')
             .send({
                 asset_from: astFrom,
@@ -267,6 +299,7 @@ describe('apiWallet', () => {
                 to_acc: accountTo,
                 amount_from: amt_from,
                 amount_to: amt_to,
+                profit_acc: accountProfit,
                 fee,
             });
 
@@ -274,18 +307,31 @@ describe('apiWallet', () => {
             .query({ 'assets[]': [astFrom] });
         const balanceAfterTo = await request(settings.app).get(`/api/wallet/balance/${accountTo}`)
             .query({ 'assets[]': [astFrom] });
-        const balanceAfterProfit = await request(settings.app).get(`/api/wallet/balance/${SYSTEM_ACCOUNTS.CORE_MAIN}`)
+        const balanceAfterProfit = await request(settings.app).get(`/api/wallet/balance/${accountProfit}`)
             .query({ 'assets[]': [astFrom] });
+
+        const balanceAfterFromSec = await request(settings.app).get(`/api/wallet/balance/${accountFrom}`)
+            .query({ 'assets[]': [astTo] });
+        const balanceAfterToSec = await request(settings.app).get(`/api/wallet/balance/${accountTo}`)
+            .query({ 'assets[]': [astTo] });
 
         const amtFromWFee = new Decimal(amt_from).plus(fee);
         const balanceAfterFromDec = new Decimal(balanceAfterFrom.body.base.credit[0].balance);
         const balanceAfterToDec = new Decimal(balanceAfterTo.body.base.credit[0].balance);
-        const balanceProfitToDec = new Decimal(balanceAfterProfit.body.base.credit[0].balance);
+        const balanceProfitAfterDec = new Decimal(balanceAfterProfit.body.base.credit[0].balance);
+
+        const balanceAfterFromDecSec = new Decimal(balanceAfterFromSec.body.base.credit[0].balance);
+        const balanceAfterToDecSec = new Decimal(balanceAfterToSec.body.base.credit[0].balance);
+
         console.log(amtFromWFee, balanceBeforeFromDec, balanceAfterFromDec);
 
-        // expect(balanceBeforeFromDec.minus(balanceAfterFromDec)).toEqual(amtFromWFee);
-        // expect(balanceBeforeToDec.minus(balanceAfterToDec)).toEqual(new Decimal(amt_to));
-        // expect(balanceBeforeProfitDec.minus(balanceProfitToDec)).toEqual(new Decimal(fee));
+        expect(balanceBeforeFromDec.minus(balanceAfterFromDec)).toEqual(amtFromWFee);
+        expect(balanceAfterFromDecSec.minus(balanceBeforeFromDecSec)).toEqual(new Decimal(amt_to));
+        expect(balanceProfitAfterDec.minus(balanceBeforeProfitDec)).toEqual(new Decimal(fee));
+
+        expect(balanceBeforeToDecSec.minus(balanceAfterToDecSec)).toEqual(new Decimal(amt_to));
+        expect(balanceAfterToDec.minus(balanceBeforeToDec)).toEqual(new Decimal(amt_from));
+        expect(balanceBeforeToDecSec.minus(balanceAfterToDecSec)).toEqual(new Decimal(amt_to));
 
         done();
     });

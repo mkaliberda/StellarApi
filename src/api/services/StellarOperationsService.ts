@@ -38,6 +38,7 @@ export class StellarOperationsService {
         await Promise.all([
             this.accountManager.checkEnoughBalance(srcKeys.publicKey(), params.asset + CREDIT, new Decimal(params.amount).plus(fee)),
             this.accountManager.checkEnoughBalance(dstKeys.publicKey(), params.asset + CREDIT),
+            this.accountManager.checkEnoughBalance(profitKeys ? profitKeys.publicKey() : undefined, params.asset + CREDIT),
         ]);
 
         result.push(await this.txManager.sendAsset(
@@ -69,20 +70,21 @@ export class StellarOperationsService {
         const rsKeys: Keypair = await this.loadKeyPairs(SYSTEM_ACCOUNTS.RS_MAIN);
         const fee = profitKeys && params.fee ? params.fee : 0;
         const result: StellarBaseResponse[] = [];
+        console.log(rsKeys.publicKey());
         await Promise.all([
-            this.accountManager.checkEnoughBalance(rsKeys.publicKey(), params.asset + CREDIT, new Decimal(params.amount)),
-            this.accountManager.checkEnoughBalance(rsKeys.publicKey(), params.asset + DEBIT, new Decimal(params.amount)),
+            this.accountManager.checkEnoughBalance(rsKeys.publicKey(), params.asset + CREDIT, new Decimal(params.amount).minus(fee)),
+            this.accountManager.checkEnoughBalance(rsKeys.publicKey(), params.asset + DEBIT, new Decimal(params.amount).minus(fee)),
             this.accountManager.checkEnoughBalance(usrKeys.publicKey(), params.asset + CREDIT),
+            this.accountManager.checkEnoughBalance(profitKeys ? profitKeys.publicKey() : undefined, params.asset + CREDIT),
             this.accountManager.checkEnoughBalance(serviceKeys.publicKey(), params.asset + DEBIT),
         ]);
         if (profitKeys) {
             this.accountManager.checkEnoughBalance(profitKeys.publicKey(), params.asset + CREDIT);
         }
-        // TODO IS IT FROM SUM
         result.push(await this.txManager.sendAsset(
             rsKeys, usrKeys,
             params.asset + CREDIT,
-            new Decimal(params.amount).minus(fee).toString()
+            new Decimal(params.amount).toString()
         ));
 
         if (profitKeys && fee) {
@@ -134,14 +136,18 @@ export class StellarOperationsService {
         const result: StellarBaseResponse[] = [];
         const fee = profitKeys && params.fee ? params.fee : 0;
         await Promise.all([
-            this.accountManager.checkEnoughBalance(usrKeys.publicKey(), params.asset + CREDIT, new Decimal(params.amount)),
-            this.accountManager.checkEnoughBalance(serviceKeys.publicKey(), params.asset + DEBIT, new Decimal(params.amount)),
+            this.accountManager.checkEnoughBalance(usrKeys.publicKey(), params.asset + CREDIT, new Decimal(params.amount).plus(params.fee)),
+            this.accountManager.checkEnoughBalance(serviceKeys.publicKey(), params.asset + DEBIT, new Decimal(params.amount).plus(params.fee)),
+            this.accountManager.checkEnoughBalance(rsKeys.publicKey(), params.asset + CREDIT),
+            this.accountManager.checkEnoughBalance(rsKeys.publicKey(), params.asset + DEBIT),
+            this.accountManager.checkEnoughBalance(profitKeys ? profitKeys.publicKey() : undefined, params.asset + CREDIT),
         ]);
         result.push(await this.txManager.sendAsset(
             usrKeys, rsKeys,
             params.asset + CREDIT,
-            new Decimal(params.amount).minus(fee).toString()
+            new Decimal(params.amount).toString()
         ));
+        console.log(usrKeys, profitKeys);
         if (profitKeys && fee) {
             result.push(await this.txManager.sendAsset(
                 usrKeys, profitKeys,
@@ -149,11 +155,10 @@ export class StellarOperationsService {
                 fee.toString()
             ));
         }
-
         result.push(await this.txManager.sendAsset(
             serviceKeys, rsKeys,
             params.asset + DEBIT,
-            new Decimal(params.amount).minus(fee).toString()
+            new Decimal(params.amount).toString()
         ));
 
         return result;
@@ -167,17 +172,17 @@ export class StellarOperationsService {
         const fee = profitKeys && params.fee ? params.fee : 0;
 
         await Promise.all([
-            this.accountManager.checkEnoughBalance(fromKeys.publicKey(), params.asset_from + CREDIT, new Decimal(params.amount_from)),
-            this.accountManager.checkEnoughBalance(toKeys.publicKey(), params.asset_to + CREDIT, new Decimal(params.amount_to)),
+            this.accountManager.checkEnoughBalance(fromKeys.publicKey(), params.asset_from + CREDIT, new Decimal(params.amount_from).plus(fee)),
+            this.accountManager.checkEnoughBalance(toKeys.publicKey(), params.asset_to + CREDIT, new Decimal(params.amount_to).plus(fee)),
             this.accountManager.checkEnoughBalance(fromKeys.publicKey(), params.asset_to + CREDIT),
             this.accountManager.checkEnoughBalance(toKeys.publicKey(), params.asset_from + CREDIT),
-            this.accountManager.checkEnoughBalance(profitKeys.publicKey(), params.asset_from + CREDIT),
+            this.accountManager.checkEnoughBalance(profitKeys ? profitKeys.publicKey() : undefined, params.asset_from + CREDIT),
         ]);
 
         result.push(await this.txManager.sendAsset(
             fromKeys, toKeys,
             params.asset_from + CREDIT,
-            new Decimal(params.amount_from).minus(fee).toString()
+            new Decimal(params.amount_from).toString()
         ));
 
         if (profitKeys && fee) {

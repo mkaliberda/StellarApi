@@ -1,6 +1,6 @@
 ###
 
-GET http://localhost:3000/api/wallet/balance/RS_MAIN?assets[]=DIMO&assets[]=TNZS&include_pending=true
+GET http://localhost:3000/api/wallet/balance/RS_MAIN?assets[]=DIMO&assets[]=TNZS&include_pending=false
 Accept: application/json
 Content-Type: application/json
 
@@ -29,8 +29,8 @@ Content-Type: application/json
 
 {
     "assets": "[\"DIMO\"]",
-    "from_acc": "GDE645YPGQHXEJOGSRQ5HF7Z2CZYFW5Q3RSOUFUVJXUYR6GFSA4EWFUJ",
-    "is_user": false
+    "from_acc": "GBX5X7EDXRXJ7Q4E7V5A32EFZNM4XTVMBSNN7FBT2PEAKMNS3GWSJHZY",
+    "is_user": true
 }
 
 ###
@@ -55,11 +55,9 @@ Accept: application/json
 Content-Type: application/json
 
 {
-    "user_acc": "GB3Y27EUGF3SU3PQHSQNBHX4RYQYDHV4R3KH6XIRKDREAG6VQADHD4MP",
-    "service_acc": "GB4MQVYUH2OLYSNFTTZSI2HY3J7IUW7ADWAROZC5ZWB5WKIAIEOZ57IY",
-    "profit_acc": "",
+    "user_acc": "GBX5X7EDXRXJ7Q4E7V5A32EFZNM4XTVMBSNN7FBT2PEAKMNS3GWSJHZY",
     "amount": 100,
-    "fee": 10,
+    "fee": 1,
     "asset": "DIMO"
 }
 
