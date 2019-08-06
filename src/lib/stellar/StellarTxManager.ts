@@ -96,17 +96,24 @@ export class StellarTxManager extends StellarBaseManager {
                            destKeyPair: Keypair,
                            asset: string,
                            amount: string,
+                           channelPair?: Keypair,
                            memo?: string): Promise<any> {
-        const transaction: any = await this._getTxBuilder(srcKeyPair);
+        const buildFromAccount = channelPair ? channelPair : srcKeyPair;
+        const transaction: any = await this._getTxBuilder(buildFromAccount);
         transaction.addOperation(
             Operation.payment({
                 destination: destKeyPair.publicKey(),
                 asset: StellarBaseManager.getAsset(asset),
                 amount,
+                source: srcKeyPair.publicKey(),
             })
         );
         const tx = transaction.build();
-        tx.sign(...[srcKeyPair]);
+        if (channelPair) {
+            tx.sign(...[srcKeyPair, channelPair]);
+        } else {
+            tx.sign(...[srcKeyPair]);
+        }
         let response: any;
         try {
             response = await this.server.submitTransaction(tx);
@@ -124,7 +131,7 @@ export class StellarTxManager extends StellarBaseManager {
         const address = fromPair ? fromPair.publicKey() : StellarTxManager.getPairRoot().publicKey();
         const account = await this.server.loadAccount(address);
         const options = {
-            fee: 100, // await this.server.fetchBaseFee(),
+            fee: await this.server.fetchBaseFee(),
             memo: memoText,
             timebounds: await this.server.fetchTimebounds(100),
         };

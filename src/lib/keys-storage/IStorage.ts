@@ -6,6 +6,7 @@ interface IKeyPair {
 interface IAccountKeys {
     base: IKeyPair;
     pending?: IKeyPair;
+    channels?: any;
 }
 
 interface IKeysStorage {

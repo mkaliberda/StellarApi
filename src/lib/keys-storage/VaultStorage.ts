@@ -58,6 +58,10 @@ export class VaultStorage implements IKeysStorage {
                 address: response.data.pending && response.data.pending.address,
                 secret: response.data.pending && response.data.pending.secret,
             },
+            channels: {
+                payloads: response.data.channels ? response.data.channels : undefined,
+            },
+
         };
     }
 

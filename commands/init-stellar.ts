@@ -3,7 +3,7 @@ import { IKeyPair } from '../src/lib/keys-storage/IStorage';
 import { VaultStorage } from '../src/lib/keys-storage/VaultStorage';
 import { CREDIT, DEBIT, SYSTEM_ACCOUNTS } from '../src/lib/stellar/StellarConst';
 import { StellarTxManager } from '../src/lib/stellar/StellarTxManager';
-import { createInternalWallet, fundInternalWallet } from './stellar-comand';
+import { createInternalWallet, fundInternalWallet } from './stellar-command';
 
 const assetsToRSObj = { DIMO: 10000 , TNZS: 10000 }; // initial Tokens Pool
 const serviceName = SYSTEM_ACCOUNTS.RS_MAIN; // Name of service

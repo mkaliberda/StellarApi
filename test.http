@@ -1,6 +1,6 @@
 ###
 
-GET http://localhost:3000/api/wallet/balance/RS_MAIN?assets[]=DIMO&assets[]=TNZS&include_pending=false
+GET http://localhost:3000/api/wallet/balance/GDFNV4WMG4ONR7KWPITDDYO5PS5QDWRPTAOQVF7AQ4XR4D5L7RM3SYZI?assets[]=DIMO&assets[]=TNZS&include_pending=false
 Accept: application/json
 Content-Type: application/json
 
@@ -16,7 +16,7 @@ Accept: application/json
 Content-Type: application/json
 
 {
-    "assets": "[\"BTC\", \"TNZS\"]",
+    "assets": "[\"DIMO\", \"TNZS\"]",
     "is_user": true
 }
 
@@ -55,10 +55,39 @@ Accept: application/json
 Content-Type: application/json
 
 {
-    "user_acc": "GBX5X7EDXRXJ7Q4E7V5A32EFZNM4XTVMBSNN7FBT2PEAKMNS3GWSJHZY",
-    "amount": 100,
-    "fee": 1,
-    "asset": "DIMO"
+    "user_acc": "GDFNV4WMG4ONR7KWPITDDYO5PS5QDWRPTAOQVF7AQ4XR4D5L7RM3SYZI",
+    "amount": 1,
+    "fee": 0,
+    "asset": "DIMO",
+    "index": 0
+}
+
+###
+
+POST http://localhost:3000/api/wallet/deposit
+Accept: application/json
+Content-Type: application/json
+
+{
+    "user_acc": "GDFNV4WMG4ONR7KWPITDDYO5PS5QDWRPTAOQVF7AQ4XR4D5L7RM3SYZI",
+    "amount": 1,
+    "fee": 0,
+    "asset": "DIMO",
+    "index": 1
+}
+
+###
+
+POST http://localhost:3000/api/wallet/deposit
+Accept: application/json
+Content-Type: application/json
+
+{
+    "user_acc": "GDFNV4WMG4ONR7KWPITDDYO5PS5QDWRPTAOQVF7AQ4XR4D5L7RM3SYZI",
+    "amount": 1,
+    "fee": 0,
+    "asset": "DIMO",
+    "index": 0
 }
 
 ###

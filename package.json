@@ -6,6 +6,7 @@
   "scripts": {
     "init-stellar": "ts-node ./commands/init-stellar.ts",
     "init-core": "ts-node ./commands/init-core.ts",
+    "init-channels": "ts-node ./commands/init-channels.ts",
     "lint": "tslint -c tslint.json 'src/**/*.ts' --format stylish",
     "test-unit": "cross-env NODE_ENV=test jest --testPathPattern=unit  --runInBand  --t",
     "test-unit-watch": "cross-env NODE_ENV=test jest --testPathPattern=unit --watch  -t",

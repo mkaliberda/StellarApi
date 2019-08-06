@@ -1,5 +1,5 @@
 import { CREDIT, DEBIT, SYSTEM_ACCOUNTS } from '../src/lib/stellar/StellarConst';
-import { createInternalWallet, fundInternalWallet } from './stellar-comand';
+import { createInternalWallet, fundInternalWallet } from './stellar-command';
 
 const assetsToRSObj = { DIMO: 3000 , TNZS: 3000 }; // initial Tokens Pool
 const coreMainName = SYSTEM_ACCOUNTS.CORE_MAIN; // Name of CORE ACCOUNT
