@@ -35,8 +35,6 @@ describe('apiWallet', () => {
             .set('Accept', 'application/json')
             .send(newAddrParams);
         secondAddress = responseSec.body;
-        const amt = 100;
-        const asset = assetArray[0];
     });
 
     jest.setTimeout(60000);
@@ -104,7 +102,7 @@ describe('apiWallet', () => {
     test('core-service-fee-deposit-to-first-address-sync-with-channels', async (done) => {
         // deposit to setUp account
         const fee = 1;
-        const amt = 10;
+        const amt = 30;
         const asset = assetArray[0];
         const toAccount = firstAddress;
 
@@ -152,7 +150,7 @@ describe('apiWallet', () => {
         // hold-monney to setUp account
         const amt = 0.99;
         const astName = 'DIMO';
-        const accountHold = firstAddress; //SYSTEM_ACCOUNTS.RS_MAIN;
+        const accountHold = SYSTEM_ACCOUNTS.RS_MAIN;
         const balanceStart = await request(settings.app).get(`/api/wallet/balance/${ accountHold}`)
             .query({ 'assets[]': [astName] });
         const balStartDec =  new Decimal(balanceStart.body.base.credit[0].balance);
@@ -186,23 +184,21 @@ describe('apiWallet', () => {
 
     test('hold-money-and-withdraw-after', async (done) => {
         // hold-monney to setUp account
-        const toHold = 1.99;
-        const amt = 0.99;
-        const fee = 1;
+        const toHold = 1.99; // (1 + 0.99) * 5
+        const amt = 1;
+        const fee = 0.99;
         const astName = 'DIMO';
-        const accountHold = firstAddress; //SYSTEM_ACCOUNTS.RS_MAIN;
+        const accountHold = SYSTEM_ACCOUNTS.RS_MAIN;
         const balanceStart = await request(settings.app).get(`/api/wallet/balance/${ accountHold}`)
             .query({ 'assets[]': [astName] });
-
         const balStartDec =  new Decimal(balanceStart.body.base.credit[0].balance);
-
-        await request(settings.app).post(`/api/wallet/hold/${ accountHold }`)
+        const respHold = await request(settings.app).post(`/api/wallet/hold/${ accountHold }`)
             .set('Accept', 'application/json')
             .send({
                 asset: astName,
                 amount: toHold,
             });
-
+        expect(respHold.status).toBe(200);
         const balanceAfterHold = await request(settings.app).get(`/api/wallet/balance/${ accountHold }`)
             .query({ 'assets[]': [astName], 'include_pending': true });
 
@@ -211,20 +207,20 @@ describe('apiWallet', () => {
 
         expect(balStartDec.minus(balAfterHoldDec)).toEqual(new Decimal(toHold));
 
-        await request(settings.app).post(`/api/wallet/withdraw/`)
+        const respW = await request(settings.app).post(`/api/wallet/withdraw/`)
             .set('Accept', 'application/json')
             .send({
                 user_acc: accountHold,
                 amount: amt,
                 asset: astName,
+                sender_acc: firstAddress,
                 fee,
+                index: 2,
             });
-
+        expect(respW.status).toBe(200);
         const balanceAfterWithdrawHold = await request(settings.app).get(`/api/wallet/balance/${ accountHold }`)
             .query({ 'assets[]': [astName], 'include_pending': true });
         const balanceAfterWithdrawHoldDec =  new Decimal(balanceAfterWithdrawHold.body.pending.credit[0].balance);
-        console.log('balanceAfterWithdrawHoldDec', balanceAfterWithdrawHoldDec);
-        console.log('balAfterHoldPendingDec', balAfterHoldPendingDec);
         expect(balAfterHoldPendingDec.minus(balanceAfterWithdrawHoldDec)).toEqual(new Decimal(toHold));
         done();
     });
@@ -234,7 +230,7 @@ describe('apiWallet', () => {
         const amt = 2;
         const fee = 0.99;
         const astName = 'DIMO';
-        const accountFrom = firstAddress; //SYSTEM_ACCOUNTS.RS_MAIN;
+        const accountFrom = firstAddress; // SYSTEM_ACCOUNTS.RS_MAIN;
         const accountTo = secondAddress;
         const accountProfit = SYSTEM_ACCOUNTS.CORE_MAIN; // MUST BE DEFAULT
 
@@ -317,6 +313,7 @@ describe('apiWallet', () => {
                 amount_to: amt_to,
                 profit_acc: accountProfit,
                 fee,
+                index: 1,
             });
 
         const balanceAfterFrom = await request(settings.app).get(`/api/wallet/balance/${accountFrom}`)

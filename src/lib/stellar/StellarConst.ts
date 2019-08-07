@@ -12,6 +12,11 @@ export const ERROR = {
         TOO_EARLY: 'op_no_destination',
     },
 };
+export const CHANNELS_ROUTER = {
+    DEPOSIT: 'DEPOSIT',
+    WITHDRAW: 'WITHDRAW',
+    EXCHANGE: 'EXCHANGE',
+};
 
 export const DEBIT = 'd';
 export const CREDIT = 'c';
