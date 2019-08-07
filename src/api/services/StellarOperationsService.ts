@@ -255,7 +255,6 @@ export class StellarOperationsService {
                                        router: string = 'deposit',
                                        index: number = 0): Promise<Keypair> | undefined {
         const keys = await this.storageManager.getAccountKeys(account);
-        console.log(keys);
         if (keys.channels.payloads && router in keys.channels.payloads) {
             return StellarAccountManager.getKeyPair(keys.channels.payloads[router][index].secret);
         }

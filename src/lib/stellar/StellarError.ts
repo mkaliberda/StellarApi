@@ -17,6 +17,13 @@ export class BalanceError extends StellarError {
 }
 
 // tslint:disable-next-line: max-classes-per-file
+export class BaseError extends StellarError {
+    constructor(message: string) {
+        super(message);
+    }
+}
+
+// tslint:disable-next-line: max-classes-per-file
 export class BadAddressError extends StellarError {
     constructor(address: Address) {
         super(`Bad address: ${address}`);

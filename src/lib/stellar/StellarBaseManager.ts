@@ -1,9 +1,8 @@
-import { HttpError } from 'routing-controllers';
 import { Asset, Keypair, Network, Operation, Server } from 'stellar-sdk';
 
 import { env } from '../../env';
 import { ERROR } from './StellarConst';
-import { BadSeqError, StellarError } from './StellarError';
+import { BadSeqError, BaseError } from './StellarError';
 
 if (env.stellar.network.passphrase) {
     Network.use(new Network(env.stellar.network.passphrase));
@@ -26,7 +25,7 @@ export class StellarBaseManager {
             case err.response.data.extras.result_codes === ERROR.RES_CODES.BAD_SEQ:
                 throw new BadSeqError();
             default:
-                throw new StellarError(`Stellar network return error ${ err.response.data.extras.result_codes }`);
+                throw new BaseError(`Stellar network return error ${ err.response.data.extras.result_codes }`);
         }
     }
 

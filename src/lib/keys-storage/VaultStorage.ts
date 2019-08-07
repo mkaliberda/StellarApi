@@ -18,8 +18,6 @@ export class VaultStorage implements IKeysStorage {
         let msg;
         const respError = new HttpError(200);
 
-        console.log(`Address with error [${address}]`);
-
         if (err.response && err.response.statusCode === 404 && address) {
             respError.httpCode = 404;
             msg = `Address ${address} is not found in Vault storage`;

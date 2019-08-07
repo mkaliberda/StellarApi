@@ -94,7 +94,6 @@ describe('apiWallet', () => {
         const balance = await request(settings.app).get(`/api/wallet/balance/${firstAddress}`)
             .query({ 'assets[]': [asset] });
         const base = balance.body.base;
-        console.log(balance.body);
         expect(base.credit[0].balance).toBe('10.0000000');
         done();
     });
@@ -335,8 +334,6 @@ describe('apiWallet', () => {
 
         const balanceAfterFromDecSec = new Decimal(balanceAfterFromSec.body.base.credit[0].balance);
         const balanceAfterToDecSec = new Decimal(balanceAfterToSec.body.base.credit[0].balance);
-
-        console.log(amtFromWFee, balanceBeforeFromDec, balanceAfterFromDec);
 
         expect(balanceBeforeFromDec.minus(balanceAfterFromDec)).toEqual(amtFromWFee);
         expect(balanceAfterFromDecSec.minus(balanceBeforeFromDecSec)).toEqual(new Decimal(amt_to));

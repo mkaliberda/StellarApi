@@ -68,7 +68,6 @@ describe('StellarTxManagerBase', () => {
         const haveBalance = '1.9999999';
         const accountFirstPair = StellarTxManager.getKeyPair(accountFirst.secret);
         const accountSecondPair = StellarTxManager.getKeyPair(accountSecond.secret);
-        console.log(accountFirstPair, assetArray, haveBalance);
         await stellaTx.sendAsset(accountFirstPair,
                                  accountSecondPair,
                                  assetArray[0],

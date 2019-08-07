@@ -20,7 +20,6 @@ describe('Vault storage tests', () => {
     test('Check is account keys stored properly', async (done) => {
         storage.saveAccountKeys(NAME, keys);
         const response = await storage.getAccountKeys(NAME);
-        console.log('response', response.base.secret);
         expect(response.base.secret).toBe(keys.base.secret);
         done();
     });
