@@ -77,6 +77,7 @@ export class StellarController {
          * @param {number} amount - Amount.
          * @param {number} [fee=0] - Profit amount for current operation. Optional
          * @param {string} asset - Currency. Without 'c' or 'd' suffix. (ex. DIMO)
+         * @param {number} [index=0] - Index of the channels Array
          * @returns {array} Array of stellar transactions reference (th_hash, ledger, etc.).
          */
         return this.stellarOperationService.depositOperation(params);
@@ -112,6 +113,7 @@ export class StellarController {
          * @param {number} amount - Amount.
          * @param {number} [fee=0] - Profit amount for current operation. Optional
          * @param {string} asset - Currency. Without 'c' or 'd' suffix. (ex. DIMO)
+         * @param {number} [index=0] - Index of the channels Array
          * @returns {array} Array of stellar transactions reference (th_hash, ledger, etc.).
          */
         return this.stellarOperationService.withdrawOperation(params);
@@ -155,6 +157,7 @@ export class StellarController {
          * @param {number} amount_from - Spend amount
          * @param {number} amount_to - Receive amount
          * @param {number} [fee=0] - Fee amount
+         * @param {number} [index=0] - Index of the channels Array
          * @returns {array} Array of stellar transactions reference (th_hash, ledger, etc.).
          */
         return this.stellarOperationService.exchangeOperation(params);

@@ -7,6 +7,35 @@ import asyncForEach from '../src/lib/utils/AsyncForEach';
 const txManager = new StellarTxManager();
 const storageManager = new VaultStorage();
 
+export const createChannelsList = async (
+    balance: number,
+    countUp: number
+) => {
+    const channels: IKeyPair[] = [];
+    for (let i = 0; i < countUp; i++) {
+        const account: IKeyPair = await txManager.createAccount(balance.toString());
+        channels.push(account);
+    }
+    return channels;
+};
+
+export const createChannelsForAccount = async (
+    walletName: string,
+    endpoints: string[],
+    balance: number = 100,
+    countUp: number = 5
+) => {
+    const channelEndpoint: any = {};
+    await asyncForEach(endpoints, async (item) => {
+        const channels = await createChannelsList(balance, countUp);
+        channelEndpoint[item] = channels;
+    });
+    const accountStorage = await storageManager.getAccountKeys(walletName);
+    accountStorage.channels = channelEndpoint;
+    await storageManager.saveAccountKeys(walletName, accountStorage);
+    return 'channelEndpoint';
+};
+
 export const createInternalWallet = async (
     assets: any,
     walletName: string,

@@ -1,6 +1,6 @@
 ###
 
-GET http://localhost:3000/api/wallet/balance/RS_MAIN?assets[]=DIMO&assets[]=TNZS&include_pending=false
+GET http://localhost:3000/api/wallet/balance/GAPBOSDSLMSPZH6ZHU7AU6B7MD75P7Z53H3LYBBQGBKX5267DPSVLNS6?assets[]=DIMO&assets[]=TNZS&include_pending=true
 Accept: application/json
 Content-Type: application/json
 
@@ -16,8 +16,8 @@ Accept: application/json
 Content-Type: application/json
 
 {
-    "assets": "[\"BTC\", \"TNZS\"]",
-    "is_user": true
+    "assets": "[\"DIMO\", \"TNZS\"]",
+    "is_user": false
 }
 
 ###
@@ -55,22 +55,52 @@ Accept: application/json
 Content-Type: application/json
 
 {
-    "user_acc": "GBX5X7EDXRXJ7Q4E7V5A32EFZNM4XTVMBSNN7FBT2PEAKMNS3GWSJHZY",
-    "amount": 100,
-    "fee": 1,
-    "asset": "DIMO"
+    "user_acc": "GAPBOSDSLMSPZH6ZHU7AU6B7MD75P7Z53H3LYBBQGBKX5267DPSVLNS6",
+    "amount": 10,
+    "fee": 0,
+    "asset": "DIMO",
+    "index": 0
 }
 
 ###
 
-POST http://localhost:3000/api/wallet/hold/GDCOAHYVR4FVC4F2Y2CWN33QAKAGCH7OSNQ27KESJ7QMXQSPZDRGQJFX
+POST http://localhost:3000/api/wallet/deposit
 Accept: application/json
 Content-Type: application/json
 
 {
-    "amount": 2,
+    "user_acc": "GDFNV4WMG4ONR7KWPITDDYO5PS5QDWRPTAOQVF7AQ4XR4D5L7RM3SYZI",
+    "amount": 1,
+    "fee": 0,
     "asset": "DIMO",
-    "reverse": false
+    "index": 1
+}
+
+###
+
+POST http://localhost:3000/api/wallet/deposit
+Accept: application/json
+Content-Type: application/json
+
+{
+    "user_acc": "GDFNV4WMG4ONR7KWPITDDYO5PS5QDWRPTAOQVF7AQ4XR4D5L7RM3SYZI",
+    "amount": 1,
+    "fee": 0,
+    "asset": "DIMO",
+    "index": 0
+}
+
+###
+
+POST http://localhost:3000/api/wallet/hold/GDFNV4WMG4ONR7KWPITDDYO5PS5QDWRPTAOQVF7AQ4XR4D5L7RM3SYZI
+Accept: application/json
+Content-Type: application/json
+
+{
+    "amount": 30,
+    "asset": "DIMO",
+    "reverse": false,
+    "index": 0
 }
 
 ###
@@ -80,9 +110,8 @@ Accept: application/json
 Content-Type: application/json
 
 {
-    "user_acc": "",
-    "service_acc": "",
-    "profit_acc": "",
+    "user_acc": "GDFNV4WMG4ONR7KWPITDDYO5PS5QDWRPTAOQVF7AQ4XR4D5L7RM3SYZI",
+    "service_acc": "GAPBOSDSLMSPZH6ZHU7AU6B7MD75P7Z53H3LYBBQGBKX5267DPSVLNS6",
     "amount": 2,
     "fee": 1,
     "asset": "DIMO"

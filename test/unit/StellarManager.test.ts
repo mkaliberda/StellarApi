@@ -21,11 +21,13 @@ describe('StellarTxManagerBase', () => {
     const stellaAccount = new StellarAccountManager();
     let accountFirst;
     let accountSecond;
+    let accountThree;
     jest.setTimeout(30000);
 
     beforeAll(async () => {
         accountFirst = await stellaTx.createAndTrustAccount(assetArray, '100');
         accountSecond = await stellaTx.createAndTrustAccount(assetArray, '100');
+        accountThree = await stellaTx.createAndTrustAccount(assetArray, '100');
         rootPair = StellarTxManager.getKeyPair(ROOT_SECRET);
     });
 
@@ -93,6 +95,38 @@ describe('StellarTxManagerBase', () => {
         expect(getAsset).toBe(1);
         done();
     });
+
+    test('testChannels', async (done) => {
+        const haveBalance = '1.9999999';
+        // const accountFirstPair = StellarTxManager.getKeyPair(accountFirst.secret);
+        const accountSecondPair = StellarTxManager.getKeyPair(accountSecond.secret);
+        // const accountThreePair = StellarTxManager.getKeyPair(accountThree.secret);
+        const res = await stellaTx.sendAsset(rootPair,
+            accountSecondPair,
+            assetArray[0],
+            haveBalance);
+        console.log('res', res);
+        // const balancesFirst = await stellaAccount.getBalances(accountFirstPair.publicKey());
+        // let getAsset = 0;
+        // balancesFirst.forEach(item => {
+        //     if (item.asset_code === assetArray[0]) {
+        //         expect(item.balance).toBe('0.0000000');
+        //         getAsset += 1;
+        //     }
+        // });
+        // expect(getAsset).toBe(1);
+        // getAsset = 0;
+        // const balancesSecond = await stellaAccount.getBalances(accountSecondPair.publicKey());
+        // balancesSecond.forEach(item => {
+        //     if (item.asset_code === assetArray[0]) {
+        //         expect(item.balance).toBe(haveBalance);
+        //         getAsset += 1;
+        //     }
+        // });
+        // expect(getAsset).toBe(1);
+        done();
+    });
+
 
     // test('get bad address', async (done) => {
     //     const badAddress = 'BAD ADDRESS';
