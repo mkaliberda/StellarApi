@@ -15,7 +15,7 @@ export class StellarAccountManager extends StellarBaseManager {
         try {
             account = await this.server.loadAccount(address);
         } catch (err) {
-            throw new BadAddressError('TODO ADD EXCEPTION 1' + err);
+            throw new BadAddressError(err);
         }
         return account.balances;
     }

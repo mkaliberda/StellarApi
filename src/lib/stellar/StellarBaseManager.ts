@@ -2,6 +2,8 @@ import { HttpError } from 'routing-controllers';
 import { Asset, Keypair, Network, Operation, Server } from 'stellar-sdk';
 
 import { env } from '../../env';
+import { ERROR } from './StellarConst';
+import { BadSeqError, StellarError } from './StellarError';
 
 if (env.stellar.network.passphrase) {
     Network.use(new Network(env.stellar.network.passphrase));
@@ -20,8 +22,12 @@ export class StellarBaseManager {
     }
 
     protected static handleResponseException(err: any): never {
-        console.log('Error!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!', err.response.data.extras.result_codes);
-        throw new HttpError(400, 'Not found???? n_n' + err.response.data.extras.result_codes);
+        switch (err) {
+            case err.response.data.extras.result_codes === ERROR.RES_CODES.BAD_SEQ:
+                throw new BadSeqError();
+            default:
+                throw new StellarError(`Stellar network return error ${ err.response.data.extras.result_codes }`);
+        }
     }
 
     protected static getAsset(asset: string): Asset {
