@@ -24,11 +24,17 @@ export class DepositWithdrawParams {
     @IsString()
     public asset: string;
 
+    @IsOptional()
+    @IsNumber()
+    public index: number;
+
     constructor(fee: number = 0,
                 profit_acc: string = SYSTEM_ACCOUNTS.CORE_MAIN,
-                service_acc: string = SYSTEM_ACCOUNTS.CORE_SERVICE) {
+                service_acc: string = SYSTEM_ACCOUNTS.CORE_SERVICE,
+                index: number = 0) {
         this.fee = fee;
         this.profit_acc = profit_acc;
         this.service_acc = service_acc;
+        this.index = index;
     }
 }

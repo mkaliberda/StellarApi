@@ -6,7 +6,7 @@ import { Logger, LoggerInterface } from '../../decorators/Logger';
 import { IKeysStorage } from '../../lib/keys-storage/IStorage';
 import { VaultStorage } from '../../lib/keys-storage/VaultStorage';
 import { StellarAccountManager } from '../../lib/stellar/StellarAccountManager';
-import { CREDIT, DEBIT, SYSTEM_ACCOUNTS } from '../../lib/stellar/StellarConst';
+import { CHANNELS_ROUTER, CREDIT, DEBIT, SYSTEM_ACCOUNTS } from '../../lib/stellar/StellarConst';
 import { Address, StellarBaseResponse } from '../../lib/stellar/StellarPatterns';
 import { StellarTxManager } from '../../lib/stellar/StellarTxManager';
 import asyncForEach from '../../lib/utils/AsyncForEach';
@@ -47,6 +47,7 @@ export class StellarOperationsService {
             params.asset + CREDIT,
             params.amount.toString()
         ));
+
         if (profitKeys && fee) {
             result.push(await this.txManager.sendAsset(
                 srcKeys,
@@ -68,9 +69,9 @@ export class StellarOperationsService {
         const serviceKeys: Keypair = await this.loadKeyPairs(params.service_acc);
         const profitKeys: Keypair = params.profit_acc ? await this.loadKeyPairs(params.profit_acc) : undefined;
         const rsKeys: Keypair = await this.loadKeyPairs(SYSTEM_ACCOUNTS.RS_MAIN);
+        const rsKeysChannel: Keypair = await this.loadKeyChannelsPairs(SYSTEM_ACCOUNTS.RS_MAIN, CHANNELS_ROUTER.DEPOSIT, params.index);
         const fee = profitKeys && params.fee ? params.fee : 0;
         const result: StellarBaseResponse[] = [];
-        console.log(rsKeys.publicKey());
         await Promise.all([
             this.accountManager.checkEnoughBalance(rsKeys.publicKey(), params.asset + CREDIT, new Decimal(params.amount).minus(fee)),
             this.accountManager.checkEnoughBalance(rsKeys.publicKey(), params.asset + DEBIT, new Decimal(params.amount).minus(fee)),
@@ -84,23 +85,25 @@ export class StellarOperationsService {
         result.push(await this.txManager.sendAsset(
             rsKeys, usrKeys,
             params.asset + CREDIT,
-            new Decimal(params.amount).toString()
+            new Decimal(params.amount).toString(),
+            rsKeysChannel
         ));
 
         if (profitKeys && fee) {
             result.push(await this.txManager.sendAsset(
                 rsKeys, profitKeys,
                 params.asset + CREDIT,
-                fee.toString()
+                fee.toString(),
+                rsKeysChannel
             ));
         }
 
         result.push(await this.txManager.sendAsset(
             rsKeys, serviceKeys,
             params.asset + DEBIT,
-            params.amount.toString()
+            params.amount.toString(),
+            rsKeysChannel
         ));
-        // return 'ADdress';
 
         this.log.info(
             `Deposit ${params.amount} ${params.asset} to user ${usrKeys.publicKey()} and
@@ -133,6 +136,9 @@ export class StellarOperationsService {
         const serviceKeys: Keypair = await this.loadKeyPairs(params.service_acc);
         const profitKeys: Keypair = params.profit_acc ? await this.loadKeyPairs(params.profit_acc) : undefined;
         const rsKeys: Keypair = await this.loadKeyPairs(SYSTEM_ACCOUNTS.RS_MAIN);
+
+        const serviceKeysChannel: Keypair = await this.loadKeyChannelsPairs(params.service_acc, CHANNELS_ROUTER.WITHDRAW, params.index);
+
         const result: StellarBaseResponse[] = [];
         const fee = profitKeys && params.fee ? params.fee : 0;
         await Promise.all([
@@ -147,7 +153,7 @@ export class StellarOperationsService {
             params.asset + CREDIT,
             new Decimal(params.amount).toString()
         ));
-        console.log(usrKeys, profitKeys);
+
         if (profitKeys && fee) {
             result.push(await this.txManager.sendAsset(
                 usrKeys, profitKeys,
@@ -155,10 +161,12 @@ export class StellarOperationsService {
                 fee.toString()
             ));
         }
+
         result.push(await this.txManager.sendAsset(
             serviceKeys, rsKeys,
             params.asset + DEBIT,
-            new Decimal(params.amount).toString()
+            new Decimal(params.amount).toString(),
+            serviceKeysChannel
         ));
 
         return result;
@@ -170,6 +178,9 @@ export class StellarOperationsService {
         const profitKeys: Keypair = params.profit_acc ? await this.loadKeyPairs(params.profit_acc) : undefined;
         const result: StellarBaseResponse[] = [];
         const fee = profitKeys && params.fee ? params.fee : 0;
+        // in txManager.sendAsset have check for channels so if some of keys will be undefined channels will NOT USE
+        const fromKeysChannel: Keypair = await this.loadKeyChannelsPairs(params.from_acc, CHANNELS_ROUTER.EXCHANGE, params.index);
+        const toKeysChannel: Keypair = await this.loadKeyChannelsPairs(params.to_acc, CHANNELS_ROUTER.EXCHANGE, params.index);
 
         await Promise.all([
             this.accountManager.checkEnoughBalance(fromKeys.publicKey(), params.asset_from + CREDIT, new Decimal(params.amount_from).plus(fee)),
@@ -182,21 +193,24 @@ export class StellarOperationsService {
         result.push(await this.txManager.sendAsset(
             fromKeys, toKeys,
             params.asset_from + CREDIT,
-            new Decimal(params.amount_from).toString()
+            new Decimal(params.amount_from).toString(),
+            fromKeysChannel
         ));
 
         if (profitKeys && fee) {
             result.push(await this.txManager.sendAsset(
                 fromKeys, profitKeys,
                 params.asset_from + CREDIT,
-                fee.toString()
+                fee.toString(),
+                fromKeysChannel
             ));
         }
 
         result.push(await this.txManager.sendAsset(
             toKeys, fromKeys,
             params.asset_to + CREDIT,
-            params.amount_to.toString()
+            params.amount_to.toString(),
+            toKeysChannel
         ));
 
         return result;
@@ -237,11 +251,21 @@ export class StellarOperationsService {
         return assets;
     }
 
-    private async loadKeyPairs(account: any, pending: boolean = false): Promise<Keypair> | undefined {
+    private async loadKeyChannelsPairs(account: any,
+                                       router: string = 'deposit',
+                                       index: number = 0): Promise<Keypair> | undefined {
+        const keys = await this.storageManager.getAccountKeys(account);
+        console.log(keys);
+        if (keys.channels.payloads && router in keys.channels.payloads) {
+            return StellarAccountManager.getKeyPair(keys.channels.payloads[router][index].secret);
+        }
+        return undefined;
+    }
+    private async loadKeyPairs(account: any,
+                               pending: boolean = false): Promise<Keypair> | undefined {
         if (!account) {
             return undefined;
         }
-
         const keys = await this.storageManager.getAccountKeys(account);
 
         return pending ? StellarAccountManager.getKeyPair(keys.pending.secret) : StellarAccountManager.getKeyPair(keys.base.secret);
