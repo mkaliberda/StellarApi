@@ -1,18 +1,18 @@
 import { CREDIT, DEBIT, SYSTEM_ACCOUNTS } from '../src/lib/stellar/StellarConst';
 import { createInternalWallet, fundInternalWallet } from './stellar-command';
 
-const assetsToRSObj = { DIMO: 3000 , TNZS: 3000 }; // initial Tokens Pool
+const assetsCoreObj = { DIMO: 3000 , TNZS: 3000 }; // initial Tokens Pool
 const coreMainName = SYSTEM_ACCOUNTS.CORE_MAIN; // Name of CORE ACCOUNT
+const fundAmt = 3000; // Initial balance
 const coreServiceName = SYSTEM_ACCOUNTS.CORE_SERVICE; // Name of CORE ACCOUNT
-const fundAmt = 10000; // Initial balance
 
 const assetsOnlyDebit = {};
 const assetsOnlyCredit = {};
 
-Object.keys(assetsToRSObj).forEach(item => {
+Object.keys(assetsCoreObj).forEach(item => {
     // modify object to credit and debit type
-    assetsOnlyCredit[item + CREDIT] = assetsToRSObj[item];
-    assetsOnlyDebit[item + DEBIT] = assetsToRSObj[item];
+    assetsOnlyCredit[item + CREDIT] = assetsCoreObj[item];
+    assetsOnlyDebit[item + DEBIT] = assetsCoreObj[item];
 });
 
 // Create Core Main Account

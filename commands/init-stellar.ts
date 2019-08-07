@@ -6,8 +6,8 @@ import { StellarTxManager } from '../src/lib/stellar/StellarTxManager';
 import { createInternalWallet, fundInternalWallet } from './stellar-command';
 
 const assetsToRSObj = { DIMO: 10000 , TNZS: 10000 }; // initial Tokens Pool
+const fundAmtRS = 1000; // Initial balance
 const serviceName = SYSTEM_ACCOUNTS.RS_MAIN; // Name of service
-const fundAmt = 1000; // Initial balance
 const storageManager = new VaultStorage();
 
 const assetsToRSTyped = {};
@@ -29,7 +29,7 @@ const saveRootAccount = async () => {
 
 saveRootAccount()
     .then(() => {
-        createInternalWallet(assetsToRSTyped, serviceName, fundAmt)
+        createInternalWallet(assetsToRSTyped, serviceName, fundAmtRS)
             .then(wallet => {
                 fundInternalWallet(assetsToRSTyped, wallet)
                 .then(() => {
